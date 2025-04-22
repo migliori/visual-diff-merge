@@ -1,0 +1,25 @@
+```mermaid
+flowchart TD
+    title["Text Compare Mode - Data Flow"]
+    text_compare_js["text-compare.js"]
+    text_compare_js_Text_Input_UI["Text Input UI"]
+    text_compare_js --> text_compare_js_Text_Input_UI
+    text_compare_js_AJAX_Submission["AJAX Submission"]
+    text_compare_js --> text_compare_js_AJAX_Submission
+    ajax_diff_merge_php["ajax-diff-merge.php"]
+    ajax_diff_merge_php_Text_Processing["Text Processing"]
+    ajax_diff_merge_php --> ajax_diff_merge_php_Text_Processing
+    diff_processor_php["diff-processor.php"]
+    diff_processor_php_Diff_Generation["Diff Generation"]
+    diff_processor_php --> diff_processor_php_Diff_Generation
+    Config["Config"]
+    Config_Diff_Settings["Diff Settings"]
+    Config --> Config_Diff_Settings
+    text_compare_js --> |"Submit Text"| ajax_diff_merge_php
+    ajax_diff_merge_php --> |"Process Diff"| diff_processor_php
+    diff_processor_php --> |"Get Settings"| Config
+    diff_processor_php --> |"Return Diff Data"| ajax_diff_merge_php
+    ajax_diff_merge_php --> |"JSON Response"| text_compare_js
+```
+
+<!-- Generated on: 2025-04-21 18:12:09 -->

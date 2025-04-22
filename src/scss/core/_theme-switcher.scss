@@ -1,0 +1,211 @@
+@use '../abstracts/color-system' as colors;
+@use '../abstracts/variables' as vars;
+@use '../abstracts/utilities' as utils;
+
+#vdm-theme-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 1rem 0 0;
+
+  .form-check-input {
+    cursor: pointer;
+    height: 1.5rem;
+    width: 3rem;
+    margin-left: 0;
+  }
+
+  .form-check-label {
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+  }
+}
+
+.vdm-theme-switcher__wrapper {
+  display: flex;
+  align-items: center;
+  z-index: 100;
+  padding: 5px 10px;
+  border-radius: 30px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  @include utils.transition-theme;
+}
+
+.vdm-theme-switcher__control {
+  display: inline-block;
+  height: 24px;
+  position: relative;
+  width: 46px;
+
+  input {
+    display: none;
+  }
+}
+
+.vdm-theme-switcher__slider {
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  @include utils.transition-theme;
+
+  &:before {
+    content: "";
+    height: 20px;
+    width: 20px;
+    bottom: 2px;
+    left: 3px;
+    position: absolute;
+    // Keep this special transition that has different timing
+    transition: transform 0.4s ease, background-color 0.3s ease;
+  }
+
+  &.vdm-theme-switcher__slider--round {
+    border-radius: 34px;
+
+    &:before {
+      border-radius: 50%;
+    }
+  }
+}
+
+input:checked + .vdm-theme-switcher__slider {
+  &:before {
+    transform: translateX(21px);
+  }
+}
+
+.vdm-theme-switcher__label {
+  font-size: 14px;
+  padding: 0 5px;
+  @include utils.transition-slow("color");
+
+  .vdm-icon {
+    @include utils.transition-slow("color");
+  }
+}
+
+#vdm-container__wrapper {
+  @include utils.transition-theme;
+
+  .vdm-theme-switcher__slider {
+    background-color: vars.$neutral-color;
+    &:before {
+      background-color: vars.$text-light;
+    }
+  }
+
+  &.vdm-theme--light {
+    .vdm-theme-switcher__wrapper {
+      background-color: colors.bg-color(vars.$background-light, 0.85);
+      border: 1px solid colors.bg-color(vars.$border-color-light, 0.95);
+    }
+
+    .vdm-theme-switcher__label {
+      color: vars.$text-dark;
+
+      // Sun icon
+      &:first-of-type .vdm-icon {
+        color: vars.$replace-color;
+      }
+
+      // Moon icon
+      &:last-of-type .vdm-icon {
+        color: vars.$text-muted;
+      }
+    }
+  }
+
+  &.vdm-theme--dark {
+    .vdm-theme-switcher__wrapper {
+      background-color: colors.bg-color(vars.$background-dark, 0.85);
+      border: 1px solid colors.bg-color(vars.$border-color-dark, 0.9);
+    }
+
+    .vdm-theme-switcher__slider {
+      &:before {
+        background-color: vars.$background-dark;
+      }
+    }
+
+    .vdm-theme-switcher__label {
+      color: vars.$text-light;
+
+      // Sun icon
+      &:first-of-type .vdm-icon {
+        color: vars.$text-muted;
+      }
+
+      // Moon icon
+      &:last-of-type .vdm-icon {
+        color: vars.$text-light;
+      }
+    }
+  }
+}
+
+.vdm-code__table, .diff-header, .vdm-diff__pane, .vdm-diff__panes-container {
+  @include utils.transition-theme;
+}
+
+.vdm-code__line-content, .vdm-code__line-number, pre, code {
+  @include utils.transition-theme;
+}
+
+#vdm-theme__loading-indicator {
+  position: absolute;
+  right: 24px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  animation: fadeIn 0.2s ease-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+
+  .vdm-theme--dark &,
+  .vdm-theme-dark & {
+    background-color: rgba(40, 40, 40, 0.9);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.vdm-theme__loading-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  margin-right: 8px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

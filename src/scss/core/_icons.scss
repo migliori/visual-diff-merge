@@ -1,0 +1,100 @@
+/**
+ * SVG Icon System Styles
+ * Replaces FontAwesome with inline SVG icons
+ */
+
+@use '../abstracts/variables' as vars;
+@use '../abstracts/color-system' as colors;
+
+// Base icon styles
+.vdm-icon {
+  display: inline-block;
+  vertical-align: middle;
+  fill: currentColor; // Inherit color from parent text
+  overflow: visible; // Allow paths to extend outside viewBox if needed
+
+  // Default sizing
+  &:not([width]):not([height]) {
+    width: 1em;
+    height: 1em;
+  }
+}
+
+// Size variants
+.vdm-icon--sm {
+  width: 0.875em;
+  height: 0.875em;
+}
+
+.vdm-icon--lg {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+// Color variants - use currentColor by default to inherit from parent
+.vdm-icon--success {
+  color: vars.$success-color;
+}
+
+.vdm-icon--warning {
+  color: vars.$warning-color;
+}
+
+.vdm-icon--danger {
+  color: vars.$danger-color;
+}
+
+.vdm-icon--info {
+  color: vars.$info-color;
+}
+
+// Animation
+.vdm-icon--spin {
+  animation: vdm-icon-spin 2s linear infinite;
+}
+
+@keyframes vdm-icon-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// Alert icons (replaces font awesome in alerts)
+.#{vars.$prefix}-alert {
+  &.has-icon {
+    svg.vdm-icon {
+      margin-right: 0.5rem;
+    }
+  }
+
+  // Success alerts
+  &.alert-success svg.vdm-icon {
+    color: vars.$success-color;
+  }
+
+  // Warning alerts
+  &.alert-warning svg.vdm-icon {
+    color: vars.$warning-color;
+  }
+
+  // Danger alerts
+  &.alert-danger svg.vdm-icon {
+    color: vars.$danger-color;
+  }
+
+  // Info alerts
+  &.alert-info svg.vdm-icon {
+    color: vars.$info-color;
+  }
+}
+
+// Utility classes to match older FontAwesome conventions
+// These help with transition from FontAwesome to SVG
+.me-2 svg.vdm-icon,
+.mr-2 svg.vdm-icon {
+  margin-right: 0.5rem;
+}
+
+.ms-2 svg.vdm-icon,
+.ml-2 svg.vdm-icon {
+  margin-left: 0.5rem;
+}

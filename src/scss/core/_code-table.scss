@@ -1,0 +1,96 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/color-system' as colors;
+@use '../abstracts/utilities' as utils;
+@use '../core/scrollbar' as scroll;
+
+.vdm-code__table {
+  width: auto;
+  min-width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-family: monospace;
+  white-space: pre;
+  position: relative;
+
+  // Add consistent line-height to all elements (moved from _diff-core.scss)
+  * {
+    line-height: normal;
+  }
+
+  tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+    &:first-child {
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+  }
+
+  // Base styling for all table cells
+  td {
+    padding: 0;
+    border: none; // Moved from _diff-core.scss
+    vertical-align: middle !important; // Important! Aligns text baseline consistently
+  }
+
+  // Non-chunk line hover styling (moved from _diff-core.scss)
+  .vdm-code__line-content:not([data-chunk-id]):not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected):hover {
+    background-color: colors.bg-color(vars.$neutral-color, 0.07);
+    box-shadow: colors.hover-shadow(vars.$neutral-color);
+  }
+
+  // Group hover styling (moved from _diff-core.scss)
+  .vdm-diff__group-hover {
+    background-color: colors.bg-color(vars.$neutral-color, 0.07);
+    box-shadow: colors.hover-shadow(vars.$neutral-color);
+  }
+
+  // Line number cells need special handling to override the general td styling
+    .vdm-code__line-number,
+    .hljs-ln-n {
+    width: vars.$line-number-width;
+    min-width: vars.$line-number-width;
+    text-align: right;
+    user-select: none;
+    color: vars.$text-muted;
+    background-color: vars.$background-light;
+    padding: 0 10px 0 5px; // Override padding-left for line numbers
+    border-right: 1px solid vars.$border-color-light;
+    box-sizing: border-box;
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
+
+  .vdm-code__line-content {
+    position: relative;
+    white-space: pre;
+    padding: 0 30px 0 8px;
+    box-shadow: colors.left-shadow(transparent);
+    max-width: 100%;
+  }
+
+  .vdm-code__line--empty {
+    background: rgba(240, 240, 240, 0.3);
+  }
+
+  span {
+    vertical-align: baseline; // Keep baseline for the text within spans
+    height: auto; // Let the spans adjust to their content naturallyly
+  }
+}
+
+// Use scrollbar mixin consistently
+.vdm-diff__pane-content,
+.fixed-horizontal-scrollbar {
+  @include scroll.scrollbar-styling;
+}
+
+// Make sure line number background matches in dark mode
+.vdm-theme--dark .vdm-code__table .vdm-code__line-number {
+  background-color: vars.$background-dark;
+  border-right-color: vars.$border-color-dark;
+}

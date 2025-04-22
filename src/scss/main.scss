@@ -1,0 +1,77 @@
+// Load modules without circular dependencies
+@use 'abstracts/variables';
+@use 'abstracts/color-system';
+@use 'abstracts/utilities';
+
+// Load component styles
+@use 'core/alerts';
+@use 'core/container';
+@use 'core/code-table';
+@use 'core/diff-chunks';
+@use 'core/diff-core';
+@use 'core/diff-selection';
+@use 'core/icons'; // SVG icon system
+@use 'core/icon-positioning';
+@use 'core/loader'; // Loading spinner and indicators
+@use 'core/navigation';
+@use 'core/modal';
+@use 'core/theme-switcher';
+@use 'core/syntax-highlighting'; // Make sure this is loaded AFTER code-table
+@use 'core/code-copy';
+@use 'core/scrollbar';
+@use 'core/bootstrap-utilities'; // Import the Bootstrap-like utilities file
+
+// Base styles
+#vdm-container__wrapper * {
+  box-sizing: border-box; // Ensure consistent box model across all elements
+}
+
+// Enhanced dropdown styles for merge destinations
+.vdm-dropdown-visible {
+  position: relative;
+  z-index: 5;
+  min-width: 220px; // Ensure the dropdown is wide enough for text
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: var(--vdm-input-bg, #2c3034);
+  color: var(--vdm-text-color, #fff);
+  border: 1px solid var(--vdm-border-color, #495057);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:hover, &:focus {
+    border-color: var(--vdm-primary, #0d6efd);
+    outline: none;
+  }
+
+  // Make the dropdown arrow more visible
+  &::after {
+    content: "";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--vdm-text-color, #fff);
+    pointer-events: none;
+  }
+
+  option {
+    padding: 8px;
+    background-color: var(--vdm-bg, #212529);
+  }
+}
+
+// Animation for highlighting the dropdown when it can't be opened programmatically
+@keyframes dropdown-highlight-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7); }
+  50% { box-shadow: 0 0 0 8px rgba(13, 110, 253, 0.3); }
+  100% { box-shadow: 0 0 0 0 rgba(13, 110, 253, 0); }
+}
+
+.vdm-dropdown-highlight {
+  animation: dropdown-highlight-pulse 1s ease-out;
+  border-color: var(--vdm-primary, #0d6efd) !important;
+}
+
+// Any global styles can be added here

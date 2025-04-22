@@ -1,0 +1,659 @@
+// Import shared SCSS foundation
+@use '../../scss-shared' as shared;
+@use '../../scss-shared/abstracts/variables' as vars;
+@use '../../scss-shared/abstracts/color-system' as colors;
+@use "sass:color";
+
+// Example-specific variables
+$font-family-base: 'Pavanam', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$font-family-mono: Consolas, Monaco, 'Courier New', monospace;
+$primary-color: vars.$primary;      // Use shared primary color
+$primary-hover: #5a5cfa;            // Example-specific hover color
+$text-color: vars.$text-dark;       // Use shared text color
+$light-bg: vars.$light;             // Use shared light background
+$white: #fff;
+$border-light: #ddd;
+$border-medium: vars.$border-color; // Use shared border color
+$border-dark: vars.$border-color-light; // Use shared light border color
+$shadow-sm: vars.$box-shadow-sm;    // Use shared box shadow variables
+$shadow-md: vars.$box-shadow;
+$shadow-lg: vars.$box-shadow-lg;
+$transition-standard: vars.$transition-normal; // Use shared transition
+
+// Top navigation variables
+$top-nav-bg: color.adjust(vars.$dark, $lightness: 10%); // Using color.adjust instead of lighten()
+$top-nav-text: rgba(255, 255, 255, 0.85);
+$top-nav-hover: #fff;
+
+// Mixins
+@mixin box-shadow($shadow) {
+  box-shadow: $shadow;
+}
+
+@mixin transition($transition...) {
+  transition: $transition;
+}
+
+// Keyframes
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Base styling */
+body {
+  font-family: $font-family-base;
+  font-display: swap;
+  line-height: 1.6;
+  color: $text-color;
+  background-color: $light-bg;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top navigation bar */
+.top-nav {
+  background-color: $top-nav-bg;
+  color: $top-nav-text;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
+
+  &-container {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 1.5rem;
+  }
+
+  &-link {
+    color: $top-nav-text;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $top-nav-hover;
+      text-decoration: underline;
+    }
+  }
+}
+
+/* Responsive container with Bootstrap 5-like dimensions */
+.container {
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: $white;
+  @include box-shadow($shadow-md);
+
+  &:hover {
+    @include box-shadow($shadow-lg);
+  }
+
+  // Responsive breakpoints
+  @media (min-width: 576px) {
+    max-width: 540px;
+  }
+
+  @media (min-width: 768px) {
+    max-width: 720px;
+  }
+
+  @media (min-width: 992px) {
+    max-width: 960px;
+  }
+
+  @media (min-width: 1200px) {
+    max-width: 1140px;
+  }
+
+  @media (min-width: 1400px) {
+    max-width: 1320px;
+  }
+}
+
+/* VDM container styling */
+.vdm-container {
+  flex: 1 0 auto;
+  background-color: $white;
+  @include box-shadow($shadow-md);
+  overflow: hidden;
+  @include transition($transition-standard);
+
+  &:hover {
+    @include box-shadow($shadow-lg);
+  }
+}
+
+// Headings
+h1 {
+  color: $primary-hover;
+  margin-bottom: 20px;
+  border-bottom: 2px solid $border-dark;
+  padding-bottom: 10px;
+}
+
+h2 {
+  color: $primary-color;
+  margin-top: 0;
+}
+
+/* File selectors */
+.file-selectors {
+  &:not(.d-flex) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  &.d-flex {
+    margin-bottom: 20px;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+
+  select,
+  input[type="url"] {
+    padding: 10px;
+    border: 1px solid $border-light;
+    font-size: 14px;
+    font-family: $font-family-base;
+  }
+
+  textarea {
+    width: 100%;
+    height: 200px;
+    padding: 10px;
+    border: 1px solid $border-light;
+    font-family: $font-family-base;
+    font-size: 14px;
+    resize: vertical;
+  }
+
+  input[type="file"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: $primary-color;
+    color: $white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Pavanam', sans-serif;
+    @include transition(background-color 0.2s ease-in-out);
+
+    &:hover {
+      background-color: $primary-hover;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba(123, 104, 238, 0.25);
+    }
+  }
+}
+
+/* Hide the default file input */
+input[type="file"] {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+
+  &:hover {
+    background-color: $primary-hover;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(123, 104, 238, 0.25);
+  }
+}
+
+/* Style the custom file input button */
+.custom-file-label {
+  display: inline-block;
+  background-color: #6c757d;
+  color: $white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: 'Pavanam', sans-serif;
+  @include transition(background-color 0.2s ease-in-out);
+  text-align: center;
+
+  &:hover {
+    background-color: $primary-hover;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(123, 104, 238, 0.25);
+  }
+}
+
+.language-selector {
+  margin-bottom: 20px;
+
+  select {
+    padding: 10px;
+    border: 1px solid $border-light;
+    font-size: 14px;
+    font-family: $font-family-base;
+  }
+}
+
+.url-note {
+  margin-bottom: 15px;
+  color: #777;
+}
+
+button#compare-btn {
+  background-color: $primary-color;
+  color: $white;
+  border: none;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  @include transition(background-color 0.2s);
+
+  &:hover {
+    background-color: $primary-hover;
+  }
+}
+
+/* Loading indicator */
+#vdm-diff-loading {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border-left-color: $primary-color;
+  animation: spin 1s linear infinite;
+}
+
+/* Diff container styling */
+#diff-container {
+  background-color: $white;
+  overflow: hidden;
+  @include box-shadow($shadow-sm);
+}
+
+/* Diff Viewer cards styling */
+.diff-viewer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.example-card {
+  background-color: $white;
+  padding: 20px;
+  @include box-shadow($shadow-sm);
+  @include transition(transform 0.3s ease, box-shadow 0.3s ease);
+  display: flex;
+  flex-direction: column;
+  min-height: 250px;
+
+  &:hover {
+    @include box-shadow(0 5px 15px rgba(0, 0, 0, 0.15));
+  }
+}
+
+.card-content {
+  flex-grow: 1;
+}
+
+.example-link {
+  display: inline-flex;
+  align-items: center;
+  background-color: $primary-color;
+  color: $white;
+  padding: 10px 15px;
+  text-decoration: none;
+  margin-top: auto;
+  align-self: flex-start;
+  @include transition(background-color 0.2s ease);
+
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    vertical-align: middle;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='white' d='M0 96C0 60.7 28.7 32 64 32H196.1c19.1 0 37.4 7.6 50.9 21.1L289.9 96H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H448c8.8 0 16-7.2 16-16V160c0-8.8-7.2-16-16-16H286.6c-10.6 0-20.8-4.2-28.3-11.7L213.1 87c-4.5-4.5-10.6-7-17-7H64z'/%3E%3C/svg%3E");
+  }
+
+  &:hover {
+    background-color: $primary-hover;
+  }
+}
+
+/* Specific example link icons */
+a[href="file-browser.php"].example-link::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='white' d='M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H298.5c-17 0-33.3-6.7-45.3-18.7L226.7 50.7c-12-12-28.3-18.7-45.3-18.7H64C28.7 32 0 60.7 0 96v320c0 35.3 28.7 64 64 64zM448 416H264V304H448V416zM264 160V256H448V160H264zm-64 0v96H64V160h136zm0 144v112H64V304h136z'/%3E%3C/svg%3E");
+}
+
+a[href="file-upload.html"].example-link::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='white' d='M288 109.3V352c0 17.7-14.3 32-32 32s-32-14.3-32-32V109.3l-73.4 73.4c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l128-128c12.5-12.5 32.8-12.5 45.3 0l128 128c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352H192c0 35.3 28.7 64 64 64s64-28.7 64-64H448c35.3 0 64 28.7 64 64v32c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V416c0-35.3 28.7-64 64-64z'/%3E%3C/svg%3E");
+}
+
+a[href="text-compare.html"].example-link::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath fill='white' d='M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM112 256H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16z'/%3E%3C/svg%3E");
+}
+
+a[href="url-compare.html"].example-link::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='white' d='M352 256c0 22.2-1.2 43.6-3.3 64H163.3c-2.2-20.4-3.3-41.8-3.3-64s1.2-43.6 3.3-64H348.7c2.2 20.4 3.3 41.8 3.3 64zm28.8-64H503.9c5.3 20.5 8.1 41.9 8.1 64s-2.8 43.5-8.1 64H380.8c2.1-20.6 3.2-42 3.2-64s-1.1-43.4-3.2-64zm112.6-32H376.7c-10-63.9-29.8-117.4-55.3-151.6c78.3 20.7 142 77.5 171.9 151.6zm-149.1 0H167.7c6.1-36.4 15.5-68.6 27-94.7c10.5-23.6 22.2-40.7 33.5-51.5C239.4 3.2 248.7 0 256 0s16.6 3.2 27.8 13.8c11.3 10.8 23 27.9 33.5 51.5c11.6 26 20.9 58.2 27 94.7zm-209 0H18.6C48.6 85.9 112.2 29.1 190.6 8.4C165.1 42.6 145.3 96.1 135.3 160zM8.1 192H131.2c-2.1 20.6-3.2 42-3.2 64s1.1 43.4 3.2 64H8.1C2.8 299.5 0 278.1 0 256s2.8-43.5 8.1-64zM194.7 446.6c-11.6-26-20.9-58.2-27-94.6H344.3c-6.1 36.4-15.5 68.6-27 94.6c-10.5 23.6-22.2 40.7-33.5 51.5C272.6 508.8 263.3 512 256 512s-16.6-3.2-27.8-13.8c-11.3-10.8-23-27.9-33.5-51.5zM135.3 352c10 63.9 29.8 117.4 55.3 151.6C112.2 482.9 48.6 426.1 18.6 352H135.3zm358.1 0c-30 74.1-93.6 130.9-171.9 151.6c25.5-34.2 45.2-87.7 55.3-151.6H493.4z'/%3E%3C/svg%3E");
+}
+
+footer {
+  margin-top: 50px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  text-align: center;
+  flex-shrink: 0;
+  width: 100%;
+
+  &.footer-sticky {
+    margin-top: auto;
+  }
+}
+
+/* Links */
+a {
+  color: $primary-color;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .file-selectors:not(.d-flex) {
+    grid-template-columns: 1fr;
+  }
+
+  .diff-viewer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Button styles */
+.btn {
+  display: inline-block;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  @include box-shadow(0 2px 5px rgba(0, 0, 0, 0.08));
+  position: relative;
+  overflow: visible;
+  @include transition(color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease);
+
+  &:hover {
+    @include box-shadow(0 4px 8px rgba(0, 0, 0, 0.12));
+  }
+
+  &:active {
+    @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.1));
+  }
+
+  &-primary {
+    color: $white;
+    background-color: $primary-color;
+    border: 1px solid $primary-color;
+
+    &:hover {
+      background-color: $primary-hover;
+      border-color: $primary-hover;
+    }
+  }
+
+  &-flat {
+    background-color: transparent;
+    border: 1px solid $border-medium;
+    color: $text-color;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+      border-color: #a0a6b3;
+    }
+  }
+
+  &-sm {
+    padding: 0.25rem .75rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Card styles */
+.card {
+  background-color: $white;
+  @include box-shadow($shadow-md);
+  overflow: hidden;
+  @include transition($transition-standard);
+
+  &:hover {
+    @include box-shadow($shadow-lg);
+  }
+}
+
+/* Form controls */
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: $text-color;
+  background-color: $white;
+  background-clip: padding-box;
+  border: 1px solid $border-medium;
+  @include transition(all 0.15s ease);
+
+  &:focus {
+    color: $text-color;
+    background-color: $white;
+    border-color: $primary-color;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(123, 104, 238, 0.25);
+  }
+}
+
+/* VDM Form controls with optimized padding */
+.vdm-form-control {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: $text-color;
+  background-color: $white;
+  background-clip: padding-box;
+  border: 1px solid $border-medium;
+  box-sizing: border-box;
+  @include transition(all 0.15s ease);
+
+  &:focus {
+    color: $text-color;
+    background-color: $white;
+    border-color: $primary-color;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(123, 104, 238, 0.25);
+  }
+}
+
+/* Alert styles */
+.alert {
+  position: relative;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: none;
+  @include box-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.075));
+  @include transition($transition-standard);
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+  }
+
+  &-info {
+    color: #48d1cc;
+    background-color: rgba(72, 209, 204, 0.1);
+
+    &::before {
+      background-color: #48d1cc;
+    }
+  }
+}
+
+/* Utility classes */
+.p-3 { padding: 1rem !important; }
+.mb-1 { margin-bottom: 0.25rem !important; }
+.mb-2 { margin-bottom: 0.5rem !important; }
+.mb-3 { margin-bottom: 1rem !important; }
+.mb-4 { margin-bottom: 1.5rem !important; }
+.me-3 { margin-right: 1rem !important; }
+.ms-auto { margin-left: auto !important; }
+.d-flex { display: flex !important; }
+.d-block { display: block !important; }
+.d-none { display: none !important; }
+.flex-column { flex-direction: column !important; }
+.flex-wrap { flex-wrap: wrap !important; }
+.flex-grow-1 { flex-grow: 1 !important; }
+.flex-fill { flex: 1 1 auto !important; }
+.min-width-0 { min-width: 0 !important; }
+.justify-content-between { justify-content: space-between !important; }
+.text-center { text-align: center !important; }
+
+/* Font utilities */
+.font-sans {
+  font-family: $font-family-base !important;
+  font-weight: 400;
+}
+
+.font-sans-bold {
+  font-family: $font-family-base !important;
+  font-weight: bold;
+}
+
+/* Apply monospace to code-related elements */
+code, pre, .code {
+  font-family: $font-family-mono;
+}
+
+/* Icon System */
+%icon-base {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.icon-file::before,
+.icon-compare::before,
+.icon-back::before,
+.icon-moon::before,
+.icon-split-view::before {
+  @extend %icon-base;
+}
+
+/* File icon */
+.icon-file::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath fill='white' d='M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384v38.6C310.1 219.5 256 287.4 256 368c0 59.1 29.1 111.3 73.7 143.3c-3.2 .5-6.4 .7-9.7 .7H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128z'/%3E%3C/svg%3E");
+}
+
+/* Compare/Check icon */
+.icon-compare::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='white' d='M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z'/%3E%3C/svg%3E");
+}
+
+/* Back arrow icon */
+.icon-back::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 512'%3E%3Cpath fill='%237b68ee' d='M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z'/%3E%3C/svg%3E");
+}
+
+/* Moon icon for dark mode */
+.icon-moon::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 384 512'%3E%3Cpath fill='%232f3743' d='M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z'/%3E%3C/svg%3E");
+}
+
+/* Split view icon */
+.icon-split-view::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%232f3743' d='M38.4 32C17.2 32 0 49.2 0 70.4V409.6C0 430.8 17.2 448 38.4 448H473.6c21.2 0 38.4-17.2 38.4-38.4V70.4c0-21.2-17.2-38.4-38.4-38.4H38.4zM256 416v-320h32V416H256zm96 0V96h32V416H352zm96 0V96h25.6c7.1 0 12.8 5.7 12.8 12.8V399.2c0 7.1-5.7 12.8-12.8 12.8H448zm-352 0V96H64v320H96zm32 0V96h32V416H128zm32 0V96h32V416H160zm32 0V96h32V416H192z'/%3E%3C/svg%3E");
+}
+
+/* Filename display styling */
+.file-name {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #555;
+  font-style: italic;
+  min-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+
+  &.has-file {
+    background-color: #f0f0ff;
+    border-left: 3px solid $primary-color;
+    color: #555;
+    padding: 4px 8px;
+    font-style: normal;
+  }
+}

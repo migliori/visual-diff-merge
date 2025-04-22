@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Diff Merge - Customization Guide | Personalize Your Code Diff Tool</title>
+    <meta name="description" content="Customize Visual Diff Merge to match your needs. Learn how to configure themes, adjust diff behavior, add translations, and extend functionality.">
+    <meta name="keywords" content="visual diff merge customization, code comparison configuration, diff viewer styling, merge tool themes, diff tool extensions">
+    <meta name="author" content="Visual Diff Merge">
+    <meta property="og:title" content="Visual Diff Merge - Customization Guide | Personalize Your Code Diff Tool">
+    <meta property="og:description" content="Customize Visual Diff Merge to match your needs. Learn how to configure themes, adjust diff behavior, add translations, and extend functionality.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://visual-diff-merge.miglisoft.com/docs/customization.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Visual Diff Merge - Customization Guide | Personalize Your Code Diff Tool">
+    <meta name="twitter:description" content="Customize Visual Diff Merge to match your needs. Learn how to configure themes, adjust diff behavior, add translations, and extend functionality.">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Visual Diff Merge" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pavanam&display=swap">
+    <link rel="stylesheet" href="css/styles.min.css">
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!-- Global docs script -->
+    <script src="js/docs.js"></script>
+</head>
+<body>
+    <div class="docs-container">
+        <header class="docs-header">
+            <h1>Visual Diff Merge Customization Guide</h1>
+            <p class="tagline">A powerful visual diff and merge tool for the web</p>
+        </header>
+
+        <nav class="docs-nav">
+            <ul>
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="usage.html">Usage</a></li>
+                <li class="active"><a href="customization.html">Customization</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="architecture.html">Architecture</a></li>
+            </ul>
+        </nav>
+
+        <div class="docs-content-wrapper">
+            <aside class="docs-sidebar">
+                <h3>On This Page</h3>
+                <ul>
+                    <li><a href="#customization-overview">Customization Overview</a></li>
+                    <li><a href="#configuration">Configuration Customization</a></li>
+                    <li><a href="#styling">Styling Customization</a></li>
+                    <li><a href="#translations">Language and Translations</a></li>
+                    <li><a href="#extending">Extending Functionality</a></li>
+                    <li><a href="#integration">Integration with Other Systems</a></li>
+                    <li><a href="#custom-plugins">Creating Plugins</a></li>
+                </ul>
+            </aside>
+
+            <main class="docs-content">
+            <section id="customization-overview">
+                <h2>Customization Overview</h2>
+                <p>
+                    Visual Diff Merge offers several ways to customize its behavior and appearance:
+                </p>
+                <ul>
+                    <li><strong>Configuration Settings</strong> - Adjust behavior through <code>api/config.php</code></li>
+                    <li><strong>Styling Customization</strong> - Modify CSS to change the appearance</li>
+                    <li><strong>Language and Translations</strong> - Customize text strings and add languages</li>
+                    <li><strong>Extending Functionality</strong> - Add custom components or modify existing ones</li>
+                    <li><strong>Integration with Other Systems</strong> - Use Visual Diff Merge in your own applications</li>
+                </ul>
+            </section>
+
+            <section id="configuration">
+                <h2>Configuration Customization</h2>
+                <p>
+                    The <code>api/config.php</code> file is the primary way to customize Visual Diff Merge's behavior.
+                    It controls both PHP (server-side) and JavaScript (client-side) settings.
+                </p>
+
+                <p>
+                    For detailed information about the structure of the configuration file and how to set it up, refer to the <a href="installation.html#configuration">Configuration section</a> in the Installation guide.
+                </p>
+
+                <h3>Example Configuration</h3>
+                <div class="code-block">
+                    <pre><code>&lt;?php
+
+return [
+    'php' => [
+        'debug' => [
+            'enabled' => true,  // Enable debugging
+            'logLevel' => 3,    // Verbose logging
+            'logFile' => 'custom-debug.log'  // Custom log file
+        ],
+        'diff' => [
+            'contextLines' => 5,  // Show 5 lines of context
+            'ignoreWhitespace' => true,  // Ignore whitespace changes
+            'ignoreCase' => false
+        ],
+        'security' => [
+            'csrfProtection' => true,
+            'salt' => 'your-custom-salt-string',  // Custom security salt
+            'allowedDirectories' => [
+                realpath(__DIR__ . '/../diff-viewer/samples'),
+                '/var/www/html/my-project'
+            ]
+        ]
+    ],
+    'javascript' => [
+        'lang' => 'fr',  // Set French as default language
+        'debug' => true,
+        'logLevel' => 3,
+        'theme' => [
+            'defaultFamily' => 'github',  // Use GitHub theme family
+            'defaultMode' => 'light',     // Default to light mode
+            'showSelector' => true
+        ],
+        // Custom save options
+        'saveOptions' => [
+            'saveToOriginal' => true,
+            'saveWithSuffix' => true,
+            'saveToOld' => false,  // Disable saving to old file
+            'saveToOldWithSuffix' => false,
+            'saveToBoth' => true,
+            'saveToBothWithSuffix' => true
+        ]
+    ]
+];
+</code></pre>
+                </div>
+
+                <h3>Key Customization Options</h3>
+
+                <h4>Diff Behavior</h4>
+                <ul>
+                    <li>
+                        <code>php.diff.contextLines</code> - Adjust the number of unchanged lines shown around changes.
+                        Lower values show less context, higher values show more context.
+                    </li>
+                    <li>
+                        <code>php.diff.ignoreWhitespace</code> - Set to <code>true</code> to ignore whitespace changes
+                        when comparing content. Useful for code comparisons where formatting may differ.
+                    </li>
+                    <li>
+                        <code>php.diff.ignoreCase</code> - Set to <code>true</code> to ignore case differences
+                        when comparing content.
+                    </li>
+                </ul>
+
+                <h4>Theme and UI</h4>
+                <ul>
+                    <li>
+                        <code>javascript.theme.defaultFamily</code> - Change the default syntax highlighting theme family.
+                        Options include:
+                        <ul>
+                            <li><code>'atom-one'</code> - Atom One theme (default)</li>
+                            <li><code>'github'</code> - GitHub theme</li>
+                            <li><code>'vs'</code> - Visual Studio theme</li>
+                            <li><code>'xcode'</code> - Xcode theme</li>
+                            <li>And many others from highlight.js</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <code>javascript.theme.defaultMode</code> - Set default theme mode:
+                        <ul>
+                            <li><code>'dark'</code> - Dark mode (default)</li>
+                            <li><code>'light'</code> - Light mode</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <code>javascript.theme.showSelector</code> - Control visibility of the theme selector.
+                        Set to <code>false</code> to hide it.
+                    </li>
+                </ul>
+
+                <h4>Save Options</h4>
+                <p>
+                    Control which save options are available in the merge UI:
+                </p>
+                <ul>
+                    <li><code>javascript.saveOptions.saveToOriginal</code> - Save to current file (new file)</li>
+                    <li><code>javascript.saveOptions.saveWithSuffix</code> - Save to current file with suffix</li>
+                    <li><code>javascript.saveOptions.saveToOld</code> - Save to old file (overwrite)</li>
+                    <li><code>javascript.saveOptions.saveToOldWithSuffix</code> - Save to old file with suffix</li>
+                    <li><code>javascript.saveOptions.saveToBoth</code> - Save to both files (overwrite both)</li>
+                    <li><code>javascript.saveOptions.saveToBothWithSuffix</code> - Save to both files with suffix</li>
+                </ul>
+            </section>
+
+            <section id="styling">
+                <h2>Styling Customization</h2>
+                <p>
+                    Visual Diff Merge's appearance can be customized through CSS. There are several approaches:
+                </p>
+
+                <h3>Approach 1: Override with Custom CSS</h3>
+                <p>
+                    Add your own CSS file after loading the Visual Diff Merge CSS:
+                </p>
+                <div class="code-block">
+                    <pre><code>&lt;!-- Load Visual Diff Merge CSS first --&gt;
+&lt;link rel="stylesheet" href="path/to/diff-viewer.min.css"&gt;
+&lt;link rel="stylesheet" href="path/to/diff-viewer-theme.min.css"&gt;
+
+&lt;!-- Then load your custom CSS to override styles --&gt;
+&lt;link rel="stylesheet" href="path/to/your-custom-styles.css"&gt;</code></pre>
+                </div>
+
+                <h3>Theme Customization</h3>
+                <p>
+                    The <code>diff-viewer-theme.min.css</code> file contains styles for the diff viewer UI elements (buttons, alerts, etc.)
+                    that can be customized in two main ways:
+                </p>
+                <ul>
+                    <li>Compile your own custom theme by modifying <code>src/scss/theme.scss</code></li>
+                    <li>Override the CSS classnames using the PHP configuration options to match your preferred CSS framework</li>
+                </ul>
+
+                <h3>Approach 2: Modify SCSS Source Files</h3>
+                <p>
+                    If you're using the development setup, you can modify the SCSS source files directly:
+                </p>
+                <ol>
+                    <li>Modify files in <code>src/scss/</code> or <code>scss-shared/</code> directories</li>
+                    <li>Rebuild the CSS using the provided scripts:
+                        <div class="code-block">
+                            <pre><code>npm run compile-scss</code></pre>
+                        </div>
+                    </li>
+                </ol>
+
+                <h3>Important CSS Classes</h3>
+                <p>
+                    Here are some key CSS classes you may want to customize:
+                </p>
+                <table class="component-table">
+                    <thead>
+                        <tr>
+                            <th>CSS Class</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>.vdm-diff__viewer</code></td>
+                            <td>Main diff viewer container</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-diff__chunk</code></td>
+                            <td>Individual diff chunk</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-diff__line--added</code></td>
+                            <td>Added lines</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-diff__line--removed</code></td>
+                            <td>Removed lines</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-diff__line--unchanged</code></td>
+                            <td>Unchanged lines</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-diff__panel--left</code></td>
+                            <td>Left panel (old content)</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-diff__panel--right</code></td>
+                            <td>Right panel (new content)</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-btn</code></td>
+                            <td>Buttons</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-loader</code></td>
+                            <td>Loading indicator container</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-loader__spinner</code></td>
+                            <td>Loading spinner animation</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-loader__message</code></td>
+                            <td>Loading message text</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-d-none</code></td>
+                            <td>Utility class to hide elements (display: none)</td>
+                        </tr>
+                        <tr>
+                            <td><code>.vdm-diff__navigation</code></td>
+                            <td>Navigation controls</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Example Custom CSS</h3>
+                <div class="code-block">
+                    <pre><code>/* Custom colors for diff chunks */
+.vdm-diff__line--added {
+    background-color: rgba(0, 180, 0, 0.2);
+}
+
+.vdm-diff__line--removed {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+/* Custom font for code */
+.vdm-diff__code {
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+}
+
+/* Custom button styling */
+.vdm-btn {
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Custom navigation controls */
+.vdm-diff__navigation {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Highlight current chunk */
+.vdm-diff__chunk.vdm-active {
+    box-shadow: 0 0 0 2px #4285f4;
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="translations">
+                <h2>Language and Translations</h2>
+                <p>
+                    Visual Diff Merge supports multiple languages through translation objects in the configuration.
+                </p>
+
+                <h3>Setting Default Language</h3>
+                <p>
+                    Set the default language in <code>api/config.php</code>:
+                </p>
+                <div class="code-block">
+                    <pre><code>'javascript' => [
+    'lang' => 'fr', // Set French as default language
+    // Other settings...
+]</code></pre>
+                </div>
+
+                <h3>Adding Custom Translations</h3>
+                <p>
+                    To add or modify translations, edit the <code>translations</code> section in <code>api/config.php</code>:
+                </p>
+                <div class="code-block">
+                    <pre><code>'javascript' => [
+    // Other settings...
+    'translations' => [
+        'en' => [
+            'applyMerge' => 'Apply Merge',
+            'continueResolving' => 'Continue Resolving',
+            // Other English translations...
+        ],
+        'fr' => [
+            'applyMerge' => 'Appliquer la fusion',
+            'continueResolving' => 'Continuer la résolution',
+            // Other French translations...
+        ],
+        'es' => [
+            'applyMerge' => 'Aplicar fusión',
+            'continueResolving' => 'Continuar resolviendo',
+            // Other Spanish translations...
+        ]
+    ]
+]</code></pre>
+                </div>
+
+                <h3>Adding a New Language</h3>
+                <p>
+                    To add support for a new language:
+                </p>
+                <ol>
+                    <li>Create a new language key in the <code>translations</code> object</li>
+                    <li>Provide translations for all strings</li>
+                    <li>Set the <code>javascript.lang</code> value to your new language code</li>
+                </ol>
+
+                <div class="code-block">
+                    <pre><code>'javascript' => [
+    'lang' => 'de', // Set German as default language
+    'translations' => [
+        // Existing translations...
+        'de' => [
+            'applyMerge' => 'Zusammenführung anwenden',
+            'continueResolving' => 'Weiter auflösen',
+            'filesIdenticalMessage' => '&lt;strong&gt;Dateien sind identisch&lt;/strong&gt;&lt;br&gt;Die verglichenen Dateien sind identisch. Keine Unterschiede gefunden.',
+            // Add all other required translations
+        ]
+    ]
+]</code></pre>
+                </div>
+
+                <h3>Required Translation Keys</h3>
+                <p>
+                    The full list of translatable strings is available in <code>api/config.example.php</code>.
+                    At minimum, you should provide translations for:
+                </p>
+                <ul>
+                    <li>UI elements (<code>applyMerge</code>, <code>continueResolving</code>, etc.)</li>
+                    <li>Error messages (<code>invalidRequestMethod</code>, <code>fileNotFound</code>, etc.)</li>
+                    <li>Loading states (<code>loadingContent</code>, <code>processingChunks</code>, etc.)</li>
+                    <li>Confirmation dialogs (<code>unresolvedConflicts</code>, <code>resolveConflictsMessage</code>, etc.)</li>
+                </ul>
+            </section>
+
+            <section id="extending">
+                <h2>Extending Functionality</h2>
+                <p>
+                    Visual Diff Merge can be extended in several ways to add custom functionality.
+                </p>
+
+                <h3>Creating Custom UI Components</h3>
+                <p>
+                    Add custom UI elements to the diff viewer:
+                </p>
+                <div class="code-block">
+                    <pre><code>// Create a custom component
+class CustomControl {
+    constructor(options = {}) {
+        this.container = options.container || document.body;
+        this.diffViewer = options.diffViewer;
+    }
+
+    initialize() {
+        // Create your custom UI element
+        const customElement = document.createElement('div');
+        customElement.classList.add('vdm-custom-control');
+        customElement.innerHTML = `
+            &lt;button class="vdm-btn vdm-btn--primary"&gt;Custom Action&lt;/button&gt;
+        `;
+
+        // Add event listener
+        const button = customElement.querySelector('button');
+        button.addEventListener('click', () => {
+            // Do something with the diff viewer
+            console.log('Custom action clicked');
+            this.diffViewer.refreshView();
+        });
+
+        // Append to container
+        this.container.appendChild(customElement);
+        return true;
+    }
+}
+
+// After initializing the diff viewer
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for diffViewer to be initialized
+    const checkDiffViewer = setInterval(() => {
+        if (window.diffViewer) {
+            clearInterval(checkDiffViewer);
+
+            // Create and initialize your custom component
+            const customControl = new CustomControl({
+                container: document.querySelector('.vdm-diff__controls'),
+                diffViewer: window.diffViewer
+            });
+
+            customControl.initialize();
+        }
+    }, 100);
+});</code></pre>
+                </div>
+
+                <h3>Extending Manager Classes</h3>
+                <p>
+                    Extend the manager classes to add custom behavior:
+                </p>
+                <div class="code-block">
+                    <pre><code>// Extend the TextCompareManager class
+class CustomTextCompareManager extends TextCompareManager {
+    constructor(options = {}) {
+        // Call parent constructor
+        super(options);
+
+        // Add custom properties
+        this.customProperty = options.customProperty || 'default';
+    }
+
+    // Override a method
+    async handleFormSubmit(event) {
+        // Call the parent method first
+        await super.handleFormSubmit(event);
+
+        // Add custom behavior after form submission
+        console.log('Form submitted with custom behavior');
+        this.performCustomAction();
+    }
+
+    // Add a new method
+    performCustomAction() {
+        console.log('Performing custom action');
+        // Your custom logic here
+    }
+}
+
+// Replace the default manager with your custom one
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize with your custom manager
+    window.textCompareManager = new CustomTextCompareManager({
+        customProperty: 'custom value'
+    });
+});</code></pre>
+                </div>
+
+                <h3>Adding Post-Processing Hooks</h3>
+                <p>
+                    Add custom post-processing to the diff result:
+                </p>
+                <div class="code-block">
+                    <pre><code>// Create a post-processing hook
+function addCustomPostProcessing() {
+    // Wait for diffViewer to be initialized
+    const checkDiffViewer = setInterval(() => {
+        if (window.diffViewer) {
+            clearInterval(checkDiffViewer);
+
+            // Store the original method
+            const originalRenderDiff = window.diffViewer.renderDiff;
+
+            // Override the method
+            window.diffViewer.renderDiff = function() {
+                // Call the original method
+                const result = originalRenderDiff.apply(this, arguments);
+
+                // Perform post-processing
+                console.log('Performing post-processing on diff');
+
+                // Example: Add line numbers to the gutter
+                const gutters = document.querySelectorAll('.vdm-diff__gutter');
+                gutters.forEach(gutter => {
+                    const lineNumbers = gutter.querySelectorAll('.vdm-diff__line-number');
+                    lineNumbers.forEach((lineNumber, index) => {
+                        lineNumber.setAttribute('data-custom-index', index);
+                    });
+                });
+
+                return result;
+            };
+        }
+    }, 100);
+}
+
+// Add the hook
+document.addEventListener('DOMContentLoaded', addCustomPostProcessing);</code></pre>
+                </div>
+            </section>
+
+            <section id="integration">
+                <h2>Integration with Other Systems</h2>
+                <p>
+                    Visual Diff Merge can be integrated with other systems and applications.
+                </p>
+
+                <h3>Embedding in Your Application</h3>
+                <p>
+                    To embed Visual Diff Merge in your application:
+                </p>
+                <div class="code-block">
+                    <pre><code>&lt;!-- Include required CSS files --&gt;
+&lt;link rel="stylesheet" href="path/to/diff-viewer.min.css"&gt;
+&lt;link rel="stylesheet" href="path/to/diff-viewer-theme.min.css"&gt;
+
+&lt;!-- Create container for the diff viewer --&gt;
+&lt;div id="my-diff-container"&gt;&lt;/div&gt;
+
+&lt;!-- Include required JavaScript files --&gt;
+&lt;script src="path/to/diff-viewer.min.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+    // Initialize the diff viewer with your content
+    document.addEventListener('DOMContentLoaded', function() {
+        // Configuration object
+        const config = {
+            container: 'my-diff-container',
+            debug: false,
+            logLevel: 1,
+            old: {
+                type: 'text',
+                content: 'Old content here',
+                filename: 'old.txt'
+            },
+            new: {
+                type: 'text',
+                content: 'New content here',
+                filename: 'new.txt'
+            }
+        };
+
+        // Process diff on the server
+        fetch('path/to/api/diff-processor.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(config)
+        })
+        .then(response =&gt; response.json())
+        .then(result =&gt; {
+            if (result.success) {
+                // Merge the result config with our initial config
+                const mergedConfig = {...config, ...result.config};
+
+                // Initialize diff viewer
+                window.diffViewer = new DiffViewer(mergedConfig);
+                window.diffViewer.initialize();
+            } else {
+                console.error('Error processing diff:', result.error);
+            }
+        });
+    });
+&lt;/script&gt;</code></pre>
+                </div>
+
+                <h3>Creating Custom API Endpoints</h3>
+                <p>
+                    Create custom API endpoints to integrate with your system:
+                </p>
+                <div class="code-block">
+                    <pre><code>&lt;?php
+// custom-integration.php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use VisualDiffMerge\Config;
+use VisualDiffMerge\DiffViewer;
+use VisualDiffMerge\PathManager;
+
+// Initialize config
+Config::init();
+
+// Set JSON response headers
+header('Content-Type: application/json');
+
+// Get data from your system
+$oldVersion = yourSystem->getVersion('old');
+$newVersion = yourSystem->getVersion('current');
+
+// Create a DiffViewer instance
+$diffViewer = new DiffViewer([
+    'debug' => Config::isDebugEnabled(),
+    'diffContextLines' => Config::get('php.diff.contextLines'),
+    'ignoreWhitespace' => Config::get('php.diff.ignoreWhitespace'),
+    'ignoreCase' => Config::get('php.diff.ignoreCase')
+]);
+
+try {
+    // Process the diff
+    $diffData = $diffViewer->compareContent(
+        $oldVersion->content,
+        $newVersion->content,
+        $newVersion->fileExtension
+    );
+
+    // Create secure reference IDs
+    $pathManager = PathManager::getInstance();
+    $oldRefId = $pathManager->registerPath($oldVersion->filePath);
+    $newRefId = $pathManager->registerPath($newVersion->filePath);
+
+    // Prepare the response
+    $response = [
+        'success' => true,
+        'config' => [
+            'diffData' => $diffData,
+            'serverSaveEnabled' => true,
+            'fileRefId' => $newRefId,
+            'oldFileRefId' => $oldRefId,
+            'newFileName' => basename($newVersion->filePath),
+            'oldFileName' => basename($oldVersion->filePath),
+            'translations' => Config::getTranslations(Config::get('javascript.lang'))
+        ]
+    ];
+
+    echo json_encode($response);
+} catch (Exception $e) {
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
+}</code></pre>
+                </div>
+
+                <h3>Callbacks and Events</h3>
+                <p>
+                    Integrate with your system using callbacks:
+                </p>
+                <div class="code-block">
+                    <pre><code>// Set up event listeners after DiffViewer is initialized
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for diffViewer to be initialized
+    const checkDiffViewer = setInterval(() => {
+        if (window.diffViewer) {
+            clearInterval(checkDiffViewer);
+
+            // Listen for chunk selection
+            document.addEventListener('vdm:chunkSelected', function(event) {
+                console.log('Chunk selected:', event.detail);
+
+                // Integrate with your system
+                yourSystem.notifyChunkSelected(event.detail.chunkId, event.detail.side);
+            });
+
+            // Listen for merge completion
+            document.addEventListener('vdm:mergeCompleted', function(event) {
+                console.log('Merge completed:', event.detail);
+
+                // Integrate with your system
+                yourSystem.notifyMergeCompleted(event.detail.files);
+
+                // Navigate to a different page
+                setTimeout(() => {
+                    window.location.href = '/your-system/view?file=' + event.detail.files[0].filename;
+                }, 2000);
+            });
+        }
+    }, 100);
+});</code></pre>
+                </div>
+            </section>
+
+            <section id="custom-plugins">
+                <h2>Creating Plugins</h2>
+                <p>
+                    Create plugins to extend Visual Diff Merge with reusable functionality:
+                </p>
+
+                <h3>Plugin Architecture</h3>
+                <p>
+                    Follow this structure for Visual Diff Merge plugins:
+                </p>
+                <div class="code-block">
+                    <pre><code>// Visual Diff Merge Plugin Template
+(function(window) {
+    'use strict';
+
+    // Plugin constructor
+    function VDMPlugin(options = {}) {
+        this.name = 'MyCustomPlugin';
+        this.version = '1.0.0';
+        this.options = options;
+        this.diffViewer = null;
+    }
+
+    // Plugin prototype
+    VDMPlugin.prototype = {
+        /**
+         * Initialize the plugin
+         * @param {DiffViewer} diffViewer - The DiffViewer instance
+         * @returns {boolean} Success status
+         */
+        initialize: function(diffViewer) {
+            if (!diffViewer) {
+                console.error('DiffViewer instance is required');
+                return false;
+            }
+
+            this.diffViewer = diffViewer;
+            console.log(`${this.name} v${this.version} initialized`);
+
+            // Set up your plugin functionality
+            this.setupUI();
+            this.attachEventListeners();
+
+            return true;
+        },
+
+        /**
+         * Set up plugin UI
+         */
+        setupUI: function() {
+            // Create and insert your UI elements
+            const pluginContainer = document.createElement('div');
+            pluginContainer.classList.add('vdm-plugin-container');
+            pluginContainer.innerHTML = `
+                &lt;div class="vdm-plugin-header"&gt;${this.name}&lt;/div&gt;
+                &lt;div class="vdm-plugin-content"&gt;
+                    &lt;button class="vdm-btn vdm-plugin-btn"&gt;Plugin Action&lt;/button&gt;
+                &lt;/div&gt;
+            `;
+
+            // Insert into the diff viewer UI
+            const targetContainer = document.querySelector('.vdm-diff__controls');
+            if (targetContainer) {
+                targetContainer.appendChild(pluginContainer);
+            }
+        },
+
+        /**
+         * Attach event listeners
+         */
+        attachEventListeners: function() {
+            // Find your plugin button
+            const button = document.querySelector('.vdm-plugin-btn');
+            if (button) {
+                button.addEventListener('click', this.handleAction.bind(this));
+            }
+        },
+
+        /**
+         * Handle plugin action
+         * @param {Event} event - Click event
+         */
+        handleAction: function(event) {
+            console.log('Plugin action triggered');
+
+            // Example: Highlight all modified chunks
+            const modifiedChunks = this.diffViewer.getDiffData().chunks.filter(
+                chunk => chunk.type === 'modified'
+            );
+
+            modifiedChunks.forEach(chunk => {
+                // Do something with the chunk
+                console.log('Modified chunk:', chunk);
+            });
+
+            // Custom logic here
+        }
+    };
+
+    // Register plugin with Visual Diff Merge
+    window.registerVDMPlugin = function(diffViewer, options) {
+        const plugin = new VDMPlugin(options);
+        plugin.initialize(diffViewer);
+        return plugin;
+    };
+})(window);
+
+// Usage:
+// After DiffViewer is initialized
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for diffViewer to be initialized
+    const checkDiffViewer = setInterval(() => {
+        if (window.diffViewer) {
+            clearInterval(checkDiffViewer);
+
+            // Register the plugin
+            const plugin = window.registerVDMPlugin(window.diffViewer, {
+                // Plugin options
+                option1: 'value1',
+                option2: 'value2'
+            });
+        }
+    }, 100);
+});</code></pre>
+                </div>
+            </section>
+        </main>
+        </div>
+
+        <footer class="docs-footer">
+            <p>&copy; 2025 Visual Diff Merge - <a href="https://github.com/migliori/visual-diff-merge">GitHub Repository</a></p>
+        </footer>
+    </div>
+</body>
+</html>

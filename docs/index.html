@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Diff Merge - Documentation | Compare & Merge Code Files</title>
+    <meta name="description" content="Documentation for Visual Diff Merge - a powerful web-based tool for comparing and merging code files with syntax highlighting and intuitive visualization.">
+    <meta name="keywords" content="diff viewer, code comparison, merge tool, visual diff, documentation, file comparison">
+    <meta name="author" content="Visual Diff Merge">
+    <meta property="og:title" content="Visual Diff Merge - Documentation | Compare & Merge Code Files">
+    <meta property="og:description" content="Documentation for Visual Diff Merge - a powerful web-based tool for comparing and merging code files with visual tools.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://visual-diff-merge.miglisoft.com/docs/index.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Visual Diff Merge - Documentation | Compare & Merge Code Files">
+    <meta name="twitter:description" content="Documentation for Visual Diff Merge - a powerful web-based tool for comparing and merging code files with visual tools.">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Visual Diff Merge" />
+    <link rel="manifest" href="/site.webmanifest" /><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pavanam&display=swap">
+    <link rel="stylesheet" href="css/styles.min.css">
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!-- Global docs script -->
+    <script src="js/docs.js"></script>
+
+    <!-- Fancybox for image gallery -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+
+    <!-- Add CSS to your styles.css -->
+    <style>
+    .screenshot-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .screenshot-item {
+        margin: 0;
+        border-radius: 0;
+        overflow: hidden;
+        box-shadow: none;
+        background: white;
+        padding: 12px;
+        border: 1px solid #ddd;
+    }
+
+    .screenshot-gallery a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        cursor: pointer;
+    }
+
+    .screenshot {
+        width: 100%;
+        height: auto;
+        display: block;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        border: 1px solid #eee;
+    }
+
+    .screenshot-item figcaption {
+        padding: 0.75rem;
+        background: white;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #333;
+    }
+    </style>
+</head>
+<body>
+    <div class="docs-container">
+        <div class="top-nav">
+            <div class="top-nav-container">
+                <a href="https://github.com/migliori/visual-diff-merge" target="_blank" class="top-nav-link">GitHub</a>
+                <a href="/docs/" class="top-nav-link">Documentation</a>
+                <a href="/diff-viewer/" class="top-nav-link">Visual Diff Merge</a>
+            </div>
+        </div>
+
+        <header class="docs-header">
+            <h1>Visual Diff Merge</h1>
+            <p class="tagline">A powerful visual diff and merge tool for the web</p>
+        </header>
+
+        <nav class="docs-nav">
+            <ul>
+                <li class="active"><a href="index.html">Overview</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="usage.html">Usage</a></li>
+                <li><a href="customization.html">Customization</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="architecture.html">Architecture</a></li>
+                <li><a href="/diff-viewer/">Visual Diff Merge</a></li>
+            </ul>
+        </nav>
+
+        <div class="docs-content-wrapper">
+            <aside class="docs-sidebar">
+                <h3>On This Page</h3>
+                <ul>
+                    <li><a href="#introduction">Introduction</a></li>
+                    <li><a href="#screenshots">Screenshots</a></li>
+                    <li><a href="#key-features">Key Features</a></li>
+                    <li><a href="#quick-start">Quick Start</a></li>
+                    <li><a href="#configuration-intro">Configuration</a></li>
+                    <li><a href="#getting-help">Getting Help</a></li>
+                    <li><a href="#documentation-overview">Documentation Overview</a></li>
+                </ul>
+            </aside>
+
+            <main class="docs-content">
+            <section id="introduction">
+                <h2>Introduction</h2>
+                <p>
+                    Visual Diff Merge is a powerful web-based tool for comparing and merging text files and content.
+                    It provides a user-friendly interface for visualizing differences between versions of code, text files,
+                    or content from URLs, and offers intuitive merge capabilities.
+                </p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h3>Advanced Diff Visualization</h3>
+                        <p>
+                            Clearly see additions, deletions, and modifications with synchronized scrolling
+                            and intelligent <a href="usage.html#navigation">chunk navigation</a>.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Multiple Content Sources</h3>
+                        <p>
+                            Compare content from <a href="usage.html#file-browser-mode">files</a>, <a href="usage.html#text-compare-mode">direct text input</a>, or <a href="usage.html#url-compare-mode">URLs</a> with a consistent interface.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Interactive Merge</h3>
+                        <p>
+                            Resolve conflicts and merge changes with an intuitive <a href="usage.html#merge-operations">user interface</a>.
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Syntax Highlighting</h3>
+                        <p>
+                            Automatic language detection and <a href="customization.html#styling">syntax highlighting</a> for over 180 programming languages.
+                        </p>
+                    </div>
+                </div>
+
+            </section>
+
+            <section id="screenshots">
+                <h2>Screenshots</h2>
+                <p>Here are some screenshots of Visual Diff Merge in action:</p>
+                <div class="screenshot-gallery">
+                    <a href="images/screenshots/file-browser.png" data-fancybox="gallery"
+                           data-caption="File Browser Mode - Browse and compare server-side files">
+                            <figure class="screenshot-item">
+                                <img src="images/screenshots/thumbs/file-browser-thumb.jpg" alt="File Browser Mode"
+                                     class="screenshot" loading="lazy" width="400" height="225">
+                                <figcaption>File Browser Mode</figcaption>
+                            </figure>
+                        </a>
+
+                    <a href="images/screenshots/file-upload.png" data-fancybox="gallery"
+                           data-caption="File Upload Mode - Upload and compare local files">
+                            <figure class="screenshot-item">
+                                <img src="images/screenshots/thumbs/file-upload-thumb.jpg" alt="File Upload Mode"
+                                     class="screenshot" loading="lazy" width="400" height="225">
+                                <figcaption>File Upload Mode</figcaption>
+                            </figure>
+                        </a>
+
+                    <a href="images/screenshots/text-compare.png" data-fancybox="gallery"
+                           data-caption="Text Compare Mode - Directly compare text snippets">
+                            <figure class="screenshot-item">
+                                <img src="images/screenshots/thumbs/text-compare-thumb.jpg" alt="Text Compare Mode"
+                                     class="screenshot" loading="lazy" width="400" height="225">
+                                <figcaption>Text Compare Mode</figcaption>
+                            </figure>
+                        </a>
+
+                    <a href="images/screenshots/url-compare.png" data-fancybox="gallery"
+                           data-caption="URL Compare Mode - Compare content from web URLs">
+                            <figure class="screenshot-item">
+                                <img src="images/screenshots/thumbs/url-compare-thumb.jpg" alt="URL Compare Mode"
+                                     class="screenshot" loading="lazy" width="400" height="225">
+                                <figcaption>URL Compare Mode</figcaption>
+                            </figure>
+                        </a>
+                </div>
+                <p>Click on any screenshot to view it in fullscreen mode.</p>
+            </section>
+
+            <section id="key-features">
+                <h2>Key Features</h2>
+                <ul class="feature-list">
+                    <li>
+                        <strong>Multiple Operation Modes</strong>
+                        <p>
+                            Support for four distinct modes: File Browser (server files), File Upload (local files),
+                            Text Compare (direct input), and URL Compare (web content).
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Intelligent Diff Algorithm</strong>
+                        <p>
+                            Accurate difference detection with configurable context lines, whitespace handling,
+                            and case sensitivity options.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Real-time Syntax Highlighting</strong>
+                        <p>
+                            Automatic language detection and syntax highlighting powered by highlight.js
+                            with support for light and dark themes.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Chunk-based Navigation</strong>
+                        <p>
+                            Easily navigate between changes with next/previous buttons and visual indicators.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Interactive Merge Tools</strong>
+                        <p>
+                            Resolve conflicts by selecting chunks from either side or custom edits.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Multiple Save Options</strong>
+                        <p>
+                            Save merged content to original files or as new files with various options.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Responsive Design</strong>
+                        <p>
+                            Works on desktop and tablets with adaptive layout for different screen sizes.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Customizable UI</strong>
+                        <p>
+                            Extensive styling options and theme customization capabilities.
+                        </p>
+                    </li>
+                    <li>
+                        <strong>Multilingual Support</strong>
+                        <p>
+                            Built-in translations with easy extension to additional languages.
+                        </p>
+                    </li>
+                </ul>
+            </section>
+
+            <section id="quick-start">
+                <h2>Quick Start</h2>
+
+                <h3>Option 1: Quick Setup with Pre-compiled Files</h3>
+                <p>
+                    For a quick setup without needing to compile anything:
+                </p>
+                <div class="code-block">
+                    <pre><code>git clone https://github.com/migliori/visual-diff-merge.git
+
+# Navigate to the project directory
+cd visual-diff-merge
+
+# Install PHP dependencies only
+composer install --no-dev</code></pre>
+                </div>
+                <p>
+                    All pre-compiled JavaScript and CSS files are already included in the <code>dist/</code> directory,
+                    so you can start using the tool right away.
+                </p>
+
+                <h3>Option 2: Development Setup</h3>
+                <p>
+                    If you want to modify the source code:
+                </p>
+                <div class="code-block">
+                    <pre><code>git clone https://github.com/migliori/visual-diff-merge.git
+
+# Navigate to the project directory
+cd visual-diff-merge
+
+# Install all dependencies
+composer install
+npm install
+
+# Compile assets for development
+npm run compile-scss</code></pre>
+                </div>
+
+                <p>
+                    For detailed setup instructions, refer to the <a href="installation.html">Installation Guide</a>.
+                </p>
+
+                <p>
+                    After installation, you can use Visual Diff Merge in one of the four operation modes:
+                </p>
+
+                <div class="mode-cards">
+                    <div class="mode-card">
+                        <h3>File Browser Mode</h3>
+                        <p>Browse and compare server files</p>
+                        <a href="usage.html#file-browser-mode" class="mode-link">Learn more →</a>
+                    </div>
+                    <div class="mode-card">
+                        <h3>File Upload Mode</h3>
+                        <p>Upload and compare local files</p>
+                        <a href="usage.html#file-upload-mode" class="mode-link">Learn more →</a>
+                    </div>
+                    <div class="mode-card">
+                        <h3>Text Compare Mode</h3>
+                        <p>Compare text snippets directly</p>
+                        <a href="usage.html#text-compare-mode" class="mode-link">Learn more →</a>
+                    </div>
+                    <div class="mode-card">
+                        <h3>URL Compare Mode</h3>
+                        <p>Compare content from URLs</p>
+                        <a href="usage.html#url-compare-mode" class="mode-link">Learn more →</a>
+                    </div>
+                </div>
+
+                <p>
+                    For a complete setup guide, see the <a href="installation.html">Installation</a> page.
+                </p>
+            </section>
+
+            <section id="configuration-intro">
+                <h2>Configuration</h2>
+                <p>
+                    Visual Diff Merge is highly configurable through the <code>api/config.php</code> file.
+                    You can customize:
+                </p>
+                <ul>
+                    <li>Diff generation settings (context lines, whitespace handling, etc.)</li>
+                    <li>UI appearance and themes</li>
+                    <li>Default language and translations</li>
+                    <li>Security settings and allowed directories</li>
+                    <li>Debug settings and logging</li>
+                </ul>
+                <p>
+                    For detailed configuration options, see the <a href="customization.html">Customization</a> page.
+                </p>
+            </section>
+
+            <section id="getting-help">
+                <h2>Getting Help</h2>
+                <p>
+                    Visual Diff Merge is open-source software. If you need help or want to contribute:
+                </p>
+                <ul>
+                    <li>
+                        <strong>GitHub Repository</strong>: <a href="https://github.com/migliori/visual-diff-merge" target="_blank">https://github.com/migliori/visual-diff-merge</a>
+                    </li>
+                    <li>
+                        <strong>Issue Tracker</strong>: <a href="https://github.com/migliori/visual-diff-merge/issues" target="_blank">Report bugs or request features</a>
+                    </li>
+                    <li>
+                        <strong>Documentation</strong>: This documentation is your comprehensive guide to Visual Diff Merge
+                    </li>
+                </ul>
+            </section>
+
+            <section id="documentation-overview">
+                <h2>Documentation Overview</h2>
+                <div class="doc-sections">
+                    <div class="doc-section">
+                        <h3><a href="installation.html">Installation</a></h3>
+                        <p>How to install and set up Visual Diff Merge</p>
+                        <ul>
+                            <li>Prerequisites</li>
+                            <li>Installation steps</li>
+                            <li>Server configuration</li>
+                            <li>Troubleshooting</li>
+                        </ul>
+                    </div>
+                    <div class="doc-section">
+                        <h3><a href="usage.html">Usage</a></h3>
+                        <p>How to use Visual Diff Merge in different modes</p>
+                        <ul>
+                            <li>File browser mode</li>
+                            <li>File upload mode</li>
+                            <li>Text compare mode</li>
+                            <li>URL compare mode</li>
+                        </ul>
+                    </div>
+                    <div class="doc-section">
+                        <h3><a href="customization.html">Customization</a></h3>
+                        <p>How to customize Visual Diff Merge</p>
+                        <ul>
+                            <li>Configuration settings</li>
+                            <li>Styling</li>
+                            <li>Translations</li>
+                            <li>Extensions</li>
+                        </ul>
+                    </div>
+                    <div class="doc-section">
+                        <h3><a href="api.html">API</a></h3>
+                        <p>API reference and integration</p>
+                        <ul>
+                            <li>Endpoint documentation</li>
+                            <li>Request/response formats</li>
+                            <li>Security considerations</li>
+                            <li>Integration diff-viewer</li>
+                        </ul>
+                    </div>
+                    <div class="doc-section">
+                        <h3><a href="architecture.html">Architecture</a></h3>
+                        <p>Technical architecture and design</p>
+                        <ul>
+                            <li>System components</li>
+                            <li>Data flow</li>
+                            <li>Initialization sequence</li>
+                            <li>Extension points</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+        </div>
+
+        <footer class="docs-footer">
+            <p>&copy; 2025 Visual Diff Merge - <a href="https://github.com/migliori/visual-diff-merge">GitHub Repository</a></p>
+        </footer>
+    </div>
+
+    <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize Fancybox
+                Fancybox.bind("[data-fancybox]", {
+                    Carousel: {
+                        infinite: true,
+                    },
+                    Thumbs: {
+                        autoStart: true,
+                    }
+                });
+            });
+    </script>
+</body>
+</html>

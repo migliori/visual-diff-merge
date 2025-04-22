@@ -1,0 +1,49 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/color-system' as colors;
+
+// Styling for placeholder lines
+.vdm-diff__line--placeholder {
+  display: block;
+  background: colors.stripe-gradient(vars.$delete-color);
+  min-height: 1.5em;
+  border-left: 4px solid transparent;
+  position: relative;
+
+  // Add group-hover class to all hover states
+  &:not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected):hover,
+  &.vdm-diff__group-hover:not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected) {
+    background: colors.selected-stripe-gradient(vars.$delete-color);
+    border-left: 4px solid colors.selected-border(vars.$delete-color);
+  }
+
+  &.vdm-diff__chunk--selected {
+    background: colors.selected-stripe-gradient(vars.$delete-color) !important;
+    border-left: 4px solid colors.selected-border(vars.$delete-color) !important;
+  }
+
+  &.vdm-diff__chunk--unselected {
+    background: colors.unselected-stripe-gradient(vars.$delete-color) !important;
+    border-left: 4px solid colors.selected-border(vars.$neutral-color) !important;
+    opacity: 0.7;
+    filter: grayscale(70%);
+  }
+
+  // Alignment placeholders
+  &[data-placeholder-type="alignment"] {
+    &.vdm-diff__chunk--unselected {
+      background: colors.unselected-stripe-gradient(vars.$alignment-color) !important;
+      border-left: 4px solid colors.selected-border(vars.$neutral-color) !important;
+      opacity: 0.7;
+      filter: grayscale(70%);
+    }
+  }
+}
+
+// Also add this class for empty-line placeholders
+.vdm-code__line-content.vdm-code__line--empty.vdm-diff__line--placeholder {
+  &:not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected):hover,
+  &.vdm-diff__group-hover:not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected) {
+    background: colors.selected-stripe-gradient(vars.$delete-color);
+    border-left: 4px solid colors.selected-border(vars.$delete-color);
+  }
+}

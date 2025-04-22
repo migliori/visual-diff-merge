@@ -1,0 +1,472 @@
+// Bootstrap-like utility classes
+// These provide commonly used functionality similar to Bootstrap utilities
+// All classes are prefixed with 'vdm-' for namespace isolation
+
+@use '../abstracts/variables' as vars;
+
+// Display utilities
+.vdm-d-flex {
+  display: flex !important;
+}
+
+.vdm-d-inline-flex {
+  display: inline-flex !important;
+}
+
+.vdm-d-block {
+  display: block !important;
+}
+
+.vdm-d-inline-block {
+  display: inline-block !important;
+}
+
+.vdm-d-none {
+  display: none !important;
+}
+
+// Form input groups (like Bootstrap input groups)
+.vdm-input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  width: 100%;
+  border-radius: vars.$border-radius;
+  overflow: hidden;
+
+  > .vdm-input-group__prepend {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    position: relative;
+    z-index: 2;
+  }
+
+  > .vdm-input-group__append {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    margin-left: -1px; // Eliminate double border effect
+  }
+}
+
+// Auto-width select control
+.vdm-select-auto-width {
+  width: auto;
+  min-width: 150px;
+  max-width: 350px;
+}
+
+// Form control styles
+.form-select {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  appearance: none;
+}
+
+.form-select-sm {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 0.5rem;
+  font-size: 0.875rem;
+}
+
+// Flex utilities
+.vdm-flex-column {
+  flex-direction: column !important;
+}
+
+.vdm-flex-row {
+  flex-direction: row !important;
+}
+
+.vdm-flex-wrap {
+  flex-wrap: wrap !important;
+}
+
+.vdm-flex-nowrap {
+  flex-wrap: nowrap !important;
+}
+
+.vdm-flex-fill {
+  flex: 1 1 auto !important;
+}
+
+.vdm-flex-grow-0 {
+  flex-grow: 0 !important;
+}
+
+.vdm-flex-grow-1 {
+  flex-grow: 1 !important;
+}
+
+.vdm-flex-shrink-0 {
+  flex-shrink: 0 !important;
+}
+
+.vdm-flex-shrink-1 {
+  flex-shrink: 1 !important;
+}
+
+// Flex alignment
+.vdm-justify-content-start {
+  justify-content: flex-start !important;
+}
+
+.vdm-justify-content-end {
+  justify-content: flex-end !important;
+}
+
+.vdm-justify-content-center {
+  justify-content: center !important;
+}
+
+.vdm-justify-content-between {
+  justify-content: space-between !important;
+}
+
+.vdm-justify-content-around {
+  justify-content: space-around !important;
+}
+
+.vdm-align-items-start {
+  align-items: flex-start !important;
+}
+
+.vdm-align-items-end {
+  align-items: flex-end !important;
+}
+
+.vdm-align-items-center {
+  align-items: center !important;
+}
+
+.vdm-align-items-baseline {
+  align-items: baseline !important;
+}
+
+.vdm-align-items-stretch {
+  align-items: stretch !important;
+}
+
+.vdm-align-self-start {
+  align-self: flex-start !important;
+}
+
+.vdm-align-self-end {
+  align-self: flex-end !important;
+}
+
+.vdm-align-self-center {
+  align-self: center !important;
+}
+
+.vdm-align-self-baseline {
+  align-self: baseline !important;
+}
+
+.vdm-align-self-stretch {
+  align-self: stretch !important;
+}
+
+// Spacing utilities - using a consistent spacing scale
+// The number indicates the size (0.25rem * n)
+// 0 = 0, 1 = 0.25rem, 2 = 0.5rem, 3 = 1rem, 4 = 1.5rem, 5 = 3rem
+
+// Margins
+.vdm-m-0 {
+  margin: 0 !important;
+}
+
+.vdm-m-1 {
+  margin: 0.25rem !important;
+}
+
+.vdm-m-2 {
+  margin: 0.5rem !important;
+}
+
+.vdm-m-3 {
+  margin: 1rem !important;
+}
+
+.vdm-m-4 {
+  margin: 1.5rem !important;
+}
+
+.vdm-m-5 {
+  margin: 3rem !important;
+}
+
+// Margin Top
+.vdm-mt-0 {
+  margin-top: 0 !important;
+}
+
+.vdm-mt-1 {
+  margin-top: 0.25rem !important;
+}
+
+.vdm-mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.vdm-mt-3 {
+  margin-top: 1rem !important;
+}
+
+.vdm-mt-4 {
+  margin-top: 1.5rem !important;
+}
+
+// Margin Bottom
+.vdm-mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.vdm-mb-1 {
+  margin-bottom: 0.25rem !important;
+}
+
+.vdm-mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+.vdm-mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+.vdm-mb-4 {
+  margin-bottom: 1.5rem !important;
+}
+
+// Margin Start (Left in LTR)
+.vdm-ms-0 {
+  margin-left: 0 !important;
+}
+
+.vdm-ms-1 {
+  margin-left: 0.25rem !important;
+}
+
+.vdm-ms-2 {
+  margin-left: 0.5rem !important;
+}
+
+.vdm-ms-3 {
+  margin-left: 1rem !important;
+}
+
+// Margin End (Right in LTR)
+.vdm-me-0 {
+  margin-right: 0 !important;
+}
+
+.vdm-me-1 {
+  margin-right: 0.25rem !important;
+}
+
+.vdm-me-2 {
+  margin-right: 0.5rem !important;
+}
+
+.vdm-me-3 {
+  margin-right: 1rem !important;
+}
+
+// Paddings
+.vdm-p-0 {
+  padding: 0 !important;
+}
+
+.vdm-p-1 {
+  padding: 0.25rem !important;
+}
+
+.vdm-p-2 {
+  padding: 0.5rem !important;
+}
+
+.vdm-p-3 {
+  padding: 1rem !important;
+}
+
+// Padding Top
+.vdm-pt-0 {
+  padding-top: 0 !important;
+}
+
+.vdm-pt-1 {
+  padding-top: 0.25rem !important;
+}
+
+.vdm-pt-2 {
+  padding-top: 0.5rem !important;
+}
+
+.vdm-pt-3 {
+  padding-top: 1rem !important;
+}
+
+// Padding Bottom
+.vdm-pb-0 {
+  padding-bottom: 0 !important;
+}
+
+.vdm-pb-1 {
+  padding-bottom: 0.25rem !important;
+}
+
+.vdm-pb-2 {
+  padding-bottom: 0.5rem !important;
+}
+
+.vdm-pb-3 {
+  padding-bottom: 1rem !important;
+}
+
+// Padding Start (Left in LTR)
+.vdm-ps-0 {
+  padding-left: 0 !important;
+}
+
+.vdm-ps-1 {
+  padding-left: 0.25rem !important;
+}
+
+.vdm-ps-2 {
+  padding-left: 0.5rem !important;
+}
+
+.vdm-ps-3 {
+  padding-left: 1rem !important;
+}
+
+// Padding End (Right in LTR)
+.vdm-pe-0 {
+  padding-right: 0 !important;
+}
+
+.vdm-pe-1 {
+  padding-right: 0.25rem !important;
+}
+
+.vdm-pe-2 {
+  padding-right: 0.5rem !important;
+}
+
+.vdm-pe-3 {
+  padding-right: 1rem !important;
+}
+
+// Text alignment
+.vdm-text-start {
+  text-align: left !important;
+}
+
+.vdm-text-end {
+  text-align: right !important;
+}
+
+.vdm-text-center {
+  text-align: center !important;
+}
+
+// Text transformation
+.vdm-text-lowercase {
+  text-transform: lowercase !important;
+}
+
+.vdm-text-uppercase {
+  text-transform: uppercase !important;
+}
+
+.vdm-text-capitalize {
+  text-transform: capitalize !important;
+}
+
+// Text wrapping
+.vdm-text-nowrap {
+  white-space: nowrap !important;
+}
+
+.vdm-text-break {
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+// Text colors
+.vdm-text-primary {
+  color: vars.$primary !important;
+}
+
+.vdm-text-secondary {
+  color: vars.$secondary !important;
+}
+
+.vdm-text-success {
+  color: vars.$success !important;
+}
+
+.vdm-text-info {
+  color: vars.$info !important;
+}
+
+.vdm-text-warning {
+  color: vars.$warning !important;
+}
+
+.vdm-text-danger {
+  color: vars.$danger !important;
+}
+
+.vdm-text-light {
+  color: vars.$light !important;
+}
+
+.vdm-text-dark {
+  color: vars.$dark !important;
+}
+
+// Position utilities
+.vdm-position-relative {
+  position: relative !important;
+}
+
+.vdm-position-absolute {
+  position: absolute !important;
+}
+
+// Width and height utilities
+.vdm-w-100 {
+  width: 100% !important;
+}
+
+.vdm-h-100 {
+  height: 100% !important;
+}
+
+// Overflow
+.vdm-overflow-hidden {
+  overflow: hidden !important;
+}
+
+// Visibility
+.vdm-visible {
+  visibility: visible !important;
+}
+
+.vdm-invisible {
+  visibility: hidden !important;
+}

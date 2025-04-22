@@ -1,0 +1,135 @@
+@use 'sass:list'; // Add this line to use Sass list functions
+@use 'variables' as vars;
+
+// Utility mixins and functions
+
+@mixin scrollbar-styling {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+@mixin truncate-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Transition mixins - properly handling single and multiple properties
+@mixin transition-quick($property: all) {
+  // Remove quotes if present (using string literal without quotes)
+  transition: #{$property} vars.$transition-quick;
+}
+
+@mixin transition-normal($property: all) {
+  transition: #{$property} vars.$transition-normal;
+}
+
+@mixin transition-slow($property: all) {
+  transition: #{$property} vars.$transition-slow;
+}
+
+// For multiple properties version
+@mixin transition-properties($properties, $duration) {
+  $transitions: ();
+  @each $prop in $properties {
+    $transitions: list.append($transitions, #{$prop} $duration, comma);
+  }
+  transition: $transitions;
+}
+
+// Hover transition with standard properties
+@mixin transition-hover {
+  @include transition-properties(vars.$transition-properties-hover, vars.$transition-normal);
+}
+
+// Theme transition with standard properties
+@mixin transition-theme {
+  @include transition-properties(vars.$transition-properties-theme, vars.$transition-slow);
+}
+
+@keyframes highlight-pulse {
+  0% {
+    background-color: rgba(var(--highlight-color-rgb), 0.7);
+  }
+  50% {
+    background-color: rgba(var(--highlight-color-rgb), 0.3);
+  }
+  100% {
+    background-color: rgba(var(--highlight-color-rgb), 0.7);
+  }
+}
+
+// Text wrapping utilities
+.vdm-nowrap {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  min-width: fit-content;
+}
+
+// Add utility class for input groups with clean adjoining edges
+.vdm-input-group {
+  display: flex;
+  align-items: stretch;
+
+  .vdm-input-group__prepend {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: 0;
+  }
+
+  .vdm-input-group__append {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: 0;
+  }
+}
+
+// Auto-width select
+.vdm-select-auto-width {
+  width: auto;
+}
+
+.vdm-highlight {
+  position: relative;
+  z-index: 1;
+
+  --highlight-color-rgb: 255, 193, 7;
+
+  .vdm-theme--light & {
+    --highlight-color-rgb: 255, 193, 7;
+  }
+
+  .vdm-theme--dark & {
+    --highlight-color-rgb: 255, 202, 40;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(var(--highlight-color-rgb), 0.5);
+    pointer-events: none;
+    z-index: -1;
+    animation: highlight-pulse 1s ease-in-out infinite;
+  }
+}

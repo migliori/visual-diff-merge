@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual-Diff-Merge - Visual Code Comparison Tool</title>
+    <meta name="description" content="Compare and merge code files visually with syntax highlighting. Visual-Diff-Merge provides multiple comparison methods: file browser, file upload, text comparison, and URL comparison.">
+    <meta name="keywords" content="visual diff, code comparison, merge tool, diff viewer, syntax highlighting">
+    <meta name="author" content="Visual-Diff-Merge">
+    <!-- No canonical URL to allow flexible hosting -->
+    <meta property="og:title" content="Visual-Diff-Merge - Visual Code Comparison Tool">
+    <meta property="og:description" content="Compare and merge code files visually with syntax highlighting in multiple ways.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://visual-diff-merge.miglisoft.com/diff-viewer/index.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Visual-Diff-Merge - Visual Code Comparison Tool">
+    <meta name="twitter:description" content="Compare and merge code files visually with syntax highlighting in multiple ways.">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Visual Diff Merge" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pavanam&display=swap">
+    <link rel="stylesheet" href="css/styles.min.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Visual-Diff-Merge",
+        "description": "Compare and merge code files visually with syntax highlighting",
+        "applicationCategory": "DeveloperApplication",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+</head>
+<body>
+    <div class="top-nav">
+        <div class="top-nav-container">
+            <a href="https://github.com/migliori/visual-diff-merge" target="_blank" class="top-nav-link">GitHub</a>
+            <a href="/docs/" class="top-nav-link">Documentation</a>
+            <a href="/diff-viewer/" class="top-nav-link">Visual Diff Merge</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Diff Viewer</h1>
+
+        <p>Welcome to the Visual-Diff-Merge Diff Viewer page. Choose a Diff Viewer mode below to get started:</p>
+
+        <div class="diff-viewer-grid">
+            <div class="example-card">
+                <h2>File Browser</h2>
+                <div class="card-content">
+                    <p>Compare files from a predefined list of sample files.</p>
+                    <p>Uses PHP to dynamically scan directories for available files.</p>
+                </div>
+                <a href="file-browser.php" class="example-link">Try File Browser</a>
+            </div>
+
+            <div class="example-card">
+                <h2>File Upload</h2>
+                <div class="card-content">
+                    <p>Compare files by uploading them from your computer.</p>
+                    <p>Upload and compare any two files with syntax highlighting.</p>
+                </div>
+                <a href="file-upload.html" class="example-link">Try File Upload</a>
+            </div>
+
+            <div class="example-card">
+                <h2>Text Compare</h2>
+                <div class="card-content">
+                    <p>Compare code snippets or text directly.</p>
+                    <p>Paste code into text areas and compare with syntax highlighting.</p>
+                </div>
+                <a href="text-compare.html" class="example-link">Try Text Compare</a>
+            </div>
+
+            <div class="example-card">
+                <h2>URL Compare</h2>
+                <div class="card-content">
+                    <p>Compare URLs.</p>
+                    <p>Fetch and compare any URL.</p>
+                </div>
+                <a href="url-compare.html" class="example-link">Try URL Compare</a>
+            </div>
+        </div>
+
+        <footer class="footer-sticky">
+            <p><a href="https://github.com/migliori/visual-diff-merge">View on GitHub</a></p>
+        </footer>
+    </div>
+</body>
+</html>

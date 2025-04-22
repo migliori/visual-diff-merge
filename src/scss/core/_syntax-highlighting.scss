@@ -1,0 +1,48 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/utilities' as utils;
+@use '../core/scrollbar' as scroll;
+
+// Line numbers styling for preview mode
+.vdm-code__line-numbers .vdm-code__line-numbers-rows {
+  border-right: 1px solid #999;
+  padding-right: 10px;
+}
+
+// Base syntax highlighting styles
+pre code.hljs {
+  display: inline-block !important; // Override display:block
+  white-space: pre !important;
+  tab-size: 4;
+  padding: 0 !important; // Override default 1em padding
+  overflow-x: visible !important; // Let parent handle scrolling
+}
+
+// Apply scrollbar styling to code blocks using the mixin
+pre {
+  @include scroll.scrollbar-styling;
+}
+
+// Fix all syntax highlighting elements to prevent them from breaking layout
+.hljs-keyword,
+.hljs-string,
+.hljs-number,
+.hljs-comment,
+.hljs-tag,
+.hljs-name,
+.hljs-attr,
+.hljs-built_in,
+.hljs-literal,
+.hljs-meta,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-tag,
+.hljs-attribute,
+.hljs-function,
+.hljs-section,
+.hljs-title,
+.hljs-type {
+  display: inline !important;
+  white-space: pre !important;
+  max-width: none !important; // Let these flow naturally
+  line-height: inherit !important;
+}

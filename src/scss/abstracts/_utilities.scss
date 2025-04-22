@@ -1,0 +1,29 @@
+// Forward shared utilities
+@forward '../../../scss-shared/abstracts/utilities';
+
+// Mozilla-specific scrollbar styling that needs to be at the global level
+@-moz-document url-prefix() {
+  .vdm-diff__pane, .vdm-code__line-content, pre {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  }
+}
+
+// Application-specific utilities
+#vdm-merge-controls__toggle-btn {
+    cursor: pointer;
+    min-width: 140px;
+    text-align: left;
+    transition: all 0.35s ease-in-out;
+    font-weight: 500;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    &:hover {
+        opacity: 0.9;
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}

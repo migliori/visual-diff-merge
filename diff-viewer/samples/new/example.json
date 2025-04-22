@@ -1,0 +1,53 @@
+{
+  "name": "project-config",
+  "version": "1.2.0",
+  "description": "Enhanced project configuration",
+  "settings": {
+    "theme": "auto",
+    "language": "en",
+    "notifications": true,
+    "analytics": true,
+    "autoSave": {
+      "enabled": true,
+      "interval": 60
+    },
+    "accessibility": {
+      "highContrast": false,
+      "fontSize": "medium",
+      "reduceAnimations": false
+    }
+  },
+  "features": [
+    "user-management",
+    "file-upload",
+    "reporting",
+    "real-time-collaboration",
+    "api-integration",
+    "advanced-search"
+  ],
+  "database": {
+    "host": "db.example.com",
+    "port": 3306,
+    "name": "app_db",
+    "replicaSet": {
+      "enabled": true,
+      "nodes": ["node1.example.com", "node2.example.com"]
+    }
+  },
+  "cache": {
+    "enabled": true,
+    "provider": "redis",
+    "ttl": 3600
+  },
+  "security": {
+    "authentication": {
+      "mfa": true,
+      "sessionTimeout": 3600
+    },
+    "rateLimit": {
+      "enabled": true,
+      "maxRequests": 100,
+      "timeWindow": 60
+    }
+  }
+}

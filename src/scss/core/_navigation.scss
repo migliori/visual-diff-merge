@@ -1,0 +1,148 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/utilities' as utils;
+@use '../abstracts/color-system' as colors;
+
+// Diff navigation controls - COMPACT & DRAGGABLE
+.vdm-nav__controls {
+  position: absolute;
+  bottom: 100px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  width: auto;
+  max-width: 140px; // Limit width
+  background-color: rgba(vars.$background-light, 0.5); // More transparent
+  border: 1px solid vars.$border-color;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  @include utils.transition-properties((background-color, opacity, box-shadow), vars.$transition-slow);
+  backdrop-filter: blur(3px);
+  cursor: move; // Indicates it's draggable
+  user-select: none; // Prevents text selection
+
+  // Add dragging handle
+  &:before {
+    content: "⋮⋮"; // Double vertical ellipsis
+    font-size: 14px;
+    color: vars.$text-dark;
+    opacity: 0.6;
+    margin-right: 8px;
+    cursor: move;
+  }
+
+  // More opaque on hover
+  &:hover {
+    background-color: rgba(vars.$background-light, 0.85);
+  }
+
+  // Class added while dragging
+  &.dragging {
+    opacity: 0.8;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .vdm-nav__chunk {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
+
+// Navigation buttons
+.vdm-navigator__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; // Smaller
+  height: 28px; // Smaller
+  background-color: transparent;
+  color: vars.$text-dark;
+  border: 1px solid vars.$border-color;
+  border-radius: 4px;
+  cursor: pointer;
+  @include utils.transition-properties((background-color, border-color, color), vars.$transition-normal);
+  font-size: 12px; // Smaller
+  padding: 0;
+
+  &:hover:not(:disabled) {
+    background-color: colors.hover-bg(vars.$neutral-color);
+    border-color: colors.hover-border(vars.$neutral-color);
+  }
+
+  &:active:not(:disabled) {
+    background-color: colors.selected-bg(vars.$neutral-color);
+    border-color: colors.selected-border(vars.$neutral-color);
+  }
+
+  &:focus {
+    outline: 2px solid colors.selected-bg(vars.$replace-color);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  // Ensure SVG icons inherit button color
+  .vdm-icon {
+    fill: currentColor;
+    color: inherit;
+  }
+}
+
+// Counter display
+.vdm-navigator__counter {
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 36px;
+  text-align: center;
+  color: vars.$text-dark;
+  padding: 0 4px;
+  user-select: none;
+}
+
+// Dark theme adjustments
+.vdm-theme--dark {
+  .vdm-nav__controls {
+    background-color: rgba(vars.$background-dark, 0.6);
+    border-color: vars.$border-color-dark;
+
+    &:before {
+      color: vars.$text-light;
+    }
+
+    &:hover {
+      background-color: rgba(vars.$background-dark, 0.85);
+    }
+  }
+
+  .vdm-navigator__button,
+  #vdm-nav__button--prev,
+  #vdm-nav__button--next {
+    color: vars.$text-light;
+    border-color: vars.$border-color-dark;
+
+    &:hover:not(:disabled) {
+      background-color: colors.hover-bg(vars.$neutral-color);
+    }
+
+    .vdm-icon {
+      fill: currentColor;
+      color: inherit;
+    }
+  }
+
+  .vdm-navigator__counter {
+    color: vars.$text-light;
+  }
+}
+
+// Completion symbol
+#vdm-nav__counter:empty::before {
+  content: "✓";
+  color: vars.$add-color;
+}

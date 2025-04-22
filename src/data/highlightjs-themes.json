@@ -1,0 +1,218 @@
+{
+  "a11y": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/a11y-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/a11y-light.min.css"
+  },
+  "atom-one": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/atom-one-light.min.css"
+  },
+  "gradient": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/gradient-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/gradient-light.min.css"
+  },
+  "isbl-editor": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/isbl-editor-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/isbl-editor-light.min.css"
+  },
+  "kimbie": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/kimbie-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/kimbie-light.min.css"
+  },
+  "nnfx": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/nnfx-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/nnfx-light.min.css"
+  },
+  "panda-syntax": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/panda-syntax-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/panda-syntax-light.min.css"
+  },
+  "paraiso": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/paraiso-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/paraiso-light.min.css"
+  },
+  "qtcreator": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/qtcreator-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/qtcreator-light.min.css"
+  },
+  "stackoverflow": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/stackoverflow-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/stackoverflow-light.min.css"
+  },
+  "tokyo-night": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/tokyo-night-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/tokyo-night-light.min.css"
+  },
+  "rose-pine": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/rose-pine-moon.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/rose-pine-dawn.min.css"
+  },
+  "atelier-cave": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-cave.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-cave-light.min.css"
+  },
+  "atelier-dune": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-dune.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-dune-light.min.css"
+  },
+  "atelier-estuary": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-estuary.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-estuary-light.min.css"
+  },
+  "atelier-forest": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-forest.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-forest-light.min.css"
+  },
+  "atelier-heath": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-heath.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-heath-light.min.css"
+  },
+  "atelier-lakeside": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-lakeside.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-lakeside-light.min.css"
+  },
+  "atelier-plateau": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-plateau.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-plateau-light.min.css"
+  },
+  "atelier-savanna": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-savanna.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-savanna-light.min.css"
+  },
+  "atelier-seaside": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-seaside.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-seaside-light.min.css"
+  },
+  "atelier-sulphurpool": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-sulphurpool.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/atelier-sulphurpool-light.min.css"
+  },
+  "brush-trees": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/brush-trees-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/brush-trees.min.css"
+  },
+  "classic": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/classic-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/classic-light.min.css"
+  },
+  "default-base16": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/default-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/default-light.min.css"
+  },
+  "edge": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/edge-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/edge-light.min.css"
+  },
+  "equilibrium": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/equilibrium-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/equilibrium-light.min.css"
+  },
+  "equilibrium-gray": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/equilibrium-gray-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/equilibrium-gray-light.min.css"
+  },
+  "eva": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/eva-dim.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/eva.min.css"
+  },
+  "google": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/google-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/google-light.min.css"
+  },
+  "grayscale-base16": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/grayscale-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/grayscale-light.min.css"
+  },
+  "gruvbox-hard": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/gruvbox-dark-hard.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/gruvbox-light-hard.min.css"
+  },
+  "gruvbox-medium": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/gruvbox-dark-medium.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/gruvbox-light-medium.min.css"
+  },
+  "gruvbox-soft": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/gruvbox-dark-soft.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/gruvbox-light-soft.min.css"
+  },
+  "harmonic16": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/harmonic16-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/harmonic16-light.min.css"
+  },
+  "heetch": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/heetch-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/heetch-light.min.css"
+  },
+  "horizon": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/horizon-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/horizon-light.min.css"
+  },
+  "humanoid": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/humanoid-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/humanoid-light.min.css"
+  },
+  "ia": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/ia-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/ia-light.min.css"
+  },
+  "material": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/material-darker.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/material-lighter.min.css"
+  },
+  "one": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/onedark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/one-light.min.css"
+  },
+  "papercolor": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/papercolor-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/papercolor-light.min.css"
+  },
+  "solar-flare": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/solar-flare.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/solar-flare-light.min.css"
+  },
+  "solarized": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/solarized-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/solarized-light.min.css"
+  },
+  "summerfruit": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/summerfruit-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/summerfruit-light.min.css"
+  },
+  "synth-midnight-terminal": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/synth-midnight-terminal-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/synth-midnight-terminal-light.min.css"
+  },
+  "tomorrow": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/tomorrow-night.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/tomorrow.min.css"
+  },
+  "unikitty": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/unikitty-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/unikitty-light.min.css"
+  },
+  "windows-10": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/windows-10.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/windows-10-light.min.css"
+  },
+  "windows-95": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/windows-95.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/windows-95-light.min.css"
+  },
+  "windows-high-contrast": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/windows-high-contrast.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/windows-high-contrast-light.min.css"
+  },
+  "windows-nt": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/windows-nt.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/windows-nt-light.min.css"
+  },
+  "ros-pine-base16": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/ros-pine-moon.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/ros-pine-dawn.min.css"
+  },
+  "silk": {
+    "dark": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/silk-dark.min.css",
+    "light": "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/silk-light.min.css"
+  }
+}

@@ -1,0 +1,35 @@
+```mermaid
+flowchart TD
+    title["Visual Diff Merge - Data Flow Diagram"]
+    Client_Browser["Client Browser"]
+    Client_Browser_User_Interface["User Interface"]
+    Client_Browser --> Client_Browser_User_Interface
+    API_Endpoints["API Endpoints"]
+    API_Endpoints_ajax_diff_merge_php["ajax-diff-merge.php"]
+    API_Endpoints --> API_Endpoints_ajax_diff_merge_php
+    API_Endpoints_get_file_content_php["get-file-content.php"]
+    API_Endpoints --> API_Endpoints_get_file_content_php
+    API_Endpoints_get_url_content_php["get-url-content.php"]
+    API_Endpoints --> API_Endpoints_get_url_content_php
+    API_Endpoints_diff_processor_php["diff-processor.php"]
+    API_Endpoints --> API_Endpoints_diff_processor_php
+    Backend_Services["Backend Services"]
+    Backend_Services_Config["Config"]
+    Backend_Services --> Backend_Services_Config
+    Backend_Services_PathManager["PathManager"]
+    Backend_Services --> Backend_Services_PathManager
+    Backend_Services_DiffViewer["DiffViewer"]
+    Backend_Services --> Backend_Services_DiffViewer
+    Backend_Services_Security["Security"]
+    Backend_Services --> Backend_Services_Security
+    File_System["File System"]
+    File_System_Source_Files["Source Files"]
+    File_System --> File_System_Source_Files
+    Client_Browser --> |"HTTP Requests"| API_Endpoints
+    API_Endpoints --> |"PHP Function Calls"| Backend_Services
+    Backend_Services --> |"File Operations"| File_System
+    Backend_Services --> |"Processed Data"| API_Endpoints
+    API_Endpoints --> |"JSON Response"| Client_Browser
+```
+
+<!-- Generated on: 2025-04-21 18:12:09 -->

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Diff Merge - API Reference | Integration Guide</title>
+    <meta name="description" content="Complete API reference for Visual Diff Merge. Learn how to integrate and extend this powerful code comparison and merging tool with your own applications.">
+    <meta name="keywords" content="visual diff merge API, code comparison API, diff viewer integration, merge tool API, PHP diff API">
+    <meta name="author" content="Visual Diff Merge">
+    <meta property="og:title" content="Visual Diff Merge - API Reference | Integration Guide">
+    <meta property="og:description" content="Complete API reference for Visual Diff Merge. Learn how to integrate and extend this powerful code comparison and merging tool with your own applications.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://visual-diff-merge.miglisoft.com/docs/api.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Visual Diff Merge - API Reference | Integration Guide">
+    <meta name="twitter:description" content="Complete API reference for Visual Diff Merge. Learn how to integrate and extend this powerful code comparison and merging tool with your own applications.">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Visual Diff Merge" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pavanam&display=swap">
+    <link rel="stylesheet" href="css/styles.min.css">
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!-- Global docs script -->
+    <script src="js/docs.js"></script>
+</head>
+<body>
+    <div class="docs-container">
+        <header class="docs-header">
+            <h1>Visual Diff Merge API Reference</h1>
+            <p class="tagline">A powerful visual diff and merge tool for the web</p>
+        </header>
+
+        <nav class="docs-nav">
+            <ul>
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="usage.html">Usage</a></li>
+                <li><a href="customization.html">Customization</a></li>
+                <li class="active"><a href="api.html">API</a></li>
+                <li><a href="architecture.html">Architecture</a></li>
+            </ul>
+        </nav>
+
+        <div class="docs-content-wrapper">
+            <aside class="docs-sidebar">
+                <h3>On This Page</h3>
+                <ul>
+                    <li><a href="#api-overview">API Overview</a></li>
+                    <li><a href="#endpoints">Endpoints</a>
+                        <ul>
+                            <li><a href="#diff-processor">diff-processor.php</a></li>
+                            <li><a href="#ajax-diff-merge">ajax-diff-merge.php</a></li>
+                            <li><a href="#get-file-content">get-file-content.php</a></li>
+                            <li><a href="#get-url-content">get-url-content.php</a></li>
+                            <li><a href="#endpoints-config">endpoints-config.php</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#diff-data-format">Diff Data Format</a></li>
+                    <li><a href="#security">Security Considerations</a></li>
+                    <li><a href="#advanced-usage">Advanced Usage</a></li>
+                </ul>
+            </aside>
+
+            <main class="docs-content">
+            <section id="api-overview">
+                <h2>API Overview</h2>
+                <p>
+                    Visual Diff Merge provides several API endpoints for processing diffs and handling various tasks.
+                    These endpoints are PHP scripts in the <code>api/</code> directory, and they handle operations like:
+                </p>
+                <ul>
+                    <li>Processing differences between content</li>
+                    <li>Retrieving file content securely</li>
+                    <li>Fetching content from URLs</li>
+                    <li>Performing merge operations</li>
+                    <li>Providing configuration information</li>
+                </ul>
+
+                <p>
+                    For details on the underlying architecture of these API endpoints, see the <a href="architecture.html#components">System Components</a> section of the Architecture documentation.
+                </p>
+
+                <h3>Base URL</h3>
+                <p>
+                    API endpoints are normally accessed relative to the Visual Diff Merge installation. For example:
+                </p>
+                <div class="code-block">
+                    <pre><code>https://your-server.com/visual-diff-merge/api/diff-processor.php</code></pre>
+                </div>
+
+                <h3>Authentication</h3>
+                <p>
+                    By default, Visual Diff Merge endpoints do not require authentication. For production environments,
+                    you should implement your own authentication layer if needed.
+                </p>
+            </section>
+
+            <section id="endpoints">
+                <h2>Endpoints</h2>
+
+                <h3 id="diff-processor">diff-processor.php</h3>
+                <p>
+                    The main endpoint for processing diff operations. It accepts content from various sources
+                    and returns structured diff data.
+                </p>
+
+                <h4>Request</h4>
+                <ul>
+                    <li><strong>Method:</strong> POST</li>
+                    <li><strong>Content-Type:</strong> application/json</li>
+                </ul>
+
+                <h4>Request Body</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "old": {
+    "type": "file|url|text",
+    "content": "Content if type is text",
+    "url": "URL if type is url",
+    "server_path": "Server path if type is file",
+    "filename": "Optional filename"
+  },
+  "new": {
+    "type": "file|url|text",
+    "content": "Content if type is text",
+    "url": "URL if type is url",
+    "server_path": "Server path if type is file",
+    "filename": "Optional filename"
+  },
+  "filepath": "Optional filepath for language detection",
+  "debug": true|false,
+  "translations": { /* Optional translations */ }
+}</code></pre>
+                </div>
+
+                <h4>Response</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "success": true,
+  "config": {
+    "diffData": {
+      "old": [ /* Array of line objects for old content */ ],
+      "new": [ /* Array of line objects for new content */ ],
+      "chunks": [ /* Array of chunk objects describing differences */ ]
+    },
+    "serverSaveEnabled": true|false,
+    "fileRefId": "Reference ID for new file if applicable",
+    "oldFileRefId": "Reference ID for old file if applicable",
+    "newFileName": "New file name",
+    "oldFileName": "Old file name",
+    "filepath": "Filepath",
+    "translations": { /* Translations object */ },
+    /* Other configuration properties */
+  }
+}</code></pre>
+                </div>
+
+                <p>
+                    If the content is identical, the response will indicate this:
+                </p>
+                <div class="code-block">
+                    <pre><code>{
+  "success": true,
+  "identical": true,
+  "message": "The files are identical.",
+  "config": {
+    "translations": { /* Translations object */ }
+  }
+}</code></pre>
+                </div>
+
+                <h4>Error Response</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "error": "Error message",
+  "success": false
+}</code></pre>
+                </div>
+
+                <h4>Example Usage</h4>
+                <div class="code-block">
+                    <pre><code>// Example JavaScript fetch
+fetch('api/diff-processor.php', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    old: {
+      type: 'text',
+      content: 'function hello() {\n  console.log("Hello");\n}',
+      filename: 'old.js'
+    },
+    new: {
+      type: 'text',
+      content: 'function hello() {\n  console.log("Hello World");\n}',
+      filename: 'new.js'
+    },
+    filepath: 'example.js'
+  })
+})
+.then(response => response.json())
+.then(data => {
+  if (data.success) {
+    // Process diff data
+    console.log(data.config.diffData);
+  } else {
+    console.error(data.error);
+  }
+});</code></pre>
+                </div>
+
+                <h3 id="ajax-diff-merge">ajax-diff-merge.php</h3>
+                <p>
+                    Handles merge operations, allowing users to save the merged content.
+                </p>
+
+                <h4>Request</h4>
+                <ul>
+                    <li><strong>Method:</strong> POST</li>
+                    <li><strong>Content-Type:</strong> application/json</li>
+                </ul>
+
+                <h4>Request Body</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "mergedContent": "The merged content as text",
+  "fileRefId": "Reference ID for the file to save",
+  "oldFileRefId": "Reference ID for the old file",
+  "newFileName": "New file name",
+  "oldFileName": "Old file name",
+  "saveMode": "original|new-suffix|old|old-suffix|both|both-suffix"
+}</code></pre>
+                </div>
+
+                <h4>Response</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "success": true,
+  "message": "Success message",
+  "files": [
+    {
+      "path": "Saved file path",
+      "filename": "Saved file name"
+    }
+  ]
+}</code></pre>
+                </div>
+
+                <h4>Error Response</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "error": "Error message",
+  "success": false
+}</code></pre>
+                </div>
+
+                <h3 id="get-file-content">get-file-content.php</h3>
+                <p>
+                    Securely retrieves file content based on a path or reference ID.
+                </p>
+
+                <h4>Request</h4>
+                <ul>
+                    <li><strong>Method:</strong> GET</li>
+                    <li><strong>Parameters:</strong>
+                        <ul>
+                            <li><code>path</code> - Path to the file (if no refId)</li>
+                            <li><code>refId</code> - Reference ID for the file (preferred for security)</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>Response</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "success": true,
+  "content": "File content",
+  "filename": "File name",
+  "language": "Detected language"
+}</code></pre>
+                </div>
+
+                <h4>Error Response</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "success": false,
+  "error": "Error message"
+}</code></pre>
+                </div>
+
+                <h4>Example Usage</h4>
+                <div class="code-block">
+                    <pre><code>// Example JavaScript fetch
+fetch('api/get-file-content.php?refId=abcdef123456')
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log(data.content);
+    } else {
+      console.error(data.error);
+    }
+  });</code></pre>
+                </div>
+
+                <h3 id="get-url-content">get-url-content.php</h3>
+                <p>
+                    Fetches content from external URLs, helping to overcome CORS limitations.
+                </p>
+
+                <h4>Request</h4>
+                <ul>
+                    <li><strong>Method:</strong> GET</li>
+                    <li><strong>Parameters:</strong>
+                        <ul>
+                            <li><code>url</code> - URL to fetch content from</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>Response</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "success": true,
+  "content": "Content from URL",
+  "url": "Original URL"
+}</code></pre>
+                </div>
+
+                <h4>Error Response</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "success": false,
+  "error": "Error message"
+}</code></pre>
+                </div>
+
+                <h4>Example Usage</h4>
+                <div class="code-block">
+                    <pre><code>// Example JavaScript fetch
+fetch('api/get-url-content.php?url=' + encodeURIComponent('https://example.com/file.js'))
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log(data.content);
+    } else {
+      console.error(data.error);
+    }
+  });</code></pre>
+                </div>
+
+                <h3 id="endpoints-config">endpoints-config.php</h3>
+                <p>
+                    Provides information about API endpoints to the JavaScript client.
+                </p>
+
+                <h4>Request</h4>
+                <ul>
+                    <li><strong>Method:</strong> GET</li>
+                    <li><strong>Parameters:</strong>
+                        <ul>
+                            <li><code>absolute</code> - Set to "1" to get absolute URLs</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>Response</h4>
+                <div class="code-block">
+                    <pre><code>{
+  "diffProcessor": "path/to/diff-processor.php",
+  "ajaxDiffMerge": "path/to/ajax-diff-merge.php",
+  "endpoints": "path/to/endpoints-config.php"
+}</code></pre>
+                </div>
+
+                <h4>Example Usage</h4>
+                <div class="code-block">
+                    <pre><code>// Example JavaScript fetch
+fetch('api/endpoints-config.php?absolute=1')
+  .then(response => response.json())
+  .then(endpoints => {
+    console.log(endpoints.diffProcessor); // Use this URL for diff processing
+  });</code></pre>
+                </div>
+            </section>
+
+            <section id="diff-data-format">
+                <h2>Diff Data Format</h2>
+                <p>
+                    The diff-processor.php endpoint returns a structured data object that describes the differences
+                    between the old and new content. This section explains the format of this data.
+                </p>
+
+                <h3>Top-Level Structure</h3>
+                <div class="code-block">
+                    <pre><code>{
+  "success": true,
+  "config": {
+    "diffData": {
+      "old": [ /* Line objects for old content */ ],
+      "new": [ /* Line objects for new content */ ],
+      "chunks": [ /* Chunk objects describing differences */ ]
+    },
+    /* Other configuration properties */
+  }
+}</code></pre>
+                </div>
+
+                <h3>Line Objects</h3>
+                <p>
+                    The <code>old</code> and <code>new</code> arrays contain line objects:
+                </p>
+                <div class="code-block">
+                    <pre><code>{
+  "number": 1, // 1-based line number
+  "content": "Line content",
+  "code": "Line content (for syntax highlighting)",
+  "type": "context|added|removed|unchanged",
+  "chunks": [0, 1] // Indices of chunks that include this line
+}</code></pre>
+                </div>
+
+                <h3>Chunk Objects</h3>
+                <p>
+                    The <code>chunks</code> array contains objects describing each difference:
+                </p>
+                <div class="code-block">
+                    <pre><code>{
+  "id": 0, // Chunk ID (index)
+  "old": {
+    "start": 1, // 1-based line number of the start of the chunk in old content
+    "end": 3, // 1-based line number of the end of the chunk in old content
+    "lines": [0, 1, 2] // Indices in the old lines array
+  },
+  "new": {
+    "start": 1, // 1-based line number of the start of the chunk in new content
+    "end": 4, // 1-based line number of the end of the chunk in new content
+    "lines": [0, 1, 2, 3] // Indices in the new lines array
+  },
+  "type": "modified|added|removed|unchanged", // Type of change
+  "selected": "old|new" // Selected version for merge
+}</code></pre>
+                </div>
+            </section>
+
+            <section id="security">
+                <h2>Security Considerations</h2>
+                <p>
+                    When working with the Visual Diff Merge API, consider these security practices:
+                </p>
+
+                <h3>File Access Security</h3>
+                <ul>
+                    <li>
+                        <strong>Use Reference IDs:</strong> When working with server files, always use reference IDs
+                        instead of direct paths. Reference IDs are secure tokens that map to file paths without
+                        exposing the actual paths to the client.
+                    </li>
+                    <li>
+                        <strong>Configure Allowed Directories:</strong> In <code>api/config.php</code>, specify which
+                        directories are allowed to be accessed using the <code>php.security.allowedDirectories</code> setting.
+                        See <a href="installation.html#configuration">Configuration</a> for details.
+                    </li>
+                </ul>
+
+                <h3>CORS Considerations</h3>
+                <p>
+                    If you're accessing the API from a different domain:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Server Configuration:</strong> Configure your web server to allow cross-origin requests
+                        to the API endpoints if needed. See <a href="installation.html#server-specific">Server-Specific Configuration</a> for diff-viewer.
+                    </li>
+                    <li>
+                        <strong>URL Content Fetching:</strong> Use the <code>get-url-content.php</code> endpoint to fetch
+                        content from external URLs to avoid CORS issues.
+                    </li>
+                </ul>
+
+                <h3>Authorization</h3>
+                <p>
+                    By default, Visual Diff Merge does not include an authorization system. For production use:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Implement Authentication:</strong> Add your own authentication layer to protect
+                        the API endpoints.
+                    </li>
+                    <li>
+                        <strong>API Keys:</strong> Consider implementing API keys or tokens for programmatic access.
+                    </li>
+                </ul>
+            </section>
+
+            <section id="advanced-usage">
+                <h2>Advanced Usage</h2>
+
+                <h3>Custom API Endpoints</h3>
+                <p>
+                    You can create custom API endpoints to extend Visual Diff Merge's functionality:
+                </p>
+                <ol>
+                    <li>Create a new PHP file in the <code>api/</code> directory</li>
+                    <li>Include the necessary classes from the <code>VisualDiffMerge</code> namespace</li>
+                    <li>Implement your custom logic</li>
+                    <li>Return a JSON response</li>
+                </ol>
+
+                <h4>Example Custom Endpoint</h4>
+                <div class="code-block">
+                    <pre><code>&lt;?php
+// custom-endpoint.php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use VisualDiffMerge\Config;
+use VisualDiffMerge\DiffViewer;
+
+// Initialize config
+Config::init();
+
+// Set JSON response headers
+header('Content-Type: application/json');
+
+// Handle the request
+try {
+    // Your custom logic here
+    $result = [
+        'success' => true,
+        'data' => 'Your custom response'
+    ];
+
+    echo json_encode($result);
+} catch (Exception $e) {
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
+}</code></pre>
+                </div>
+
+                <h3>Programmatic API Usage</h3>
+                <p>
+                    You can use the Visual Diff Merge API programmatically from your applications:
+                </p>
+
+                <h4>PHP Example</h4>
+                <div class="code-block">
+                    <pre><code>&lt;?php
+// PHP example using curl
+$data = [
+    'old' => [
+        'type' => 'text',
+        'content' => 'Old content here',
+        'filename' => 'old.txt'
+    ],
+    'new' => [
+        'type' => 'text',
+        'content' => 'New content here',
+        'filename' => 'new.txt'
+    ]
+];
+
+$ch = curl_init('https://your-server.com/visual-diff-merge/api/diff-processor.php');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+
+$response = curl_exec($ch);
+$result = json_decode($response, true);
+
+if ($result['success']) {
+    // Process the diff data
+    $diffData = $result['config']['diffData'];
+} else {
+    // Handle error
+    echo $result['error'];
+}
+
+curl_close($ch);</code></pre>
+                </div>
+
+                <h4>JavaScript Example</h4>
+                <div class="code-block">
+                    <pre><code>// JavaScript example using fetch API
+const processsDiff = async (oldContent, newContent) => {
+  const data = {
+    old: {
+      type: 'text',
+      content: oldContent,
+      filename: 'old.txt'
+    },
+    new: {
+      type: 'text',
+      content: newContent,
+      filename: 'new.txt'
+    }
+  };
+
+  try {
+    const response = await fetch('https://your-server.com/visual-diff-merge/api/diff-processor.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      // Process the diff data
+      return result.config.diffData;
+    } else {
+      throw new Error(result.error);
+    }
+  } catch (error) {
+    console.error('Error processing diff:', error);
+    throw error;
+  }
+};</code></pre>
+                </div>
+            </section>
+        </main>
+        </div>
+
+        <footer class="docs-footer">
+            <p>&copy; 2025 Visual Diff Merge - <a href="https://github.com/migliori/visual-diff-merge">GitHub Repository</a></p>
+        </footer>
+    </div>
+</body>
+</html>

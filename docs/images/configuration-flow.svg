@@ -1,0 +1,43 @@
+```mermaid
+flowchart TD
+    title["Visual Diff Merge - Configuration Flow"]
+    Config_Default_Values["Config Default Values"]
+    Config_Default_Values_In_Config_php["In Config.php"]
+    Config_Default_Values --> Config_Default_Values_In_Config_php
+    User_Config["User Config"]
+    User_Config_api_config_php["api/config.php"]
+    User_Config --> User_Config_api_config_php
+    Config_php_init__["Config.php init()"]
+    Config_php_init___Merge_Configurations["Merge Configurations"]
+    Config_php_init__ --> Config_php_init___Merge_Configurations
+    Backend_Components["Backend Components"]
+    Backend_Components_PathManager["PathManager"]
+    Backend_Components --> Backend_Components_PathManager
+    Backend_Components_DiffViewer["DiffViewer"]
+    Backend_Components --> Backend_Components_DiffViewer
+    Backend_Components_Security["Security"]
+    Backend_Components --> Backend_Components_Security
+    API_Endpoints["API Endpoints"]
+    API_Endpoints_ajax_diff_merge_php["ajax-diff-merge.php"]
+    API_Endpoints --> API_Endpoints_ajax_diff_merge_php
+    API_Endpoints_get_file_content_php["get-file-content.php"]
+    API_Endpoints --> API_Endpoints_get_file_content_php
+    window_diffConfig["window.diffConfig"]
+    window_diffConfig_Browser_JS_Config["Browser JS Config"]
+    window_diffConfig --> window_diffConfig_Browser_JS_Config
+    Frontend_Components["Frontend Components"]
+    Frontend_Components_ThemeManager["ThemeManager"]
+    Frontend_Components --> Frontend_Components_ThemeManager
+    Frontend_Components_ResourceLoader["ResourceLoader"]
+    Frontend_Components --> Frontend_Components_ResourceLoader
+    Frontend_Components_DiffViewer_js["DiffViewer.js"]
+    Frontend_Components --> Frontend_Components_DiffViewer_js
+    Config_Default_Values --> |"Start with defaults"| Config_php_init__
+    User_Config --> |"Merge user settings"| Config_php_init__
+    Config_php_init__ --> |"Configure PHP components"| Backend_Components
+    Config_php_init__ --> |"Configure endpoints"| API_Endpoints
+    API_Endpoints --> |"Pass JS config"| window_diffConfig
+    window_diffConfig --> |"Configure JS components"| Frontend_Components
+```
+
+<!-- Generated on: 2025-04-21 18:12:09 -->

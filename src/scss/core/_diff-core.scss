@@ -1,0 +1,105 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/color-system' as colors;
+@use '../abstracts/utilities' as utils;
+
+// Global box model for all diff elements
+.vdm-code__table,
+.vdm-code__table * {
+  box-sizing: border-box;
+}
+
+// Common transitions for all interactive elements
+[data-chunk-id]:not([data-chunk-id=""]),
+.vdm-code__line-content {
+  @include utils.transition-properties(
+    (background-color, box-shadow, opacity),
+    vars.$transition-quick
+  );
+}
+
+// Pane header styling for Check All buttons
+.vdm-pane-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 8px; /* Increased y-padding */
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  z-index: 101;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+  height: 34px; /* Increased height to 34px */
+  box-sizing: border-box; /* Ensure padding is included in height calculation */
+}
+
+// Check All button styling
+.vdm-check-all-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  border-radius: 3px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  color: #333;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  .vdm-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    margin-right: 3px;
+  }
+}
+
+// Apply dark theme styling to pane header and button
+.vdm-theme--dark {
+  .vdm-pane-header {
+    background-color: #333;
+    border-color: #444;
+  }
+
+  .vdm-check-all-btn {
+    background-color: #444;
+    border-color: #555;
+    color: #eee;
+
+    &:hover {
+      background-color: #555;
+    }
+  }
+}
+
+// Basic structure of diff elements - no colors or interaction states
+.vdm-code__table {
+  // Common element structure
+  [data-chunk-id]:not([data-chunk-id=""]) {
+    cursor: pointer;
+    position: relative;
+    box-shadow: colors.left-shadow(transparent);
+  }
+
+  .vdm-diff__line--placeholder {
+    display: block;
+  }
+
+  // Set up consistent base structure for all line types
+  .vdm-code__line-content,
+  .vdm-diff__line--add,
+  .vdm-diff__line--delete,
+  .vdm-diff__line--replace-left,
+  .vdm-diff__line--replace-right,
+  .vdm-code__line--empty {
+    box-shadow: colors.left-shadow(transparent);
+  }
+}

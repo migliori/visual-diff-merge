@@ -1,0 +1,68 @@
+@use 'color-system';
+
+// CSS class prefix for all components
+$prefix: 'vdm';
+
+// Retro Pastels with Modern Accents
+$primary: #7b68ee;      // Periwinkle purple
+$secondary: #6c757d;    // Medium gray
+$success: #50c878;      // Emerald green
+$danger: #ff6b6b;       // Coral red
+$warning: #ffcc5c;      // Amber gold
+$info: #48d1cc;         // Turquoise
+$purple: #c587e8;       // Soft lavender
+$dark: #2f3743;         // Slate navy
+$gray: #a0a6b3;         // Dusty gray
+$light: #f9f7ff;        // Off-white purple tint
+
+// Basic colors with new palette
+$border-color: #e0e0e0;
+$border-color-light: #eaedf2;
+$border-color-dark: #3a3a56;
+$background-light: $light;
+$background-dark: $dark;
+$text-muted: #8a8aaa;
+$text-dark: #2d2d3a;
+$text-light: #f9fafc;
+
+// Primary color definitions with new palette
+$add-color: $success;
+$delete-color: $danger;
+$replace-color: $warning;
+$neutral-color: $gray;
+$alignment-color: #4ecca3;  // Mint green
+$warning-color: $warning;
+$info-color: $info;
+$success-color: $success;
+$danger-color: $danger;
+
+// Add the missing empty-color variable
+$empty-color: $neutral-color;
+
+// Generic selection colors
+$selected-color: $primary;
+$unselected-color: $neutral-color;
+
+// Dimensions
+$line-number-width: 40px;
+
+// Modal variables
+$modal-header-height: 60px;
+$modal-footer-height: 60px;
+
+// Transition variables
+$transition-quick: 0.15s ease;
+$transition-normal: 0.25s ease-in-out;
+$transition-slow: 0.35s ease-in-out;
+$transition-properties-hover: background-color, border-color, color, opacity, box-shadow, transform;
+$transition-properties-theme: background-color, border-color, color, box-shadow;
+
+// Border radius variables
+$border-radius-sm: 0.2rem;
+$border-radius: 0.375rem;
+$border-radius-lg: 0.5rem;
+
+// Shadow variables
+$box-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+$box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+$box-shadow-lg: 0 1rem 2rem rgba(0, 0, 0, 0.15);

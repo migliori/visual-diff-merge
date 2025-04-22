@@ -1,0 +1,37 @@
+// Selection states
+.vdm-code__table {
+  [data-chunk-id]:not([data-chunk-id=""]) {
+    cursor: pointer;
+    position: relative;
+
+    &:not(.vdm-diff__chunk--selected):hover {
+      background-color: rgba(255, 255, 255, 0.07);
+      box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .vdm-diff__chunk--selected {
+    background-color: $selected-bg !important;
+    box-shadow: inset 4px 0 0 $selected-border !important;
+    z-index: 2;
+
+    &:hover {
+      background-color: $selected-bg !important;
+      box-shadow: inset 4px 0 0 $selected-border !important;
+    }
+  }
+
+  .vdm-diff__chunk--unselected {
+    opacity: 0.6;
+    filter: grayscale(70%);
+    background-color: $unselected-bg !important;
+    box-shadow: inset 4px 0 0 $unselected-border !important;
+    position: relative;
+    cursor: pointer !important;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      box-shadow: inset 4px 0 0 rgba(255, 255, 255, 0.5) !important;
+    }
+  }
+}

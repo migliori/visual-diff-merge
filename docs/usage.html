@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Diff Merge - Usage Guide | Code Comparison Tool</title>
+    <meta name="description" content="Learn how to use Visual Diff Merge to compare and merge code files. Detailed instructions for file browser, file upload, text comparison, and URL comparison modes.">
+    <meta name="keywords" content="visual diff merge usage, code comparison tool, file comparison, text diff viewer, merge tool tutorial">
+    <meta name="author" content="Visual Diff Merge">
+    <meta property="og:title" content="Visual Diff Merge - Usage Guide | Code Comparison Tool">
+    <meta property="og:description" content="Learn how to use Visual Diff Merge to compare and merge code files. Detailed instructions for all comparison modes.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://visual-diff-merge.miglisoft.com/docs/usage.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Visual Diff Merge - Usage Guide | Code Comparison Tool">
+    <meta name="twitter:description" content="Learn how to use Visual Diff Merge to compare and merge code files. Detailed instructions for all comparison modes.">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Visual Diff Merge" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pavanam&display=swap">
+    <link rel="stylesheet" href="css/styles.min.css">
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!-- Global docs script -->
+    <script src="js/docs.js"></script>
+</head>
+<body>
+    <div class="docs-container">
+        <header class="docs-header">
+            <h1>Visual Diff Merge Usage Guide</h1>
+            <p class="tagline">A powerful visual diff and merge tool for the web</p>
+        </header>
+
+        <nav class="docs-nav">
+            <ul>
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li class="active"><a href="usage.html">Usage</a></li>
+                <li><a href="customization.html">Customization</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="architecture.html">Architecture</a></li>
+            </ul>
+        </nav>
+
+        <div class="docs-content-wrapper">
+            <aside class="docs-sidebar">
+                <h3>On This Page</h3>
+                <ul>
+                    <li><a href="#usage-modes">Usage Modes</a></li>
+                    <li><a href="#file-browser">File Browser Mode</a></li>
+                    <li><a href="#file-upload">File Upload Mode</a></li>
+                    <li><a href="#text-compare">Text Compare Mode</a></li>
+                    <li><a href="#url-compare">URL Compare Mode</a></li>
+                    <li><a href="#common-features">Common Features</a>
+                        <ul>
+                            <li><a href="#navigation-controls">Navigation Controls</a></li>
+                            <li><a href="#theme-selection">Theme Selection</a></li>
+                            <li><a href="#merge-capability">Merge Capability</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#using-api">Using the API</a></li>
+                </ul>
+            </aside>
+
+            <main class="docs-content">
+            <section id="usage-modes">
+                <h2>Usage Modes</h2>
+                <p>
+                    Visual Diff Merge offers four distinct modes for comparing content. Each mode requires specific files and setup.
+                    The diff-viewer directory contains sample implementations of each mode.
+                </p>
+
+                <p>
+                    <strong>Click on a mode tab below</strong> to view detailed implementation instructions for each comparison mode.
+                </p>
+
+                <div class="mode-selector">
+
+                    <div class="mode-tabs-container">
+                        <ul class="nav-tabs">
+                            <li class="active"><a href="#file-browser"><i class="tab-icon folder-icon"></i>File Browser</a></li>
+                            <li><a href="#file-upload"><i class="tab-icon upload-icon"></i>File Upload</a></li>
+                            <li><a href="#text-compare"><i class="tab-icon text-icon"></i>Text Compare</a></li>
+                            <li><a href="#url-compare"><i class="tab-icon url-icon"></i>URL Compare</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="file-browser" class="mode-section active">
+                                <h3>File Browser Mode</h3>
+                                <p>
+                                    The File Browser mode allows users to browse files on the server and select two files for comparison.
+                                    This mode requires server-side access to files.
+                                </p>
+
+                                <h4>Required Files</h4>
+                                <ul>
+                                    <li><code>file-browser.php</code> - PHP script for the file browser interface</li>
+                                    <li><code>file-browser.min.js</code> - JavaScript for the file browser functionality</li>
+                                    <li><code>diff-viewer.min.css</code> - CSS for the diff viewer</li>
+                                    <li><code>diff-viewer-theme.min.css</code> - CSS for the diff viewer UI elements (buttons, alerts, etc.)</li>
+                                </ul>
+
+                                <h4>Implementation Example</h4>
+                                <div class="code-block">
+                                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;File Browser Comparison - Visual-Diff-Merge&lt;/title&gt;
+    &lt;meta name="description" content="Compare files in a browser with Visual-Diff-Merge."&gt;
+    &lt;meta name="keywords" content="Visual-Diff-Merge, file comparison, diff viewer, merge tool"&gt;
+
+    &lt;!-- Include the Visual Diff Merge CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../dist/css/diff-viewer.min.css&quot;&gt;
+
+    &lt;!-- Include the Visual Diff Merge theme CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../dist/css/diff-viewer-theme.min.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="vdm-container vdm-p-3"&gt;
+        &lt;h1 class="vdm-mb-3"&gt;File Browser Comparison&lt;/h1&gt;
+        &lt;p class="vdm-mb-4"&gt;&lt;a href="index.html" class="vdm-btn vdm-btn--flat vdm-btn-sm"&gt;← Back Home&lt;/a&gt;&lt;/p&gt;
+
+        &lt;div class="vdm-card vdm-p-3 vdm-mb-4"&gt;
+            &lt;form id="vdm-file-comparison-form" class="vdm-d-flex vdm-flex-column"&gt;
+                &lt;div class="vdm-file-selectors vdm-d-flex vdm-flex-wrap vdm-justify-content-between vdm-mb-3"&gt;
+                    &lt;div class="vdm-mb-2 vdm-flex-grow-1 vdm-me-3" style="min-width: 45%;"&gt;
+                        &lt;label for="old-file" class="vdm-mb-1 vdm-d-block"&gt;Old File:&lt;/label&gt;
+                        &lt;select id="old-file" class="vdm-form-control" data-type="old"&gt;
+                            &lt;?php foreach ($oldFiles as $file) : ?&gt;
+                                    &lt;option value="&lt;?= htmlspecialchars($file['path']) ?&gt;"
+                                            data-ref-id="&lt;?= htmlspecialchars($file['ref_id']) ?&gt;"&gt;
+                                        &lt;?= htmlspecialchars($file['language']) ?&gt; (&lt;?= htmlspecialchars($file['name']) ?&gt;)
+                                    &lt;/option&gt;
+                            &lt;?php endforeach; ?&gt;
+                        &lt;/select&gt;
+                    &lt;/div&gt;
+                    &lt;div class="vdm-mb-2 vdm-flex-grow-1" style="min-width: 45%;"&gt;
+                        &lt;label for="new-file" class="vdm-mb-1 vdm-d-block"&gt;New File:&lt;/label&gt;
+                        &lt;select id="new-file" class="vdm-form-control" data-type="new"&gt;
+                            &lt;?php foreach ($newFiles as $file) : ?&gt;
+                                    &lt;option value="&lt;?= htmlspecialchars($file['path']) ?&gt;"
+                                           data-ref-id="&lt;?= htmlspecialchars($file['ref_id']) ?&gt;"&gt;
+                                        &lt;?= htmlspecialchars($file['language']) ?&gt; (&lt;?= htmlspecialchars($file['name']) ?&gt;)
+                                    &lt;/option&gt;
+                            &lt;?php endforeach; ?&gt;
+                        &lt;/select&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;button type="submit" class="vdm-btn vdm-btn--primary vdm-ms-auto"&gt;Compare Files&lt;/button&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+
+        &lt;div id="vdm-merge__result" class="vdm-p-3 vdm-mb-3 vdm-d-none"&gt;&lt;/div&gt;
+
+        &lt;div id="vdm-container__wrapper" class="vdm-theme--dark vdm-d-none"&gt;
+            &lt;div class="vdm-user-content"&gt;
+                &lt;h2 class="vdm-text-center vdm-mb-2"&gt;Side by Side Comparison&lt;/h2&gt;
+                &lt;p class="vdm-text-center vdm-mb-3"&gt;Click on a section to select it for the merged result&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;!-- UI elements will be generated by JavaScript --&gt;
+
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Required JavaScript files --&gt;
+    &lt;script src="../dist/diff-viewer.min.js"&gt;&lt;/script&gt;
+    &lt;script src="../dist/file-browser.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                                </div>
+
+                                <h4>PHP Server-Side Requirements</h4>
+                                <p>
+                                    The server-side PHP component needs to:
+                                </p>
+                                <ol>
+                                    <li>Provide a way to access available files (two options available)</li>
+                                    <li>Generate secure reference IDs for each file</li>
+                                    <li>Populate the dropdown menus</li>
+                                    <li>Process the selected files when the form is submitted</li>
+                                </ol>
+
+                                <p>There are two ways to configure the files for comparison:</p>
+
+                                <h5>Option 1: Directory-based file scanning</h5>
+                                <p>Automatically scan directories for files:</p>
+                                <div class="code-block">
+                                    <pre><code>&lt;?php
+// Include required files
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use VisualDiffMerge\FileBrowser;
+
+// Configuration - Specify directories to scan for files
+$config = [
+    'old' => [
+        'type' => 'directory',
+        'path' => realpath(dirname(__FILE__)) . '/../diff-viewer/samples/old/',
+        'baseUrl' => '../diff-viewer/samples/old/'
+    ],
+    'new' => [
+        'type' => 'directory',
+        'path' => realpath(dirname(__FILE__)) . '/../diff-viewer/samples/new/',
+        'baseUrl' => '../diff-viewer/samples/new/'
+    ]
+];
+
+// Initialize the FileBrowser
+$fileBrowser = new FileBrowser();
+
+// Get files from directories
+$oldFiles = $fileBrowser->getFiles($config['old']['path'], $config['old']['baseUrl']);
+$newFiles = $fileBrowser->getFiles($config['new']['path'], $config['new']['baseUrl']);
+
+// Continue with the HTML output
+?&gt;</code></pre>
+                                </div>
+
+                                <h5>Option 2: Explicit file list</h5>
+                                <p>Manually specify files to compare:</p>
+                                <div class="code-block">
+                                    <pre><code>&lt;?php
+// Include required files
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use VisualDiffMerge\FileBrowser;
+
+// Configuration - Specify explicit file lists
+$config = [
+    'old' => [
+        'type' => 'files',
+        'files' => [
+            realpath(dirname(__FILE__)) . '/../diff-viewer/samples/old/example1.js',
+            realpath(dirname(__FILE__)) . '/../diff-viewer/samples/old/example2.php',
+            // Add more files as needed
+        ],
+        'baseUrl' => '../diff-viewer/samples/old/'
+    ],
+    'new' => [
+        'type' => 'files',
+        'files' => [
+            realpath(dirname(__FILE__)) . '/../diff-viewer/samples/new/example1.js',
+            realpath(dirname(__FILE__)) . '/../diff-viewer/samples/new/example2.php',
+            // Add more files as needed
+        ],
+        'baseUrl' => '../diff-viewer/samples/new/'
+    ]
+];
+
+// Initialize the FileBrowser
+$fileBrowser = new FileBrowser();
+
+// Get files from explicit file lists
+$oldFiles = $fileBrowser->getFiles($config['old']['files'], $config['old']['baseUrl']);
+$newFiles = $fileBrowser->getFiles($config['new']['files'], $config['new']['baseUrl']);
+
+// Continue with the HTML output
+?&gt;</code></pre>
+                                </div>
+
+                                <h4>Workflow</h4>
+                                <ol>
+                                    <li>User selects old and new files from the dropdowns</li>
+                                    <li>User clicks "Compare Files" button</li>
+                                    <li>FileBrowserManager handles the form submission</li>
+                                    <li>File content is retrieved securely using reference IDs</li>
+                                    <li>Content is sent to diff-processor.php for processing</li>
+                                    <li>Result is displayed in the diff viewer</li>
+                                </ol>
+                            </div>
+
+                            <div id="file-upload" class="mode-section">
+                                <h3>File Upload Mode</h3>
+                                <p>
+                                    The File Upload mode allows users to upload two files from their local machine for comparison.
+                                    This mode does not require server-side file access but still needs PHP for diff processing.
+                                </p>
+
+                                <h4>Required Files</h4>
+                                <ul>
+                                    <li><code>file-upload.html</code> - HTML file with the upload form</li>
+                                    <li><code>file-upload.min.js</code> - JavaScript for file upload functionality</li>
+                                    <li><code>diff-viewer.min.css</code> - CSS for the diff viewer</li>
+                                    <li><code>diff-viewer-theme.min.css</code> - CSS for the diff viewer UI elements (buttons, alerts, etc.)</li>
+                                </ul>
+
+                                <h4>Implementation Example</h4>
+                                <div class="code-block">
+                                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;File Upload - Visual Diff Merge&lt;/title&gt;
+    &lt;meta name="description" content="Compare files by uploading them with Visual-Diff-Merge."&gt;
+    &lt;meta name="keywords" content="Visual-Diff-Merge, file comparison, diff viewer, merge tool"&gt;
+
+    &lt;!-- Include the Visual Diff Merge CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../dist/css/diff-viewer.min.css&quot;&gt;
+
+    &lt;!-- Include the Visual Diff Merge theme CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../dist/css/diff-viewer-theme.min.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="vdm-container vdm-p-3"&gt;
+        &lt;h1 class="vdm-mb-3"&gt;File Upload Comparison&lt;/h1&gt;
+        &lt;p class="vdm-mb-4"&gt;&lt;a href="index.html" class="vdm-btn vdm-btn--flat vdm-btn-sm"&gt;← Back Home&lt;/a&gt;&lt;/p&gt;
+
+        &lt;!-- File upload form --&gt;
+        &lt;form id="file-upload-form" class="vdm-card vdm-p-3 vdm-mb-4"&gt;
+            &lt;div class="vdm-file-selectors vdm-d-flex vdm-flex-wrap vdm-justify-content-between vdm-mb-3"&gt;
+                &lt;div class="vdm-mb-2 vdm-flex-grow-1 vdm-me-3" style="min-width: 45%;"&gt;
+                    &lt;label for="old-file-upload" class="vdm-custom-file-label vdm-icon-file vdm-mb-1 vdm-d-block"&gt;
+                        Upload Old File
+                    &lt;/label&gt;
+                    &lt;input type="file" id="old-file-upload" class="vdm-form-control" required&gt;
+                    &lt;div id="old-file-name" class="vdm-file-name vdm-mt-1"&gt;&lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class="vdm-mb-2 vdm-flex-grow-1" style="min-width: 45%;"&gt;
+                    &lt;label for="new-file-upload" class="vdm-custom-file-label vdm-icon-file vdm-mb-1 vdm-d-block"&gt;
+                        Upload New File
+                    &lt;/label&gt;
+                    &lt;input type="file" id="new-file-upload" class="vdm-form-control" required&gt;
+                    &lt;div id="new-file-name" class="vdm-file-name vdm-mt-1"&gt;&lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;button type="submit" id="compare-btn" class="vdm-btn vdm-btn--primary vdm-ms-auto vdm-icon-compare"&gt;
+                Compare Files
+            &lt;/button&gt;
+        &lt;/form&gt;
+
+        &lt;div id="vdm-merge__result" class="vdm-p-3 vdm-mb-3 vdm-d-none"&gt;&lt;/div&gt;
+
+        &lt;div id="vdm-container__wrapper" class="vdm-theme--dark vdm-d-none"&gt;
+            &lt;div class="vdm-user-content"&gt;
+                &lt;h2 class="vdm-text-center vdm-mb-2"&gt;Side by Side Comparison&lt;/h2&gt;
+                &lt;p class="vdm-text-center vdm-mb-3"&gt;Click on a section to select it for the merged result&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;!-- UI elements will be generated by JavaScript --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Required JavaScript files --&gt;
+    &lt;script src="../dist/diff-viewer.min.js"&gt;&lt;/script&gt;
+    &lt;script src="../dist/file-upload.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                                </div>
+
+                                <h4>Workflow</h4>
+                                <ol>
+                                    <li>User selects local files using the file inputs</li>
+                                    <li>User clicks "Compare Files" button</li>
+                                    <li>FileUploadManager reads the files using the FileReader API</li>
+                                    <li>File content is sent to diff-processor.php for processing</li>
+                                    <li>Loading indicators are dynamically created by the LoaderManager</li>
+                                    <li>Result is displayed in the diff viewer</li>
+                                </ol>
+
+                                <h4>Important Notes</h4>
+                                <ul>
+                                    <li>Files are read on the client side using JavaScript's FileReader API</li>
+                                    <li>Only the file content is sent to the server, not the actual files</li>
+                                    <li>Loading indicators are created dynamically by the LoaderManager utility</li>
+                                    <li>File size limitations apply based on your server configuration</li>
+                                </ul>
+                            </div>
+
+                            <div id="text-compare" class="mode-section">
+                                <h3>Text Compare Mode</h3>
+                                <p>
+                                    The Text Compare mode allows users to enter or paste code snippets directly for comparison.
+                                    This is useful for comparing small sections of code or testing changes.
+                                </p>
+
+                                <h4>Required Files</h4>
+                                <ul>
+                                    <li><code>text-compare.html</code> - HTML file with the text input form</li>
+                                    <li><code>text-compare.min.js</code> - JavaScript for text comparison functionality</li>
+                                    <li><code>diff-viewer.min.css</code> - CSS for the diff viewer</li>
+                                    <li><code>diff-viewer-theme.min.css</code> - CSS for the diff viewer UI elements (buttons, alerts, etc.)</li>
+                                </ul>
+
+                                <h4>Implementation Example</h4>
+                                <div class="code-block">
+                                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Text Comparison - Visual-Diff-Merge&lt;/title&gt;
+    &lt;meta name="description" content="Compare text snippets with Visual-Diff-Merge."&gt;
+    &lt;meta name="keywords" content="Visual-Diff-Merge, text comparison, diff viewer, merge tool"&gt;
+
+    &lt;!-- Include the Visual Diff Merge CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../dist/css/diff-viewer.min.css&quot;&gt;
+
+    &lt;!-- Include the Visual Diff Merge theme CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../dist/css/diff-viewer-theme.min.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="vdm-container vdm-p-3"&gt;
+        &lt;h1 class="vdm-mb-3"&gt;Text Comparison&lt;/h1&gt;
+        &lt;p class="vdm-mb-4"&gt;&lt;a href="index.html" class="vdm-btn vdm-btn--flat vdm-btn-sm"&gt;← Back Home&lt;/a&gt;&lt;/p&gt;
+
+        &lt;div class="vdm-card vdm-p-3 vdm-mb-4"&gt;
+            &lt;form id="text-comparison-form" class="vdm-d-flex vdm-flex-column"&gt;
+                &lt;div class="vdm-d-flex vdm-flex-wrap vdm-mb-3"&gt;
+                    &lt;div class="vdm-mb-3 vdm-flex-grow-1 vdm-me-3" style="min-width: 45%;"&gt;
+                        &lt;label for="old-text" class="vdm-mb-1 vdm-d-block"&gt;Old Content:&lt;/label&gt;
+                        &lt;textarea id="old-text" class="vdm-form-control vdm-code-textarea" rows="10" placeholder="Paste your original code/text here" required&gt;&lt;/textarea&gt;
+                    &lt;/div&gt;
+                    &lt;div class="vdm-mb-3 vdm-flex-grow-1" style="min-width: 45%;"&gt;
+                        &lt;label for="new-text" class="vdm-mb-1 vdm-d-block"&gt;New Content:&lt;/label&gt;
+                        &lt;textarea id="new-text" class="vdm-form-control vdm-code-textarea" rows="10" placeholder="Paste your modified code/text here" required&gt;&lt;/textarea&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;div class="vdm-d-flex vdm-flex-wrap vdm-mb-3 vdm-align-items-center"&gt;
+                    &lt;div class="vdm-mb-2 vdm-me-3"&gt;
+                        &lt;label for="language-select" class="vdm-mb-1 vdm-d-block"&gt;Language:&lt;/label&gt;
+                        &lt;select id="language-select" class="vdm-form-control"&gt;
+                            &lt;option value="auto" selected&gt;Auto-detect&lt;/option&gt;
+                            &lt;option value="javascript"&gt;JavaScript&lt;/option&gt;
+                            &lt;option value="html"&gt;HTML&lt;/option&gt;
+                            &lt;option value="css"&gt;CSS&lt;/option&gt;
+                            &lt;option value="php"&gt;PHP&lt;/option&gt;
+                            &lt;option value="python"&gt;Python&lt;/option&gt;
+                            &lt;option value="java"&gt;Java&lt;/option&gt;
+                            &lt;option value="csharp"&gt;C#&lt;/option&gt;
+                            &lt;option value="cpp"&gt;C++&lt;/option&gt;
+                            &lt;option value="ruby"&gt;Ruby&lt;/option&gt;
+                            &lt;option value="go"&gt;Go&lt;/option&gt;
+                            &lt;option value="rust"&gt;Rust&lt;/option&gt;
+                            &lt;option value="swift"&gt;Swift&lt;/option&gt;
+                            &lt;option value="typescript"&gt;TypeScript&lt;/option&gt;
+                            &lt;option value="kotlin"&gt;Kotlin&lt;/option&gt;
+                            &lt;option value="sql"&gt;SQL&lt;/option&gt;
+                            &lt;option value="xml"&gt;XML&lt;/option&gt;
+                            &lt;option value="json"&gt;JSON&lt;/option&gt;
+                            &lt;option value="yaml"&gt;YAML&lt;/option&gt;
+                            &lt;option value="markdown"&gt;Markdown&lt;/option&gt;
+                            &lt;option value="plaintext"&gt;Plain Text&lt;/option&gt;
+                        &lt;/select&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;button type="submit" class="vdm-btn vdm-btn--primary vdm-ms-auto"&gt;Compare&lt;/button&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+
+        &lt;div id="vdm-merge__result" class="vdm-p-3 vdm-mb-3 vdm-d-none"&gt;&lt;/div&gt;
+
+        &lt;div id="vdm-container__wrapper" class="vdm-theme--dark vdm-d-none"&gt;
+            &lt;div class="vdm-user-content"&gt;
+                &lt;h2 class="vdm-text-center vdm-mb-2"&gt;Side by Side Comparison&lt;/h2&gt;
+                &lt;p class="vdm-text-center vdm-mb-3"&gt;Click on a section to select it for the merged result&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;!-- UI elements will be generated by JavaScript --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Required JavaScript files --&gt;
+    &lt;script src="../dist/diff-viewer.min.js"&gt;&lt;/script&gt;
+    &lt;script src="../dist/text-compare.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                                </div>
+
+                                <h4>Workflow</h4>
+                                <ol>
+                                    <li>User enters or pastes text into the old and new textareas</li>
+                                    <li>User selects a language for syntax highlighting (optional)</li>
+                                    <li>User clicks "Compare" button</li>
+                                    <li>TextCompareManager collects the input</li>
+                                    <li>Text content is sent to diff-processor.php for processing</li>
+                                    <li>Result is displayed in the diff viewer</li>
+                                </ol>
+
+                                <h4>Features</h4>
+                                <ul>
+                                    <li>Language selection for proper syntax highlighting</li>
+                                    <li>Auto-detection of language based on content (when "Auto-detect" is selected)</li>
+                                    <li>Support for various programming languages and formats</li>
+                                </ul>
+                            </div>
+
+                            <div id="url-compare" class="mode-section">
+                                <h3>URL Compare Mode</h3>
+                                <p>
+                                    The URL Compare mode allows users to compare content from two URLs. This is useful for comparing
+                                    web pages, remote code repositories, or API responses.
+                                </p>
+
+                                <h4>Required Files</h4>
+                                <ul>
+                                    <li><code>url-compare.html</code> - HTML file with the URL input form</li>
+                                    <li><code>url-compare.min.js</code> - JavaScript for URL comparison functionality</li>
+                                    <li><code>diff-viewer.min.css</code> - CSS for the diff viewer</li>
+                                    <li><code>diff-viewer-theme.min.css</code> - CSS for the diff viewer UI elements (buttons, alerts, etc.)</li>
+                                </ul>
+
+                                <h4>Implementation Example</h4>
+                                <div class="code-block">
+                                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;URL Compare - Visual Diff Merge&lt;/title&gt;
+    &lt;meta name="description" content="Compare content from URLs with Visual-Diff-Merge."&gt;
+    &lt;meta name="keywords" content="Visual-Diff-Merge, URL comparison, diff viewer, merge tool"&gt;
+
+    &lt;!-- Include the Visual Diff Merge CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../dist/css/diff-viewer.min.css&quot;&gt;
+
+    &lt;!-- Include the Visual Diff Merge theme CSS --&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;../dist/css/diff-viewer-theme.min.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="vdm-container vdm-p-3"&gt;
+        &lt;h1 class="vdm-mb-3"&gt;URL Comparison&lt;/h1&gt;
+        &lt;p class="vdm-mb-4"&gt;&lt;a href="index.html" class="vdm-btn vdm-btn--flat vdm-btn-sm"&gt;← Back Home&lt;/a&gt;&lt;/p&gt;
+
+        &lt;div class="vdm-card vdm-p-3 vdm-mb-4"&gt;
+            &lt;form id="url-comparison-form" class="vdm-d-flex vdm-flex-column"&gt;
+                &lt;div class="vdm-d-flex vdm-flex-wrap"&gt;
+                    &lt;div class="vdm-mb-3 vdm-me-3 vdm-flex-fill vdm-min-width-0"&gt;
+                        &lt;label for="old-url" class="vdm-mb-1 vdm-d-block"&gt;Old Content URL:&lt;/label&gt;
+                        &lt;input type="url" id="old-url" class="vdm-form-control" placeholder="https://example.com/old-content.html" required&gt;
+                    &lt;/div&gt;
+                    &lt;div class="vdm-mb-3 vdm-flex-fill vdm-min-width-0"&gt;
+                        &lt;label for="new-url" class="vdm-mb-1 vdm-d-block"&gt;New Content URL:&lt;/label&gt;
+                        &lt;input type="url" id="new-url" class="vdm-form-control" placeholder="https://example.com/new-content.html" required&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;button type="submit" id="compare-btn" class="vdm-btn vdm-btn--primary vdm-ms-auto"&gt;Compare URLs&lt;/button&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+
+        &lt;div id="vdm-merge__result" class="vdm-p-3 vdm-mb-3 vdm-d-none"&gt;&lt;/div&gt;
+
+        &lt;div id="vdm-container__wrapper" class="vdm-theme--dark vdm-d-none"&gt;
+            &lt;div class="vdm-user-content"&gt;
+                &lt;h2 class="vdm-text-center vdm-mb-2"&gt;Side by Side Comparison&lt;/h2&gt;
+                &lt;p class="vdm-text-center vdm-mb-3"&gt;Click on a section to select it for the merged result&lt;/p&gt;
+            &lt;/div&gt;
+
+            &lt;!-- UI elements will be generated by JavaScript --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Required JavaScript files --&gt;
+    &lt;script src="../dist/diff-viewer.min.js"&gt;&lt;/script&gt;
+    &lt;script src="../dist/url-compare.min.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                                </div>
+
+                                <h4>Workflow</h4>
+                                <ol>
+                                    <li>User enters two URLs</li>
+                                    <li>User selects a language for syntax highlighting (optional)</li>
+                                    <li>User clicks "Compare URLs" button</li>
+                                    <li>UrlCompareManager sends the URLs to get-url-content.php</li>
+                                    <li>Server fetches content from both URLs</li>
+                                    <li>Content is sent to diff-processor.php for processing</li>
+                                    <li>Result is displayed in the diff viewer</li>
+                                </ol>
+
+                                <h4>Important Notes</h4>
+                                <ul>
+                                    <li>URLs must be accessible from the server</li>
+                                    <li>CORS restrictions are bypassed because the server fetches content, not the browser</li>
+                                    <li>Timeout limitations apply based on your server configuration</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="common-features">
+                <h2>Common Features Across All Modes</h2>
+
+                <h3 id="navigation-controls">Navigation Controls</h3>
+                <p>
+                    All modes provide navigation controls for moving between differences:
+                </p>
+                <ul>
+                    <li>Next difference button (↓)</li>
+                    <li>Previous difference button (↑)</li>
+                    <li>Difference counter showing current/total</li>
+                </ul>
+
+                <p>
+                    For technical details on how navigation works, see the <a href="architecture.html#components">DiffNavigator component</a> in the architecture documentation.
+                </p>
+
+                <h3 id="theme-selection">Theme Selection</h3>
+                <p>
+                    All modes support theme selection for syntax highlighting:
+                </p>
+                <ul>
+                    <li>Dark/light mode toggle</li>
+                    <li>Theme family selector (atom-one, github, etc.)</li>
+                </ul>
+
+                <h3 id="merge-capability">Merge Capability</h3>
+                <p>
+                    When enabled, all modes support interactive merging:
+                </p>
+                <ul>
+                    <li>Select chunks from either side</li>
+                    <li>Preview merged result</li>
+                    <li>Save merged content (functionality varies by mode)</li>
+                </ul>
+            </section>
+
+            <section id="using-api">
+                <h2>Using the API</h2>
+                <p>
+                    For more advanced usage, you can directly use the API endpoints:
+                </p>
+
+                <h3>Main API Endpoints</h3>
+                <ul>
+                    <li><code>diff-processor.php</code> - Main endpoint for processing diffs</li>
+                    <li><code>ajax-diff-merge.php</code> - Endpoint for merge operations</li>
+                    <li><code>get-file-content.php</code> - Endpoint for securely retrieving file content</li>
+                    <li><code>get-url-content.php</code> - Endpoint for fetching URL content</li>
+                </ul>
+
+                <p>For detailed API documentation, see the <a href="api.html">API Reference</a>.</p>
+            </section>
+        </main>
+        </div>
+
+        <footer class="docs-footer">
+            <p>&copy; 2025 Visual Diff Merge - <a href="https://github.com/migliori/visual-diff-merge">GitHub Repository</a></p>
+        </footer>
+    </div>
+</body>
+</html>

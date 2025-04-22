@@ -1,0 +1,35 @@
+```mermaid
+flowchart TD
+    title["File Browser Mode - Data Flow"]
+    FileBrowser_js["FileBrowser.js"]
+    FileBrowser_js_Directory_Navigation["Directory Navigation"]
+    FileBrowser_js --> FileBrowser_js_Directory_Navigation
+    FileBrowser_js_File_Selection["File Selection"]
+    FileBrowser_js --> FileBrowser_js_File_Selection
+    get_file_content_php["get-file-content.php"]
+    get_file_content_php_Directory_Listing["Directory Listing"]
+    get_file_content_php --> get_file_content_php_Directory_Listing
+    get_file_content_php_File_Retrieval["File Retrieval"]
+    get_file_content_php --> get_file_content_php_File_Retrieval
+    diff_processor_php["diff-processor.php"]
+    diff_processor_php_Diff_Generation["Diff Generation"]
+    diff_processor_php --> diff_processor_php_Diff_Generation
+    PathManager["PathManager"]
+    PathManager_Path_Validation["Path Validation"]
+    PathManager --> PathManager_Path_Validation
+    PathManager_Security_Checks["Security Checks"]
+    PathManager --> PathManager_Security_Checks
+    Config["Config"]
+    Config_Settings["Settings"]
+    Config --> Config_Settings
+    Config_Allowed_Directories["Allowed Directories"]
+    Config --> Config_Allowed_Directories
+    FileBrowser_js --> |"List Directory/Get File"| get_file_content_php
+    get_file_content_php --> |"Validate Paths"| PathManager
+    PathManager --> |"Check Allowed Directories"| Config
+    get_file_content_php --> |"Request Diff"| diff_processor_php
+    diff_processor_php --> |"Get Diff Settings"| Config
+    diff_processor_php --> |"Return Diff Data"| FileBrowser_js
+```
+
+<!-- Generated on: 2025-04-21 18:12:09 -->

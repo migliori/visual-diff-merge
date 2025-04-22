@@ -1,0 +1,32 @@
+```mermaid
+flowchart TD
+    title["Visual Diff Merge - Architecture Overview"]
+    UI_Layer["UI Layer"]
+    UI_Layer_Frontend_Components["Frontend Components"]
+    UI_Layer --> UI_Layer_Frontend_Components
+    UI_Layer_Theme_System["Theme System"]
+    UI_Layer --> UI_Layer_Theme_System
+    UI_Layer_Syntax_Highlighting["Syntax Highlighting"]
+    UI_Layer --> UI_Layer_Syntax_Highlighting
+    API_Layer["API Layer"]
+    API_Layer_AJAX_Endpoints["AJAX Endpoints"]
+    API_Layer --> API_Layer_AJAX_Endpoints
+    API_Layer_Diff_Processing["Diff Processing"]
+    API_Layer --> API_Layer_Diff_Processing
+    Backend_Layer["Backend Layer"]
+    Backend_Layer_Config_System["Config System"]
+    Backend_Layer --> Backend_Layer_Config_System
+    Backend_Layer_Path_Management["Path Management"]
+    Backend_Layer --> Backend_Layer_Path_Management
+    Backend_Layer_Security["Security"]
+    Backend_Layer --> Backend_Layer_Security
+    Storage["Storage"]
+    Storage_File_System["File System"]
+    Storage --> Storage_File_System
+    UI_Layer --> |"API Requests"| API_Layer
+    API_Layer --> |"Invokes"| Backend_Layer
+    Backend_Layer --> |"Reads/Writes"| Storage
+    API_Layer --> |"JSON Response"| UI_Layer
+```
+
+<!-- Generated on: 2025-04-21 18:12:09 -->

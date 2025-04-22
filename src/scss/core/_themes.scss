@@ -1,0 +1,26 @@
+// Theme specific styles
+#diff-container-wrapper {
+  &.dark-theme {
+    .theme-switch-label {
+      .fa-sun {
+        color: #555;
+      }
+
+      .fa-moon {
+        color: #0d6efd;
+      }
+    }
+  }
+
+  &.light-theme {
+    .theme-switch-label {
+      .fa-sun {
+        color: #f39c12;
+      }
+
+      .fa-moon {
+        color: #555;
+      }
+    }
+  }
+}

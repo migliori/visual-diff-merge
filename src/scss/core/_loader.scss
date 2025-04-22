@@ -1,0 +1,359 @@
+// Loader component styling
+// This file contains styling for various loaders and spinners
+
+@use '../abstracts/color-system' as colors;
+@use '../abstracts/variables' as vars;
+@use '../abstracts/utilities' as utils;
+
+// Main loader spinner styling
+.vdm-loader__spinner {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: vars.$primary;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+
+  // Dark theme styling
+  .vdm-theme--dark & {
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: vars.$primary;
+  }
+}
+
+// Loader container
+.vdm-loader__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+// Loader wrapper for positioning
+.vdm-loader__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+// Fullscreen loader
+.vdm-loader--fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 10000;
+
+  .vdm-theme--dark & {
+    background-color: rgba(40, 40, 40, 0.7);
+  }
+}
+
+// Inline loader
+.vdm-loader--inline {
+  display: inline-flex;
+  vertical-align: middle;
+  padding: 0.5rem;
+}
+
+// Active loader
+.vdm-loader--active {
+  display: flex !important;
+}
+
+// Size variations
+.vdm-loader__spinner--sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+.vdm-loader__spinner--lg {
+  width: 50px;
+  height: 50px;
+  border-width: 4px;
+}
+
+// Animation for spinner rotation
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Fade in animation for loading sections
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Loading text styling
+.vdm-loader__text {
+  margin-left: 1rem;
+  font-size: 0.95rem;
+  color: vars.$text-dark;
+
+  .vdm-theme--dark & {
+    color: vars.$text-light;
+  }
+}
+
+// Optional loading component with pulsing animation
+.vdm-loader__pulse {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: vars.$primary;
+  opacity: 0.6;
+  animation: pulse 1.5s ease-in-out infinite;
+
+  .vdm-theme--dark & {
+    background-color: vars.$primary;
+  }
+}
+
+// Specific loader instances
+
+// The main application loader
+#vdm-loader__indicator {
+  z-index: 10000;
+
+  &.vdm-loader__container {
+    padding: 15px 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    .vdm-theme--dark & {
+      background-color: rgba(40, 40, 40, 0.9);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+}
+
+/**
+ * Loader Component Styles
+ *
+ * This file contains styles for various loader components in the application,
+ * including fullscreen, inline, and container-specific loaders.
+ */
+
+// Base loader styles
+.vdm-loader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+
+  // When showing
+  &--showing {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  // Loader spinner
+  &__spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--vdm-primary-color, #007bff);
+    animation: vdm-spin 0.8s linear infinite;
+
+    .vdm-theme-dark & {
+      border-color: rgba(255, 255, 255, 0.1);
+      border-top-color: var(--vdm-primary-color, #2196f3);
+    }
+  }
+
+  // Loader message
+  &__message {
+    margin-top: 15px;
+    font-size: 1rem;
+    text-align: center;
+    color: var(--vdm-text-color, #333);
+
+    .vdm-theme-dark & {
+      color: var(--vdm-text-color, #eee);
+    }
+  }
+
+  // Fullscreen loader
+  &--fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 9999;
+
+    .vdm-theme-dark & {
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  // Inline loader
+  &--inline {
+    display: inline-flex;
+    margin: 0 10px;
+
+    .vdm-loader__spinner {
+      width: 20px;
+      height: 20px;
+      border-width: 2px;
+    }
+
+    .vdm-loader__message {
+      margin-top: 0;
+      margin-left: 10px;
+      font-size: 0.875rem;
+    }
+  }
+
+  // Small loader
+  &--small {
+    .vdm-loader__spinner {
+      width: 24px;
+      height: 24px;
+      border-width: 3px;
+    }
+
+    .vdm-loader__message {
+      font-size: 0.875rem;
+      margin-top: 8px;
+    }
+  }
+
+  // Container loader (for buttons, etc.)
+  &--container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 2;
+
+    .vdm-theme-dark & {
+      background-color: rgba(20, 20, 20, 0.8);
+    }
+  }
+
+  // Theme switcher specific loader
+  &--theme-switch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); // Increased opacity
+    z-index: 5;
+    display: flex;
+    flex-direction: row; // Horizontal layout for container loaders
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+
+    .vdm-theme--dark &,
+    .vdm-theme-dark & {
+      background-color: rgba(30, 30, 30, 0.8); // Increased opacity
+    }
+
+    .vdm-loader__spinner {
+      width: 20px;
+      height: 20px;
+      border-width: 2px;
+      margin-right: 10px; // Add space between spinner and text
+    }
+
+    .vdm-loader__message {
+      font-size: 0.9rem; // Larger font
+      margin-top: 0;
+      margin-left: 0;
+      font-weight: 500; // Make it slightly bolder
+      color: var(--vdm-text-color, #333);
+      white-space: nowrap; // Keep text on one line
+
+      .vdm-theme--dark &,
+      .vdm-theme-dark & {
+        color: var(--vdm-text-color, #eee);
+      }
+    }
+  }
+}
+
+// Spinner animation
+@keyframes vdm-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Special loading state for buttons
+.vdm-btn--loading {
+  position: relative;
+  pointer-events: none;
+  color: transparent !important;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: calc(50% - 10px);
+    left: calc(50% - 10px);
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: vdm-spin 0.8s linear infinite;
+  }
+
+  // Dark variant
+  &.vdm-btn--dark:before {
+    border-color: rgba(0, 0, 0, 0.2);
+    border-top-color: #333;
+  }
+}

@@ -1,0 +1,27 @@
+```mermaid
+flowchart TD
+    title["File Upload Mode - Data Flow"]
+    file_upload_js["file-upload.js"]
+    file_upload_js_File_Upload_UI["File Upload UI"]
+    file_upload_js --> file_upload_js_File_Upload_UI
+    file_upload_js_AJAX_Upload["AJAX Upload"]
+    file_upload_js --> file_upload_js_AJAX_Upload
+    ajax_diff_merge_php["ajax-diff-merge.php"]
+    ajax_diff_merge_php_File_Processing["File Processing"]
+    ajax_diff_merge_php --> ajax_diff_merge_php_File_Processing
+    ajax_diff_merge_php_Temp_Storage["Temp Storage"]
+    ajax_diff_merge_php --> ajax_diff_merge_php_Temp_Storage
+    diff_processor_php["diff-processor.php"]
+    diff_processor_php_Diff_Generation["Diff Generation"]
+    diff_processor_php --> diff_processor_php_Diff_Generation
+    Config["Config"]
+    Config_Diff_Settings["Diff Settings"]
+    Config --> Config_Diff_Settings
+    file_upload_js --> |"Upload Files"| ajax_diff_merge_php
+    ajax_diff_merge_php --> |"Process Diff"| diff_processor_php
+    diff_processor_php --> |"Get Settings"| Config
+    diff_processor_php --> |"Return Diff Data"| ajax_diff_merge_php
+    ajax_diff_merge_php --> |"JSON Response"| file_upload_js
+```
+
+<!-- Generated on: 2025-04-21 18:12:09 -->

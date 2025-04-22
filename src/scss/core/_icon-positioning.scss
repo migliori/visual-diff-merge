@@ -1,0 +1,116 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/color-system' as colors;
+@use '../abstracts/utilities' as utils; // Make sure this is properly imported
+
+// Icon column is now a direct child of diff-pane
+.vdm-diff__pane {
+  position: relative; // Required for absolute positioning
+
+  // Style the icon column container
+  .vdm-icon__column {
+    position: absolute;
+    top: 34px; // Match top padding of content
+    right: 10px;
+    height: calc(100% - 50px); // Adjust height to match visible content area
+    width: 30px;
+    z-index: 100; // Increase z-index to ensure it's above other elements
+    pointer-events: none; // Let clicks pass through
+    overflow: hidden; // Hide markers outside the visible area
+
+    // No transition for transform to ensure smooth scrolling
+    transform: translateY(0); // Initial position
+    will-change: transform; // Hint for browser optimization
+    transition: transform 0s; // No transition delay
+    transform-origin: top left; // Ensure the transform property isn't being overridden
+
+    // Style all markers
+    .vdm-icon__marker {
+      position: absolute;
+      right: 10px;
+      width: 1em;
+      height: 1em;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      z-index: 100;
+
+      // Position using icon index
+      top: calc((var(--icon-index) * var(--cell-height, 20.5px)));
+      transform: translateY(-100%);
+
+      // Hide by default
+      opacity: 0;
+      visibility: hidden;
+
+      // Content displayed via pseudo-elements
+      &::before {
+        display: inline-block;
+        font-size: 0.8em;
+      }
+
+      // Show when class is added by JavaScript
+      &.vdm-diff__chunk--selected {
+        opacity: 1;
+        visibility: visible;
+        color: colors.selected-border(vars.$add-color);
+
+        &::before {
+          content: "✓";
+        }
+      }
+
+      &.vdm-diff__chunk--unselected {
+        opacity: 1;
+        visibility: visible;
+        color: colors.selected-border(vars.$neutral-color);
+
+        &::before {
+          content: "−";
+        }
+      }
+
+      &.vdm-diff__placeholder {
+        opacity: 1;
+        visibility: visible;
+        color: vars.$text-muted;
+
+        &::before {
+          content: "+";
+        }
+      }
+
+      // IMPORTANT: Handle selected placeholder (takes precedence)
+      &.vdm-diff__placeholder.vdm-diff__chunk--selected {
+        opacity: 1;
+        visibility: visible;
+        color: colors.selected-border(vars.$add-color);
+
+        &::before {
+          content: "✓"; // Still shows checkmark when selected
+        }
+      }
+    }
+  }
+
+  // Hide icon column when horizontally scrolled
+  &.vdm-diff__pane--scrolled .vdm-icon__column {
+    opacity: 0;
+    @include utils.transition-quick("opacity");
+  }
+}
+
+// Ensure content doesn't overlap with icons
+.vdm-code__line-content {
+  padding-right: 30px !important; // Reserve space for icons
+}
+
+// Fix code display in line content
+.vdm-code__line-content pre {
+  margin: 0;
+  padding: 0;
+  line-height: inherit;
+  display: inline;
+}

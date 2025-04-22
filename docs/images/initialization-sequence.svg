@@ -1,0 +1,14 @@
+```mermaid
+sequenceDiagram
+    title: Visual Diff Merge - Initialization Sequence
+    Browser->>+index.js: Load Page
+    index.js->>+ConfigUtils: Validate Config
+    index.js->>+ResourceLoader: Initialize
+    ResourceLoader->>+ThemeManager: Load Theme
+    index.js->>+EndpointDiscovery: Discover API Endpoints
+    EndpointDiscovery->>+Config.php: Get Configuration
+    index.js->>+DiffViewer: Initialize Viewer
+    DiffViewer->>+Browser: Render UI
+```
+
+<!-- Generated on: 2025-04-21 18:12:09 -->

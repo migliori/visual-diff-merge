@@ -1,0 +1,762 @@
+// Import shared SCSS foundation
+@use '../../scss-shared' as shared;
+@use '../../scss-shared/abstracts/variables' as vars;
+@use '../../scss-shared/abstracts/color-system' as colors;
+@use "sass:color";
+@use "sass:map";
+
+// Documentation-specific variables
+$font-family: (
+  base: ('Pavanam', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif),
+  mono: (Consolas, Monaco, 'Courier New', monospace)
+);
+$code: (
+  bg: rgba(vars.$primary, 0.05),
+  color: color.adjust(vars.$primary, $lightness: -10%)
+);
+$content-max-width: 900px;
+$primary-light: color.adjust(vars.$primary, $lightness: 15%);
+$heading-colors: (
+  'h1': color.adjust(vars.$dark, $lightness: -5%),
+  'h2': color.adjust(vars.$dark, $lightness: 5%),
+  'h3': color.adjust(vars.$dark, $lightness: 5%),
+  'h4': color.adjust(vars.$dark, $lightness: 10%),
+  'h5': color.adjust(vars.$dark, $lightness: 15%)
+);
+$link: (
+  color: vars.$primary,
+  hover: color.adjust(vars.$primary, $lightness: -15%)
+);
+$nav: (
+  bg: vars.$dark,
+  text: vars.$light
+);
+$text: vars.$text-dark;
+
+// Top navigation variables
+$top-nav: (
+  bg: color.adjust(vars.$dark, $lightness: 10%),
+  text: rgba(255, 255, 255, 0.85),
+  hover: #fff
+);
+
+// Mixins
+@mixin card-base {
+  background-color: #fff;
+  border-radius: vars.$border-radius;
+  padding: 1.5rem;
+  box-shadow: vars.$box-shadow-sm;
+}
+
+@mixin responsive-container {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+// Base styles for documentation
+body {
+  font-family: map.get($font-family, base);
+  font-display: swap;
+  line-height: 1.6;
+  color: $text;
+  background-color: vars.$background-light;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+// Top navigation bar
+.top-nav {
+  background-color: map.get($top-nav, bg);
+  color: map.get($top-nav, text);
+  padding: 0.5rem 1rem;
+  width: 100%;
+  box-sizing: border-box;
+
+  &-container {
+    display: flex;
+    justify-content: flex-end;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 1.5rem;
+  }
+
+  &-link {
+    color: map.get($top-nav, text);
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: map.get($top-nav, hover);
+      text-decoration: underline;
+    }
+  }
+}
+
+// Main layout
+.docs {
+  &-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  &-content-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  // Sidebar navigation
+  &-sidebar {
+    width: 220px;
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: vars.$primary;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-bottom: 0.5rem;
+
+        a {
+          display: block;
+          padding: 0.3rem 0.5rem;
+          color: $text;
+          text-decoration: none;
+          border-left: 2px solid transparent;
+          transition: all 0.2s ease;
+
+          &:hover {
+            color: vars.$primary;
+            border-left-color: $primary-light;
+            background-color: map.get($code, bg);
+          }
+
+          &.active {
+            color: vars.$primary;
+            border-left-color: vars.$primary;
+            background-color: rgba(vars.$primary, 0.1);
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+
+  // Header
+  &-header {
+    background-color: map.get($nav, bg);
+    color: map.get($nav, text);
+    padding: 2rem;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+
+    h1 {
+      color: map.get($nav, text);
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: 2.5rem;
+      text-align: center;
+    }
+
+    .tagline {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      opacity: 0.8;
+      text-align: center;
+    }
+  }
+
+  // Navigation
+  &-nav {
+    background-color: map.get($nav, bg);
+    color: map.get($nav, text);
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      li {
+        margin: 0;
+
+        a {
+          color: rgba(255,255,255,0.8);
+          text-decoration: none;
+          transition: all 0.2s ease;
+          display: block;
+          padding: 0.5rem 1rem;
+          border-radius: 4px;
+
+          &:hover {
+            color: #fff;
+            background-color: rgba(255,255,255,0.1);
+          }
+        }
+
+        &.active a {
+          color: #fff;
+          background-color: rgba(255,255,255,0.2);
+        }
+      }
+    }
+  }
+
+  // Main content area
+  &-content {
+    flex: 1;
+    min-width: 0; // Fix for flexbox min-width issue
+    padding: 2rem;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden; // Prevent horizontal overflow
+
+    h1, h2, h3, h4, h5 {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: map.get($heading-colors, 'h1');
+      border-bottom: 1px solid rgba(vars.$primary, 0.2);
+      padding-bottom: 0.75rem;
+      margin-top: 0;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      color: map.get($heading-colors, 'h2');
+      padding-bottom: 0.5rem;
+      margin-top: 2.5rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+      color: map.get($heading-colors, 'h3');
+      margin-top: 2rem;
+      font-weight: 500;
+      font-variant: small-caps;
+      letter-spacing: 0.03em;
+      border-bottom: 1px solid rgba(vars.$dark, 0.2);
+    }
+
+    h4 {
+      font-size: 1.25rem;
+      color: map.get($heading-colors, 'h4');
+      margin-top: 1.75rem;
+      font-weight: 500;
+      padding: 0.4rem 0.75rem;
+      background-color: rgba(vars.$dark, 0.06);
+      border-radius: 3px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    h5 {
+      font-size: 1rem;
+      color: map.get($heading-colors, 'h5');
+      margin-top: 1.5rem;
+      font-weight: 600;
+      padding: 0 .5rem;
+      border-left: 3px solid rgba(vars.$dark, 0.15);
+      display: inline-block;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+    }
+
+    a {
+      color: map.get($link, color);
+      text-decoration: none;
+      border-bottom: 1px dotted map.get($link, color);
+
+      &:hover {
+        color: map.get($link, hover);
+        border-bottom: 1px solid map.get($link, hover);
+      }
+    }
+
+    code {
+      font-family: map.get($font-family, mono);
+      background-color: map.get($code, bg);
+      color: map.get($code, color);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background-color: vars.$dark;
+      color: vars.$light;
+      padding: 1.5rem;
+      border-radius: vars.$border-radius;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      font-family: map.get($font-family, mono);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      box-shadow: vars.$box-shadow-sm;
+      max-width: 100%;
+      word-wrap: break-word;
+
+      code {
+        background-color: transparent;
+        color: inherit;
+        padding: 0;
+        border-radius: 0;
+      }
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      display: block;
+      @include responsive-container;
+
+      th, td {
+        padding: 0.75rem;
+        border: 1px solid vars.$border-color;
+      }
+
+      th {
+        background-color: rgba(vars.$primary, 0.1);
+        font-weight: 600;
+        text-align: left;
+      }
+
+      tr:nth-child(even) {
+        background-color: rgba(0,0,0,0.02);
+      }
+    }
+
+    blockquote {
+      border-left: 4px solid vars.$primary;
+      margin: 1.5rem 0;
+      padding: 0.5rem 1rem;
+      background-color: rgba(vars.$primary, 0.05);
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 1.5rem auto;
+      border-radius: vars.$border-radius;
+      box-shadow: vars.$box-shadow;
+    }
+  }
+
+  // Footer
+  &-footer {
+    background-color: vars.$dark;
+    color: vars.$light;
+    padding: 2rem;
+    text-align: center;
+    margin-top: auto;
+    width: 100%;
+    box-sizing: border-box;
+
+    a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+
+      &:hover {
+        color: #fff;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Feature and component-specific styles
+.feature {
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  &-card {
+    @include card-base;
+
+    h3 {
+      margin-top: 0;
+      color: vars.$primary;
+      font-size: 1.2rem;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.mode {
+  &-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  &-card {
+    @include card-base;
+    text-align: center;
+
+    h3 {
+      margin-top: 0;
+      color: vars.$primary;
+      font-size: 1.2rem;
+    }
+
+    .mode-link {
+      display: inline-block;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: map.get($link, color);
+    }
+  }
+
+  // Mode selector tab system
+  &-selector {
+    margin: 2rem 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    overflow: hidden;
+  }
+
+  &-section {
+    padding: 1.5rem;
+    background-color: #fff;
+    display: none;
+
+      &.active {
+        display: block;
+     }
+  }
+}
+
+.doc {
+  &-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  &-section {
+    @include card-base;
+
+    h3 {
+      margin-top: 0;
+      font-size: 1.2rem;
+
+      a {
+        border-bottom: none;
+      }
+    }
+
+    ul {
+      margin-bottom: 0;
+      padding-left: 1.5rem;
+    }
+  }
+}
+
+.code-block {
+  position: relative;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+
+  pre {
+    margin: 0;
+  }
+}
+
+.component-table,
+.config-table {
+  font-size: 0.9rem;
+
+  code {
+    white-space: nowrap;
+  }
+}
+
+.full-width-img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+}
+
+%diagram-base {
+  margin: 2rem 0;
+  max-width: 100%;
+  overflow-x: auto;
+
+  img {
+    border: 1px solid vars.$border-color;
+    max-width: 100%;
+  }
+
+  em {
+    display: block;
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: rgba($text, 0.7);
+  }
+}
+
+.sequence-diagram,
+.flow-diagram,
+.architecture-diagram,
+.data-flow-diagram {
+  @extend %diagram-base;
+}
+
+.sequence-list {
+  @include card-base;
+  padding: 1.5rem 1.5rem 1.5rem 3rem;
+
+  li {
+    margin-bottom: 0.75rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  strong {
+    color: vars.$primary;
+  }
+}
+
+// Tab navigation
+.nav-tabs {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-bottom: 2px solid #ddd;
+  overflow-x: auto;
+
+  li {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 0.5rem;
+      color: #555;
+      text-decoration: none;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      position: relative;
+    }
+
+    &.active a {
+      color: vars.$primary;
+      border-bottom: 3px solid vars.$primary;
+      background-color: rgba(vars.$primary, 0.05);
+    }
+
+    a:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: vars.$primary;
+    }
+  }
+}
+
+.tab-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.7;
+
+  .nav-tabs li.active & {
+    opacity: 1;
+  }
+}
+
+// Tab icons using CSS
+.folder-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230078d7'%3E%3Cpath d='M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z'/%3E%3C/svg%3E");
+}
+
+.upload-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230078d7'%3E%3Cpath d='M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z'/%3E%3C/svg%3E");
+}
+
+.text-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230078d7'%3E%3Cpath d='M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z'/%3E%3C/svg%3E");
+}
+
+.url-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230078d7'%3E%3Cpath d='M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z'/%3E%3C/svg%3E");
+}
+
+// Responsive adjustments for the tab system
+@media (max-width: 768px) {
+  .nav-tabs {
+    flex-direction: column;
+    border-bottom: none;
+
+    li {
+      border-bottom: 1px solid #ddd;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      a {
+        padding: 1rem;
+        justify-content: flex-start;
+        border-left: 3px solid transparent;
+        border-bottom: none;
+      }
+
+      &.active a {
+        border-bottom: none;
+        border-left: 3px solid vars.$primary;
+      }
+    }
+  }
+
+  .docs {
+    &-header {
+      padding: 1.5rem 1rem;
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .tagline {
+        font-size: 1rem;
+      }
+    }
+
+    &-nav {
+      padding: 0 1rem 1rem;
+
+      ul {
+        flex-direction: column;
+        align-items: center;
+
+        li {
+          width: 100%;
+          text-align: center;
+
+          a {
+            padding: 0.75rem;
+          }
+        }
+      }
+    }
+
+    &-content {
+      padding: 1.5rem 1rem;
+    }
+  }
+
+  .feature-grid,
+  .mode-cards,
+  .doc-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Utility classes
+.text {
+  &-center { text-align: center; }
+  &-right { text-align: right; }
+  &-left { text-align: left; }
+}
+
+.mt-0 { margin-top: 0 !important; }
+.mb {
+  &-0 { margin-bottom: 0 !important; }
+  &-1 { margin-bottom: 0.5rem !important; }
+  &-2 { margin-bottom: 1rem !important; }
+  &-3 { margin-bottom: 1.5rem !important; }
+  &-4 { margin-bottom: 2rem !important; }
+}
+
+.mw-100 { max-width: 100%; }
+
+// Code syntax highlighting related styles
+.hljs {
+  &-keyword { color: #c678dd; }
+  &-string { color: #98c379; }
+  &-comment { color: #7f848e; font-style: italic; }
+  &-function { color: #61afef; }
+  &-number { color: #d19a66; }
+  &-operator { color: #c678dd; }
+  &-class { color: #e5c07b; }
+  &-variable { color: #e06c75; }
+}

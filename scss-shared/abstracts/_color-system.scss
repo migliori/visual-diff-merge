@@ -1,0 +1,87 @@
+// Base color generation functions - completely independent
+@function bg-color($base-color, $opacity: 0.4) {
+  @return rgba($base-color, $opacity);
+}
+
+@function selected-bg($base-color) {
+  @return bg-color($base-color, 0.5);
+}
+
+@function selected-border($base-color) {
+  @return rgba($base-color, 1.0);
+}
+
+@function unselected-bg($base-color) {
+  @return bg-color($base-color, 0.1);
+}
+
+@function hover-bg($base-color) {
+  @return bg-color($base-color, 0.3);
+}
+
+@function hover-border($base-color) {
+  @return rgba($base-color, 0.7);
+}
+
+// Stripe gradient generator
+@function stripe-gradient($color, $angle: 45deg, $light-opacity: 0.2, $dark-opacity: 0.3) {
+  @return repeating-linear-gradient(
+    $angle,
+    rgba($color, $light-opacity),
+    rgba($color, $light-opacity) 10px,
+    rgba($color, $dark-opacity) 10px,
+    rgba($color, $dark-opacity) 20px
+  );
+}
+
+// Selected/unselected state functions
+@function selected-stripe-gradient($color) {
+  @return stripe-gradient($color, 45deg, 0.3, 0.4);
+}
+
+@function unselected-stripe-gradient($color) {
+  @return stripe-gradient($color, 45deg, 0.1, 0.15);
+}
+
+@function hover-stripe-gradient($color) {
+  @return stripe-gradient($color, 45deg, 0.25, 0.35);
+}
+
+// Box shadow functions
+@function left-shadow($color) {
+  @return inset 4px 0 0 0 $color;
+}
+
+@function selected-shadow($base-color) {
+  @return left-shadow(selected-border($base-color));
+}
+
+@function unselected-shadow($neutral-color) {
+  @return left-shadow(selected-border($neutral-color));
+}
+
+@function hover-shadow($base-color) {
+  @return left-shadow(hover-border($base-color));
+}
+
+// Mixins that don't depend on any variables
+@mixin hover-state($color) {
+  &:not(.selected):not(.unselected):hover {
+    background-color: hover-bg($color);
+    box-shadow: hover-shadow($color);
+  }
+}
+
+// Updated mixins to use box-shadow instead of border
+@mixin selected-state($base-color) {
+  background-color: selected-bg($base-color) !important;
+  box-shadow: selected-shadow($base-color) !important;
+}
+
+@mixin unselected-state($base-color, $neutral-color) {
+  background-color: unselected-bg($base-color) !important;
+  box-shadow: unselected-shadow($neutral-color) !important;
+  position: relative;
+  opacity: 0.6;
+  filter: grayscale(70%);
+}

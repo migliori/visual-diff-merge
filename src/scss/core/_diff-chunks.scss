@@ -1,0 +1,78 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/color-system' as colors;
+@use '../abstracts/utilities' as utils;
+
+// Add consistent transitions (moved from _diff-core.scss)
+[data-chunk-id]:not([data-chunk-id=""]),
+.vdm-code__line-content {
+  @include utils.transition-properties(
+    (background-color, box-shadow, opacity),
+    vars.$transition-quick
+  );
+}
+
+// Specific styling for different chunk types
+.vdm-code__table {
+
+  // Default state for all chunk elements
+  [data-chunk-id]:not([data-chunk-id=""]) {
+    cursor: pointer;
+    position: relative;
+    box-shadow: colors.left-shadow(transparent); // Use box-shadow instead of border
+    box-sizing: border-box; // Important for width calculations
+
+    // Hover effect matching the selected state
+    &:not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected):not(.vdm-diff__line--placeholder):hover,
+    &.vdm-diff__group-hover:not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected):not(.vdm-diff__line--placeholder) {
+      background-color: colors.hover-bg(vars.$neutral-color);
+      box-shadow: colors.hover-shadow(vars.$neutral-color);
+    }
+  }
+
+  // Addition chunks
+  .vdm-diff__line--add {
+    background-color: colors.bg-color(vars.$add-color);
+    box-shadow: colors.left-shadow(transparent);
+  }
+
+  // Deletion chunks
+  .vdm-diff__line--delete {
+    background-color: colors.bg-color(vars.$delete-color);
+    box-shadow: colors.left-shadow(transparent);
+
+    // Use mixin instead of repeating code
+    @include colors.hover-state(vars.$delete-color);
+  }
+
+  // Special case for delete lines in chunks with placeholders
+  .vdm-diff__line--delete[data-has-placeholder="true"] {
+    background-color: colors.bg-color(vars.$add-color);
+    @include colors.hover-state(vars.$add-color);
+  }
+
+  // Empty line styling - using the standardized vdm-code__line--empty class
+  .vdm-code__line--empty {
+    // Replace direct rgba with a function
+    background: colors.bg-color(vars.$neutral-color, 0.3);
+    box-shadow: colors.left-shadow(transparent);
+    @include colors.hover-state(vars.$add-color);
+  }
+
+  // Replace chunks (both sides)
+  .vdm-diff__line--replace-left,
+  .vdm-diff__line--replace-right {
+    background-color: colors.bg-color(vars.$replace-color, 0.2);
+    box-shadow: colors.left-shadow(transparent);
+    @include colors.hover-state(vars.$replace-color);
+  }
+
+  // Placeholder styling
+  .vdm-diff__line--placeholder {
+    background: colors.stripe-gradient(vars.$delete-color);
+  }
+
+  // Empty placeholder
+  .vdm-code__line-content.vdm-code__line--empty.vdm-diff__line--placeholder {
+    background: colors.stripe-gradient(vars.$delete-color, true);
+  }
+}

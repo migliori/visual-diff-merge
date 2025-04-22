@@ -1,0 +1,70 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/utilities' as utils;
+@use '../core/scrollbar' as scroll;
+
+#vdm-container__wrapper {
+  position: relative;
+  height: clamp(300px, 90vh, 900px);
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+
+  #vdm-diff__container,
+  #vdm-diff__viewer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.vdm-diff__panes-container {
+  display: flex;
+  border: 1px solid vars.$border-color;
+  border-radius: 4px;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
+.vdm-diff__pane {
+  flex: 1;
+  position: relative;
+  padding-top: 0; /* Remove fixed padding */
+  padding-bottom: 20px;
+  border-right: 1px solid vars.$border-color;
+  height: auto;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.vdm-diff__pane-content {
+  position: absolute;
+  top: 34px; /* Updated to match the new header height */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overflow-x: auto;
+  @include scroll.scrollbar-styling;
+}
+
+.vdm-diff__line-wrapper {
+  position: relative;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.vdm-diff__table-wrapper {
+  min-width: 100%;
+  overflow-x: visible;
+  width: auto;
+}

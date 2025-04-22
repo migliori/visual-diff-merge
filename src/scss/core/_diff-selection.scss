@@ -1,0 +1,158 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/color-system' as colors;
+
+// Interaction states for all diff elements
+.vdm-code__table {
+  // Generic hover state
+  [data-chunk-id]:not([data-chunk-id=""]) {
+    &:not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected):hover,
+    &.vdm-diff__group-hover:not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected) {
+      background-color: colors.hover-bg(vars.$neutral-color);
+      box-shadow: colors.hover-shadow(vars.$neutral-color);
+    }
+  }
+
+  // Type-specific hover states
+  .vdm-diff__line--add:not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected):hover {
+    @include colors.hover-state(vars.$add-color);
+  }
+
+  .vdm-diff__line--delete:not(.vdm-diff__chunk--selected):not(.vdm-diff__chunk--unselected):hover {
+    @include colors.hover-state(vars.$delete-color);
+  }
+
+  // Combined selection states for diff-add (consolidating duplicate selectors)
+  .vdm-diff__line--add {
+    &.vdm-diff__chunk--selected {
+      @include colors.selected-state(vars.$add-color);
+    }
+
+    &.vdm-diff__chunk--unselected {
+      @include colors.unselected-state(vars.$add-color, vars.$neutral-color);
+
+      // Additional hover effect
+      &:hover {
+        background-color: colors.hover-bg(vars.$add-color) !important;
+        box-shadow: colors.unselected-shadow(vars.$neutral-color) !important;
+      }
+    }
+  }
+
+  // Selection states for diff-delete
+  .vdm-diff__line--delete {
+    &.vdm-diff__chunk--selected {
+      @include colors.selected-state(vars.$delete-color);
+    }
+
+    &.vdm-diff__chunk--unselected {
+      @include colors.unselected-state(vars.$delete-color, vars.$neutral-color);
+
+      // Additional hover effect
+      &:hover {
+        background-color: colors.hover-bg(vars.$delete-color) !important;
+        box-shadow: colors.unselected-shadow(vars.$neutral-color) !important;
+      }
+    }
+  }
+
+  // Styling for placeholder lines
+  .vdm-diff__line--placeholder {
+    display: block;
+    background: colors.stripe-gradient(vars.$delete-color);
+    box-shadow: colors.left-shadow(transparent);
+
+    // Selection states for placeholders
+    &.vdm-diff__chunk--selected {
+      background: colors.stripe-gradient(vars.$add-color) !important;
+      box-shadow: colors.selected-shadow(vars.$add-color) !important;
+    }
+
+    &.vdm-diff__chunk--unselected {
+      opacity: 0.6;
+      filter: grayscale(70%);
+      box-shadow: colors.unselected-shadow(vars.$neutral-color) !important;
+    }
+  }
+
+  // Also add this class for empty-line placeholders
+  .vdm-code__line-content.vdm-code__line--empty.vdm-diff__line--placeholder {
+    background: colors.stripe-gradient(vars.$delete-color, true);
+
+    // Selection states for empty placeholders
+    &.vdm-diff__chunk--selected {
+      background: colors.stripe-gradient(vars.$add-color, true) !important;
+      box-shadow: colors.selected-shadow(vars.$add-color) !important;
+    }
+
+    &.vdm-diff__chunk--unselected {
+      opacity: 0.6;
+      filter: grayscale(70%);
+      box-shadow: colors.unselected-shadow(vars.$neutral-color) !important;
+    }
+  }
+
+  // Special case for delete lines with placeholders
+  .vdm-diff__line--delete[data-has-placeholder="true"] {
+    &.vdm-diff__chunk--selected {
+      @include colors.selected-state(vars.$add-color);
+    }
+
+    &.vdm-diff__chunk--unselected {
+      @include colors.unselected-state(vars.$add-color, vars.$neutral-color);
+
+      // Additional hover effect
+      &:hover {
+        background-color: colors.hover-bg(vars.$add-color) !important;
+        box-shadow: colors.unselected-shadow(vars.$neutral-color) !important;
+      }
+    }
+  }
+
+  // Selection states for empty-content-line
+  .vdm-code__line--empty {
+    &.vdm-diff__chunk--selected {
+      @include colors.selected-state(vars.$add-color);
+    }
+
+    &.vdm-diff__chunk--unselected {
+      @include colors.unselected-state(vars.$add-color, vars.$neutral-color);
+    }
+  }
+
+  // Selection states for empty-content-line.diff-add
+  .vdm-code__line--empty.vdm-diff__line--add {
+    &.vdm-diff__chunk--selected {
+      background-color: colors.selected-bg(vars.$add-color) !important;
+      box-shadow: colors.selected-shadow(vars.$add-color) !important;
+    }
+
+    &.vdm-diff__chunk--unselected {
+      background-color: colors.unselected-bg(vars.$add-color) !important;
+      box-shadow: colors.unselected-shadow(vars.$neutral-color) !important;
+      opacity: 0.6;
+      filter: grayscale(70%);
+    }
+  }
+
+  // Selection states for regular line content
+  .vdm-code__line-content {
+    &.vdm-diff__chunk--selected {
+      &:not(.vdm-diff__line--placeholder) {
+        box-shadow: colors.selected-shadow(vars.$add-color) !important;
+      }
+    }
+
+    &.vdm-diff__chunk--unselected {
+      box-shadow: colors.unselected-shadow(vars.$neutral-color) !important;
+      opacity: 0.6;
+      filter: grayscale(70%);
+      cursor: pointer !important;
+
+      // Additional hover effect
+      &:hover {
+        background-color: colors.hover-bg(vars.$neutral-color) !important;
+        box-shadow: colors.unselected-shadow(vars.$neutral-color) !important;
+      }
+    }
+  }
+}

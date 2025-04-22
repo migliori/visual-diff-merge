@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Diff Merge - Architecture | Technical Design Documentation</title>
+    <meta name="description" content="Technical architecture documentation for Visual Diff Merge. Understand the component structure, data flow, and internal design of this powerful code comparison tool.">
+    <meta name="keywords" content="visual diff merge architecture, code comparison architecture, diff viewer design, merge tool components, PHP JavaScript integration">
+    <meta name="author" content="Visual Diff Merge">
+    <meta property="og:title" content="Visual Diff Merge - Architecture | Technical Design Documentation">
+    <meta property="og:description" content="Technical architecture documentation for Visual Diff Merge. Understand the component structure, data flow, and internal design.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://visual-diff-merge.miglisoft.com/docs/architecture.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Visual Diff Merge - Architecture | Technical Design Documentation">
+    <meta name="twitter:description" content="Technical architecture documentation for Visual Diff Merge. Understand the component structure, data flow, and internal design.">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Visual Diff Merge" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pavanam&display=swap">
+    <link rel="stylesheet" href="css/styles.min.css">
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!-- Mermaid.js for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Mermaid with dark theme to match the site's style
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'dark',
+                securityLevel: 'loose',
+                flowchart: {
+                    htmlLabels: true,
+                    curve: 'basis'
+                }
+            });
+
+            // Function to load diagram content from files and render them
+            async function loadAndRenderDiagrams() {
+                const diagramContainers = document.querySelectorAll('.mermaid-container');
+
+                for (const container of diagramContainers) {
+                    const filePath = container.dataset.diagramFile;
+
+                    try {
+                        const response = await fetch(filePath);
+                        if (!response.ok) throw new Error(`Failed to load diagram: ${response.statusText}`);
+
+                        let content = await response.text();
+
+                        // Extract the mermaid content from the file (between the ```mermaid and ``` markers)
+                        const mermaidMatch = content.match(/```mermaid\n([\s\S]*?)```/);
+                        if (mermaidMatch && mermaidMatch[1]) {
+                            content = mermaidMatch[1];
+                        }
+
+                        // Create a new mermaid div
+                        const mermaidDiv = document.createElement('div');
+                        mermaidDiv.className = 'mermaid';
+                        mermaidDiv.textContent = content;
+                        container.appendChild(mermaidDiv);
+
+                        // Update the Mermaid rendering
+                        mermaid.contentLoaded();
+                    } catch (error) {
+                        console.error(`Error loading diagram ${filePath}:`, error);
+                        // Show fallback image if available
+                        const fallbackId = container.dataset.fallbackId;
+                        if (fallbackId) {
+                            const fallback = document.getElementById(fallbackId);
+                            if (fallback) fallback.style.display = 'block';
+                        }
+                    }
+                }
+            }
+
+            // Load diagrams after page is loaded
+            loadAndRenderDiagrams();
+        });
+    </script>
+    <!-- Global docs script -->
+    <script src="js/docs.js"></script>
+    <style>
+        /* Add some styling for the mermaid diagrams */
+        .mermaid-container {
+            background-color: #f8f8f8;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow: auto;
+        }
+        /* Dark theme overrides */
+        @media (prefers-color-scheme: dark) {
+            .mermaid-container {
+                background-color: #2d2d2d;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="docs-container">
+        <header class="docs-header">
+            <h1>Visual Diff Merge</h1>
+            <p class="tagline">A powerful visual diff and merge tool for the web</p>
+        </header>
+
+        <nav class="docs-nav">
+            <ul>
+                <li><a href="index.html">Overview</a></li>
+                <li><a href="installation.html">Installation</a></li>
+                <li><a href="usage.html">Usage</a></li>
+                <li><a href="customization.html">Customization</a></li>
+                <li><a href="api.html">API</a></li>
+                <li class="active"><a href="architecture.html">Architecture</a></li>
+            </ul>
+        </nav>
+
+        <div class="docs-content-wrapper">
+            <aside class="docs-sidebar">
+                <h3>On This Page</h3>
+                <ul>
+                    <li><a href="#architecture">Architecture Overview</a></li>
+                    <li><a href="#components">System Components</a></li>
+                    <li><a href="#data-flow">Data Flow</a></li>
+                    <li><a href="#mode-specific-flows">Mode-Specific Data Flows</a></li>
+                    <li><a href="#initialization-sequence">Initialization Sequence</a></li>
+                    <li><a href="#configuration-flow">Configuration Flow</a></li>
+                    <li><a href="#extension-points">Extension Points</a></li>
+                </ul>
+            </aside>
+
+            <main class="docs-content">
+            <section id="architecture">
+                <h2>Architecture Overview</h2>
+                <p>
+                    Visual Diff Merge is built with a modular architecture that separates backend processing from frontend visualization.
+                    This separation allows for flexibility in deployment and usage scenarios while maintaining a consistent user experience.
+                </p>
+
+                <div class="architecture-diagram">
+                    <div class="mermaid-container" data-diagram-file="images/architecture-overview.svg">
+                        <!-- Diagram will be rendered here -->
+                    </div>
+                    <p><em>Figure 1: High-level architecture of Visual Diff Merge</em></p>
+                </div>
+
+                <p>
+                    The system is composed of three main layers:
+                </p>
+
+                <ol>
+                    <li>
+                        <strong>Backend (PHP)</strong>: Handles file operations, diff generation, and security
+                    </li>
+                    <li>
+                        <strong>API Layer</strong>: Provides <a href="api.html">endpoints</a> for diff processing, file access, and configuration
+                    </li>
+                    <li>
+                        <strong>Frontend (JavaScript)</strong>: Manages UI components, visualization, and user interactions
+                    </li>
+                </ol>
+
+                <p>
+                    For implementation details about configuring these components, see the <a href="installation.html#configuration">Configuration</a> section of the Installation guide.
+                </p>
+            </section>
+
+            <section id="components">
+                <h2>System Components</h2>
+
+                <h3>Backend Components</h3>
+                <p>
+                    The backend is implemented in PHP and provides core functionality for file operations, diff generation, and security.
+                </p>
+
+                <table class="component-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Description</th>
+                            <th>Responsibilities</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>DiffViewer</code></td>
+                            <td>Core diff generation engine</td>
+                            <td>
+                                <ul>
+                                    <li>Generate diff data between content sources</li>
+                                    <li>Process files, URLs, and raw text content</li>
+                                    <li>Format diff results for frontend consumption</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>FileBrowser</code></td>
+                            <td>File system interaction</td>
+                            <td>
+                                <ul>
+                                    <li>Scan directories for available files</li>
+                                    <li>Read file contents safely</li>
+                                    <li>Provide hierarchical file organization</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>Config</code></td>
+                            <td>Configuration management</td>
+                            <td>
+                                <ul>
+                                    <li>Load and merge configuration settings</li>
+                                    <li>Provide access to settings via consistent API</li>
+                                    <li>Generate client-side configuration subset</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>PathManager</code></td>
+                            <td>Secure path handling</td>
+                            <td>
+                                <ul>
+                                    <li>Generate secure file references</li>
+                                    <li>Map reference IDs to real file paths</li>
+                                    <li>Maintain path security across requests</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>Security</code></td>
+                            <td>Security services</td>
+                            <td>
+                                <ul>
+                                    <li>Validate file paths and access permissions</li>
+                                    <li>Sanitize inputs and prevent exploits</li>
+                                    <li>Enforce directory access restrictions</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>DebugLogger</code></td>
+                            <td>Logging functionality</td>
+                            <td>
+                                <ul>
+                                    <li>Record diagnostic information</li>
+                                    <li>Support multiple log levels</li>
+                                    <li>Format complex data for debugging</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>API Layer Components</h3>
+                <p>
+                    The API layer consists of several endpoint scripts that handle specific functionality and bridge the frontend with the backend.
+                </p>
+
+                <table class="component-table">
+                    <thead>
+                        <tr>
+                            <th>Endpoint</th>
+                            <th>Description</th>
+                            <th>Responsibilities</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>diff-processor.php</code></td>
+                            <td>Primary diff processing endpoint</td>
+                            <td>
+                                <ul>
+                                    <li>Process content from various sources</li>
+                                    <li>Generate diff data using DiffViewer</li>
+                                    <li>Return formatted results to client</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>ajax-diff-merge.php</code></td>
+                            <td>Merge operation handler</td>
+                            <td>
+                                <ul>
+                                    <li>Process merge requests</li>
+                                    <li>Save merged content to files</li>
+                                    <li>Handle various save options (original, suffix, etc.)</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>get-file-content.php</code></td>
+                            <td>Secure file content provider</td>
+                            <td>
+                                <ul>
+                                    <li>Retrieve file content safely</li>
+                                    <li>Validate file references and permissions</li>
+                                    <li>Return file content in standardized format</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>get-url-content.php</code></td>
+                            <td>URL content fetcher</td>
+                            <td>
+                                <ul>
+                                    <li>Retrieve content from external URLs</li>
+                                    <li>Bypass client-side CORS restrictions</li>
+                                    <li>Handle errors and timeout gracefully</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>endpoint-config.php</code></td>
+                            <td>Configuration provider</td>
+                            <td>
+                                <ul>
+                                    <li>Return client-side configuration settings</li>
+                                    <li>Provide language and translation data</li>
+                                    <li>Share debug settings with client</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>endpoints-config.php</code></td>
+                            <td>API discovery service</td>
+                            <td>
+                                <ul>
+                                    <li>Provide endpoint URLs to client</li>
+                                    <li>Support relative or absolute URL formats</li>
+                                    <li>Enable dynamic endpoint discovery</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Frontend Components</h3>
+                <p>
+                    The frontend is built with modular JavaScript components that handle visualization, user interaction, and state management.
+                </p>
+
+                <table class="component-table">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Description</th>
+                            <th>Responsibilities</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>DiffViewer</code></td>
+                            <td>Main viewer component</td>
+                            <td>
+                                <ul>
+                                    <li>Coordinate visualization of diff content</li>
+                                    <li>Manage subcomponents and services</li>
+                                    <li>Handle initialization and state management</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>ChunkManager</code></td>
+                            <td>Chunk handling and rendering</td>
+                            <td>
+                                <ul>
+                                    <li>Process diff chunks for display</li>
+                                    <li>Manage chunk selection and state</li>
+                                    <li>Coordinate visual representation of chunks</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>MergeHandler</code></td>
+                            <td>Merge operations controller</td>
+                            <td>
+                                <ul>
+                                    <li>Process user merge selections</li>
+                                    <li>Generate merged content</li>
+                                    <li>Handle save operations and API interactions</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>DiffNavigator</code></td>
+                            <td>Navigation controls</td>
+                            <td>
+                                <ul>
+                                    <li>Provide next/previous navigation</li>
+                                    <li>Track current position in diff</li>
+                                    <li>Show navigation indicators</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>SyntaxHighlighter</code></td>
+                            <td>Code highlighting</td>
+                            <td>
+                                <ul>
+                                    <li>Detect languages automatically</li>
+                                    <li>Apply syntax highlighting to code</li>
+                                    <li>Manage highlight.js integration</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><code>ThemeManager</code></td>
+                            <td>Theme handling</td>
+                            <td>
+                                <ul>
+                                    <li>Switch between light and dark modes</li>
+                                    <li>Manage highlighting themes</li>
+                                    <li>Persist user theme preferences</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Mode-specific Managers</td>
+                            <td>Mode controllers</td>
+                            <td>
+                                <ul>
+                                    <li>Handle specific mode functionality (FileBrowserManager, FileUploadManager, etc.)</li>
+                                    <li>Coordinate API interactions for specific modes</li>
+                                    <li>Manage mode-specific UI elements</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Utility Classes</td>
+                            <td>Shared services</td>
+                            <td>
+                                <ul>
+                                    <li>Provide common functionality (Debug, DOMUtils, etc.)</li>
+                                    <li>Implement core services (AlertManager, LoaderManager, etc.)</li>
+                                    <li>Enable shared state management</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="data-flow">
+                <h2>Data Flow</h2>
+                <p>
+                    The data flow in Visual Diff Merge varies depending on the operation mode, but follows a general pattern:
+                </p>
+
+                <div class="data-flow-diagram">
+                    <div class="mermaid-container" data-diagram-file="images/data-flow-diagram.svg">
+                        <!-- Diagram will be rendered here -->
+                    </div>
+                    <p><em>Figure 2: Data flow across system components</em></p>
+                </div>
+
+                <h3>General Data Flow Sequence</h3>
+                <ol>
+                    <li>
+                        <strong>Content Acquisition</strong>: Content is obtained from the source (files, URLs, or direct input)
+                    </li>
+                    <li>
+                        <strong>Content Processing</strong>: Content is sent to the API for diff generation
+                    </li>
+                    <li>
+                        <strong>Diff Calculation</strong>: The backend processes the content and generates diff data
+                    </li>
+                    <li>
+                        <strong>Diff Visualization</strong>: The frontend renders the diff data in the viewer
+                    </li>
+                    <li>
+                        <strong>User Interaction</strong>: Users navigate, select chunks, and make merge decisions
+                    </li>
+                    <li>
+                        <strong>Merge Processing</strong>: Selected merge operations are processed by the API (if applicable)
+                    </li>
+                    <li>
+                        <strong>Result Delivery</strong>: Merged content is saved or returned to the user
+                    </li>
+                </ol>
+
+                <h3>Mode-Specific Workflows</h3>
+
+                <h4>File Browser Mode</h4>
+                <div class="sequence-diagram">
+                    <ol class="sequence-list">
+                        <li>
+                            <strong>User</strong> → <strong>FileBrowserManager</strong>: Select files for comparison
+                        </li>
+                        <li>
+                            <strong>FileBrowserManager</strong> → <strong>get-file-content.php</strong>: Request file content using file references
+                        </li>
+                        <li>
+                            <strong>get-file-content.php</strong> → <strong>PathManager</strong>: Resolve file paths from references
+                        </li>
+                        <li>
+                            <strong>PathManager</strong> → <strong>Security</strong>: Validate file access permissions
+                        </li>
+                        <li>
+                            <strong>get-file-content.php</strong> → <strong>FileBrowserManager</strong>: Return file content
+                        </li>
+                        <li>
+                            <strong>FileBrowserManager</strong> → <strong>diff-processor.php</strong>: Send content for diff processing
+                        </li>
+                        <li>
+                            <strong>diff-processor.php</strong> → <strong>DiffViewer (PHP)</strong>: Process content and generate diff
+                        </li>
+                        <li>
+                            <strong>diff-processor.php</strong> → <strong>FileBrowserManager</strong>: Return diff data and configuration
+                        </li>
+                        <li>
+                            <strong>FileBrowserManager</strong> → <strong>DiffViewer (JS)</strong>: Initialize viewer with diff data
+                        </li>
+                        <li>
+                            <strong>DiffViewer (JS)</strong>: Render diff visualization and UI components
+                        </li>
+                    </ol>
+                </div>
+
+                <h4>File Upload Mode</h4>
+                <div class="sequence-diagram">
+                    <ol class="sequence-list">
+                        <li>
+                            <strong>User</strong> → <strong>FileUploadManager</strong>: Upload files for comparison
+                        </li>
+                        <li>
+                            <strong>FileUploadManager</strong>: Read file content from uploaded files
+                        </li>
+                        <li>
+                            <strong>FileUploadManager</strong> → <strong>diff-processor.php</strong>: Send content for diff processing
+                        </li>
+                        <li>
+                            <strong>diff-processor.php</strong> → <strong>DiffViewer (PHP)</strong>: Process content and generate diff
+                        </li>
+                        <li>
+                            <strong>diff-processor.php</strong> → <strong>FileUploadManager</strong>: Return diff data and configuration
+                        </li>
+                        <li>
+                            <strong>FileUploadManager</strong> → <strong>DiffViewer (JS)</strong>: Initialize viewer with diff data
+                        </li>
+                        <li>
+                            <strong>DiffViewer (JS)</strong>: Render diff visualization and UI components
+                        </li>
+                    </ol>
+                </div>
+
+                <h4>Text Compare Mode</h4>
+                <div class="sequence-diagram">
+                    <ol class="sequence-list">
+                        <li>
+                            <strong>User</strong> → <strong>TextCompareManager</strong>: Input text for comparison
+                        </li>
+                        <li>
+                            <strong>TextCompareManager</strong> → <strong>diff-processor.php</strong>: Send text content for diff processing
+                        </li>
+                        <li>
+                            <strong>diff-processor.php</strong> → <strong>DiffViewer (PHP)</strong>: Process content and generate diff
+                        </li>
+                        <li>
+                            <strong>diff-processor.php</strong> → <strong>TextCompareManager</strong>: Return diff data and configuration
+                        </li>
+                        <li>
+                            <strong>TextCompareManager</strong> → <strong>DiffViewer (JS)</strong>: Initialize viewer with diff data
+                        </li>
+                        <li>
+                            <strong>DiffViewer (JS)</strong>: Render diff visualization and UI components
+                        </li>
+                    </ol>
+                </div>
+
+                <h4>URL Compare Mode</h4>
+                <div class="sequence-diagram">
+                    <ol class="sequence-list">
+                        <li>
+                            <strong>User</strong> → <strong>UrlCompareManager</strong>: Input URLs for comparison
+                        </li>
+                        <li>
+                            <strong>UrlCompareManager</strong> → <strong>get-url-content.php</strong>: Request URL content for client-side preview (optional)
+                        </li>
+                        <li>
+                            <strong>UrlCompareManager</strong> → <strong>diff-processor.php</strong>: Send URLs for diff processing
+                        </li>
+                        <li>
+                            <strong>diff-processor.php</strong>: Fetch content from URLs
+                        </li>
+                        <li>
+                            <strong>diff-processor.php</strong> → <strong>DiffViewer (PHP)</strong>: Process content and generate diff
+                        </li>
+                        <li>
+                            <strong>diff-processor.php</strong> → <strong>UrlCompareManager</strong>: Return diff data and configuration
+                        </li>
+                        <li>
+                            <strong>UrlCompareManager</strong> → <strong>DiffViewer (JS)</strong>: Initialize viewer with diff data
+                        </li>
+                        <li>
+                            <strong>DiffViewer (JS)</strong>: Render diff visualization and UI components
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+            <section id="mode-specific-flows">
+                <h2>Mode-Specific Data Flows</h2>
+                <p>
+                    Visual Diff Merge supports four primary modes of operation, each with its own data flow pattern.
+                    These diagrams illustrate how data moves through the system in each operational mode.
+                </p>
+
+                <h3>File Browser Mode</h3>
+                <p>
+                    File Browser mode allows users to navigate the server's file system and select files for comparison.
+                </p>
+                <div class="flow-diagram">
+                    <div class="mermaid-container" data-diagram-file="images/mode-file-browser-flow.svg">
+                        <!-- Diagram will be rendered here -->
+                    </div>
+                    <p><em>Figure 5: Data flow in File Browser mode</em></p>
+                </div>
+
+                <h3>File Upload Mode</h3>
+                <p>
+                    File Upload mode enables users to upload files from their local system for comparison.
+                </p>
+                <div class="flow-diagram">
+                    <div class="mermaid-container" data-diagram-file="images/mode-file-upload-flow.svg">
+                        <!-- Diagram will be rendered here -->
+                    </div>
+                    <p><em>Figure 6: Data flow in File Upload mode</em></p>
+                </div>
+
+                <h3>Text Compare Mode</h3>
+                <p>
+                    Text Compare mode allows direct comparison of text snippets entered by users.
+                </p>
+                <div class="flow-diagram">
+                    <div class="mermaid-container" data-diagram-file="images/mode-text-compare-flow.svg">
+                        <!-- Diagram will be rendered here -->
+                    </div>
+                    <p><em>Figure 7: Data flow in Text Compare mode</em></p>
+                </div>
+
+                <h3>URL Compare Mode</h3>
+                <p>
+                    URL Compare mode fetches content from remote URLs for comparison.
+                </p>
+                <div class="flow-diagram">
+                    <div class="mermaid-container" data-diagram-file="images/mode-url-compare-flow.svg">
+                        <!-- Diagram will be rendered here -->
+                    </div>
+                    <p><em>Figure 8: Data flow in URL Compare mode</em></p>
+                </div>
+            </section>
+
+            <section id="initialization-sequence">
+                <h2>Initialization Sequence</h2>
+                <p>
+                    The initialization sequence describes how the application bootstraps itself when a page is loaded.
+                    This process includes loading configuration settings, initializing components, and preparing the UI.
+                </p>
+
+                <div class="flow-diagram">
+                    <div class="mermaid-container" data-diagram-file="images/initialization-sequence.svg">
+                        <!-- Diagram will be rendered here -->
+                    </div>
+                    <p><em>Figure 9: Application initialization sequence</em></p>
+                </div>
+
+                <p>
+                    During initialization, the following steps occur:
+                </p>
+                <ol>
+                    <li>DOM content load triggers the application bootstrap</li>
+                    <li>Configuration is loaded from default and user settings</li>
+                    <li>Theme preferences are applied</li>
+                    <li>Core components are initialized</li>
+                    <li>Mode-specific components are loaded based on the current view</li>
+                    <li>Event listeners are attached to UI elements</li>
+                    <li>Initial state is established</li>
+                </ol>
+            </section>
+
+            <section id="configuration-flow">
+                <h2>Configuration Flow</h2>
+                <p>
+                    Visual Diff Merge uses a cascading configuration system that merges defaults with user preferences
+                    and runtime settings. This ensures flexibility while maintaining consistent behavior.
+                </p>
+
+                <div class="flow-diagram">
+                    <div class="mermaid-container" data-diagram-file="images/configuration-flow.svg">
+                        <!-- Diagram will be rendered here -->
+                    </div>
+                    <p><em>Figure 10: Configuration resolution flow</em></p>
+                </div>
+
+                <p>
+                    The configuration system processes settings in this order of precedence:
+                </p>
+                <ol>
+                    <li>Runtime settings (highest priority)</li>
+                    <li>URL parameters</li>
+                    <li>User preferences (stored in localStorage)</li>
+                    <li>Instance configuration (server-side settings)</li>
+                    <li>Default configuration (lowest priority)</li>
+                </ol>
+
+                <p>
+                    This hierarchical approach allows for flexible customization while ensuring the application
+                    always has valid settings to fall back on.
+                </p>
+            </section>
+
+            <section id="extension-points">
+                <h2>Extension Points</h2>
+                <p>
+                    Visual Diff Merge is designed with extensibility in mind. The application provides several
+                    extension points where developers can customize behavior without modifying the core codebase.
+                </p>
+
+                <h3>Syntax Highlighting</h3>
+                <p>
+                    The SyntaxHighlighter component supports custom language definitions and themes beyond the
+                    built-in options provided by highlight.js.
+                </p>
+
+                <h3>Diff Algorithms</h3>
+                <p>
+                    The core differencing engine can be extended with custom algorithms by implementing the
+                    appropriate interfaces in the DiffViewer component.
+                </p>
+
+                <h3>Custom Themes</h3>
+                <p>
+                    The ThemeManager supports registration of custom themes that can be added to the theme selection
+                    options available to users.
+                </p>
+
+                <h3>Custom File Sources</h3>
+                <p>
+                    Beyond the built-in file sources (browser, upload, text, URL), developers can implement custom
+                    file sources by extending the appropriate base classes and registering them with the application.
+                </p>
+            </section>
+
+            <section id="conclusion">
+                <h2>Conclusion</h2>
+                <p>
+                    This architectural overview provides a high-level understanding of Visual Diff Merge's design
+                    and component structure. For implementation details, refer to the source code and inline
+                    documentation. For customization options, see the <a href="customization.html">Customization</a> guide.
+                </p>
+
+                <p>
+                    Last updated: April 21, 2025
+                </p>
+            </section>
+        </main>
+        </div>
+
+        <footer class="docs-footer">
+            <p>&copy; 2025 Visual Diff Merge - <a href="https://github.com/migliori/visual-diff-merge">GitHub Repository</a></p>
+        </footer>
+    </div>
+</body>
+</html>

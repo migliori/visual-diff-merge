@@ -1,0 +1,7 @@
+// Main export file for shared SCSS foundation
+// This file acts as the entry point for all shared SCSS resources
+
+// Import all abstracts
+@forward 'abstracts/color-system';
+@forward 'abstracts/variables';
+@forward 'abstracts/utilities';

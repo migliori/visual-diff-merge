@@ -1,0 +1,333 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/color-system' as colors;
+@use '../abstracts/utilities' as utils; // Add this import
+@use '../core/scrollbar' as scroll;
+@use 'sass:color'; // Add this to use color functions with module system
+
+// Modal styles
+.vdm-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  @include utils.transition-quick("opacity");
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  background-color: #fff;
+
+  // Add styling for modal close button
+  .vdm-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    color: vars.$text-dark;
+    opacity: 0.7;
+    @include utils.transition-quick("all");
+
+    &:before, &:after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 2px;
+      background-color: currentColor;
+      transition: background-color 0.2s ease;
+    }
+
+    &:before {
+      transform: rotate(45deg);
+    }
+
+    &:after {
+      transform: rotate(-45deg);
+    }
+
+    &:hover, &:focus {
+      outline: none;
+      opacity: 1;
+      background-color: rgba(0, 0, 0, 0.05);
+      transform: scale(1.1);
+
+      &:before, &:after {
+        background-color: vars.$danger-color;
+      }
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &.vdm-modal--fixed-footer {
+    height: 90% !important;
+    max-height: 90% !important;
+    width: 95% !important;
+    max-width: 95% !important;
+    top: 5% !important;
+
+    .vdm-modal__content {
+      height: calc(100% - vars.$modal-header-height) !important;
+      max-height: none !important;
+      padding: 0;
+      overflow: hidden !important;
+    }
+  }
+
+  &.vdm-modal--fullscreen {
+    width: 95% !important;
+    height: 90% !important;
+    max-height: 90% !important;
+    top: 5% !important;
+
+    .vdm-modal__content {
+      height: 100%;
+      padding: 0;
+    }
+  }
+
+  .vdm-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: vars.$modal-header-height;
+    background-color: vars.$background-light;
+    border-bottom: 1px solid vars.$border-color;
+
+    h5 {
+      margin: 0;
+      font-weight: 400;
+    }
+  }
+
+  .vdm-modal__header--fixed {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: vars.$background-light;
+    border-bottom: 1px solid vars.$border-color-light;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+    h5 {
+      margin: 0;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .vdm-btn-close {
+      background: transparent;
+      border: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1;
+      color: vars.$text-dark;
+      text-shadow: 0 1px 0 #fff;
+      opacity: .5;
+      padding: 0;
+      margin: -1rem -1rem -1rem auto;
+      cursor: pointer;
+
+      &:hover {
+        opacity: .75;
+      }
+    }
+  }
+
+  // Code Copy Modal specific styles
+  .vdm-modal__copy-dialog {
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .vdm-modal__copy-instructions {
+    margin-bottom: 10px;
+    color: vars.$text-dark;
+  }
+
+  .vdm-modal__copy-textarea-container {
+    flex: 1;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center; /* Center the textarea horizontally */
+    width: 100%;
+  }
+
+  .vdm-modal__copy-textarea {
+    width: 100%;
+    max-width: calc(100% - 10px); /* Prevent horizontal overflow */
+    height: 100%;
+    min-height: 200px;
+    font-family: monospace;
+    padding: 10px;
+    border: 1px solid vars.$border-color;
+    border-radius: 4px;
+    resize: none;
+    @include scroll.scrollbar-styling;
+    overflow: auto; // This enables scrollbars in both directions when needed
+    background-color: var(--code-bg-color, #f5f5f5);
+    color: var(--code-text-color, #333);
+    box-sizing: border-box; /* Ensure padding is included in width calculation */
+  }
+
+  .vdm-modal__copy-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  // General button styling for all modal buttons (except close buttons)
+  .vdm-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    @include utils.transition-quick("all");
+
+    // Ensure the icon has consistent sizing
+    .vdm-icon {
+      flex-shrink: 0;
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+
+  // Keep the existing copy button styling and extend it
+  .vdm-modal__copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &.btn-success {
+      i {
+        animation: fadeIn 0.3s ease-in;
+      }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  }
+
+  // Common modal button variations with appropriate icons
+  .vdm-btn-primary {
+    background-color: vars.$primary;
+    color: #fff;
+    border: 1px solid color.scale(vars.$primary, $lightness: -5%);
+
+    &:hover {
+      background-color: color.scale(vars.$primary, $lightness: -5%);
+    }
+  }
+
+  .vdm-btn-secondary {
+    background-color: vars.$secondary;
+    color: #fff;
+    border: 1px solid color.scale(vars.$secondary, $lightness: -5%);
+
+    &:hover {
+      background-color: color.scale(vars.$secondary, $lightness: -5%);
+    }
+  }
+
+  .vdm-btn-success {
+    background-color: vars.$success;
+    color: #fff;
+    border: 1px solid color.scale(vars.$success, $lightness: -5%);
+
+    &:hover {
+      background-color: color.scale(vars.$success, $lightness: -5%);
+    }
+  }
+
+  .vdm-btn-danger {
+    background-color: vars.$danger;
+    color: #fff;
+    border: 1px solid color.scale(vars.$danger, $lightness: -5%);
+
+    &:hover {
+      background-color: color.scale(vars.$danger, $lightness: -5%);
+    }
+  }
+
+  .vdm-btn-outline {
+    background-color: transparent;
+    color: vars.$text-dark;
+    border: 1px solid vars.$border-color;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+#vdm-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.66);
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px); // For Safari support
+  @include utils.transition-quick("opacity");
+}
+
+// Merge preview content
+.vdm-modal__preview-content {
+  height: calc(100% - 48px); // Adjust height to account for header and footer
+  overflow: auto;
+  padding: 24px;
+  // Apply scrollbar styling using the mixin
+  @include scroll.scrollbar-styling;
+
+  pre {
+      margin: 0;
+      max-height: 100%;
+      overflow: auto;
+      position: relative; // Ensure proper positioning of copy button
+
+      // Apply scrollbar styling to nested pre elements
+      @include scroll.scrollbar-styling;
+
+      code {
+        min-width: calc(100% - 2px);
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 13px;
+        line-height: 1.2;
+      }
+    }
+
+  code {
+    tab-size: 4;
+  }
+
+  .hljs-ln-numbers {
+    padding: 1px 5px;
+  }
+}

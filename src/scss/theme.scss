@@ -1,0 +1,415 @@
+// Import dependencies for theme styles
+@use 'sass:color';
+@use 'abstracts/variables' as vars;
+@use 'abstracts/color-system' as colors;
+@use 'abstracts/utilities' as utils;
+
+// Modern theme styles for visual-diff-merge
+// Based on 2025 Bootstrap 5 trends
+
+// Base styles for the theme
+.vdm-container__wrapper * {
+  &:not(pre, code, pre *, code *) {
+    font-family: inherit;
+  }
+}
+
+// Button styles with enhanced visuals
+.vdm-btn {
+  display: inline-block;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: visible; /* Changed from hidden to visible */
+  @include utils.transition-properties(
+    (color, background-color, border-color, box-shadow, transform),
+    vars.$transition-quick
+  );
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  &:active {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Add support for better flex layout when used with vdm-nowrap */
+  &.vdm-nowrap {
+    display: inline-flex;
+    width: auto; /* Allow the button to expand as needed */
+    min-width: fit-content; /* Ensure content is never compressed */
+  }
+}
+
+.vdm-btn--primary {
+  color: #fff;
+  background-color: vars.$primary;
+  border: 1px solid vars.$primary;
+
+  &:hover {
+    background-color: color.scale(vars.$primary, $lightness: -5%);
+    border-color: color.scale(vars.$primary, $lightness: -7%);
+  }
+}
+
+.vdm-btn--secondary {
+  color: #fff;
+  background-color: vars.$secondary;
+  border: 1px solid vars.$secondary;
+
+  &:hover {
+    background-color: color.scale(vars.$secondary, $lightness: -5%);
+    border-color: color.scale(vars.$secondary, $lightness: -7%);
+  }
+}
+
+.vdm-btn--info {
+  color: vars.$dark;
+  background-color: vars.$info;
+  border: 1px solid vars.$info;
+
+  &:hover {
+    background-color: color.scale(vars.$info, $lightness: -5%);
+    border-color: color.scale(vars.$info, $lightness: -7%);
+  }
+}
+
+.vdm-btn--success {
+  color: #fff;
+  background-color: vars.$success;
+  border: 1px solid vars.$success;
+
+  &:hover {
+    background-color: color.scale(vars.$success, $lightness: -5%);
+    border-color: color.scale(vars.$success, $lightness: -7%);
+  }
+}
+
+.vdm-btn--danger {
+  color: #fff;
+  background-color: vars.$danger;
+  border: 1px solid vars.$danger;
+
+  &:hover {
+    background-color: color.scale(vars.$danger, $lightness: -5%);
+    border-color: color.scale(vars.$danger, $lightness: -7%);
+  }
+}
+
+.vdm-btn--warning {
+  color: vars.$dark;
+  background-color: vars.$warning;
+  border: 1px solid vars.$warning;
+
+  &:hover {
+    background-color: color.scale(vars.$warning, $lightness: -5%);
+    border-color: color.scale(vars.$warning, $lightness: -7%);
+  }
+}
+
+.vdm-btn--flat {
+  background-color: transparent;
+  border: 1px solid vars.$border-color;
+  color: vars.$text-dark;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    border-color: vars.$border-color-dark;
+  }
+}
+
+.vdm-btn--outline-primary {
+  background-color: transparent;
+  border: 1px solid vars.$primary;
+  color: vars.$primary;
+
+  &:hover {
+    background-color: vars.$primary;
+    color: #fff;
+  }
+}
+
+// Button size variations
+.vdm-btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  border-radius: vars.$border-radius-sm;
+}
+
+.vdm-btn-xs {
+  padding: 0.15rem 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  border-radius: vars.$border-radius-sm;
+}
+
+.vdm-btn-lg {
+  padding: 0.625rem 1.25rem;
+  font-size: 1.125rem;
+  border-radius: vars.$border-radius-lg;
+}
+
+// Alert styles with improved shadows and transitions
+.vdm-alert {
+  position: relative;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: none;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow-sm;
+  transition: all vars.$transition-normal;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    border-radius: 4px 0 0 4px;
+  }
+}
+
+.vdm-alert--danger {
+  color: color.scale(vars.$danger, $lightness: -25%);
+  background-color: rgba(vars.$danger, 0.1);
+
+  &::before {
+    background-color: vars.$danger;
+  }
+}
+
+.vdm-alert--info {
+  color: color.scale(vars.$info, $lightness: -25%);
+  background-color: rgba(vars.$info, 0.1);
+
+  &::before {
+    background-color: vars.$info;
+  }
+}
+
+.vdm-alert--success {
+  color: color.scale(vars.$success, $lightness: -25%);
+  background-color: rgba(vars.$success, 0.1);
+
+  &::before {
+    background-color: vars.$success;
+  }
+}
+
+.vdm-alert--warning {
+  color: #664d03; // Darker text color for better contrast
+  background-color: rgba(vars.$warning, 0.15); // Slightly more opaque background
+
+  &::before {
+    background-color: vars.$warning;
+  }
+}
+
+// Card styles for containers
+.vdm-card {
+  background-color: #fff;
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+  overflow: hidden;
+  transition: all vars.$transition-normal;
+
+  &:hover {
+    box-shadow: vars.$box-shadow-lg;
+  }
+}
+
+.vdm-card__header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid vars.$border-color-light;
+  background-color: rgba(vars.$light, 0.5);
+}
+
+.vdm-card__body {
+  padding: 1.5rem;
+}
+
+.vdm-card__footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid vars.$border-color-light;
+  background-color: rgba(vars.$light, 0.5);
+}
+
+// Form controls
+.vdm-form-control {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: vars.$text-dark;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid vars.$border-color;
+  border-radius: vars.$border-radius;
+  transition: all vars.$transition-quick;
+
+  &:focus {
+    color: vars.$text-dark;
+    background-color: #fff;
+    border-color: color.scale(vars.$primary, $lightness: 15%);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(vars.$primary, 0.25);
+  }
+}
+
+.vdm-select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+// Badge styles
+.vdm-badge {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: vars.$border-radius-sm;
+}
+
+.vdm-badge--primary { background-color: vars.$primary; color: #fff; }
+.vdm-badge--secondary { background-color: vars.$secondary; color: #fff; }
+.vdm-badge--success { background-color: vars.$success; color: #fff; }
+.vdm-badge--danger { background-color: vars.$danger; color: #fff; }
+.vdm-badge--warning { background-color: vars.$warning; color: vars.$dark; }
+.vdm-badge--info { background-color: vars.$info; color: vars.$dark; }
+.vdm-badge--purple { background-color: vars.$purple; color: #fff; }
+.vdm-badge--dark { background-color: vars.$dark; color: #fff; }
+.vdm-badge--light { background-color: vars.$light; color: vars.$dark; }
+
+// Nav styles
+.vdm-nav {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+
+.vdm-nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: vars.$primary;
+  text-decoration: none;
+  transition: color vars.$transition-quick;
+
+  &:hover,
+  &:focus {
+    color: color.scale(vars.$primary, $lightness: -15%);
+  }
+
+  &.active {
+    color: color.scale(vars.$primary, $lightness: -20%);
+    font-weight: 500;
+  }
+
+  &.disabled {
+    color: vars.$text-muted;
+    pointer-events: none;
+    cursor: default;
+  }
+}
+
+// Table styles
+.vdm-table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: vars.$text-dark;
+  vertical-align: top;
+  border-color: vars.$border-color-light;
+
+  th, td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid vars.$border-color-light;
+  }
+
+  thead th {
+    vertical-align: bottom;
+    background-color: rgba(vars.$light, 0.5);
+    font-weight: 600;
+  }
+
+  tbody tr:hover {
+    background-color: rgba(vars.$primary, 0.03);
+  }
+}
+
+// Progress bars
+.vdm-progress {
+  display: flex;
+  height: 0.75rem;
+  overflow: hidden;
+  font-size: 0.75rem;
+  background-color: rgba(vars.$gray, 0.15);
+  border-radius: 50rem;
+}
+
+.vdm-progress-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  background-color: vars.$primary;
+  transition: width 0.6s ease;
+}
+
+// Tooltip styles
+.vdm-tooltip {
+  position: absolute;
+  z-index: 1070;
+  display: block;
+  margin: 0;
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  letter-spacing: normal;
+  word-break: normal;
+  word-spacing: normal;
+  white-space: normal;
+  line-break: auto;
+  font-size: 0.875rem;
+  word-wrap: break-word;
+  opacity: 0;
+  max-width: 200px;
+  padding: 0.5rem;
+  color: #fff;
+  background-color: rgba(vars.$dark, 0.95);
+  border-radius: vars.$border-radius;
+  box-shadow: vars.$box-shadow;
+  transition: opacity 0.15s;
+}
+
+.vdm-tooltip--show {
+  opacity: 1;
+}

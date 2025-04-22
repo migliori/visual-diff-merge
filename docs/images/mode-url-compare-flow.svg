@@ -1,0 +1,30 @@
+```mermaid
+flowchart TD
+    title["URL Compare Mode - Data Flow"]
+    url_compare_js["url-compare.js"]
+    url_compare_js_URL_Input_UI["URL Input UI"]
+    url_compare_js --> url_compare_js_URL_Input_UI
+    url_compare_js_AJAX_Request["AJAX Request"]
+    url_compare_js --> url_compare_js_AJAX_Request
+    get_url_content_php["get-url-content.php"]
+    get_url_content_php_URL_Fetching["URL Fetching"]
+    get_url_content_php --> get_url_content_php_URL_Fetching
+    get_url_content_php_Content_Retrieval["Content Retrieval"]
+    get_url_content_php --> get_url_content_php_Content_Retrieval
+    diff_processor_php["diff-processor.php"]
+    diff_processor_php_Diff_Generation["Diff Generation"]
+    diff_processor_php --> diff_processor_php_Diff_Generation
+    Config["Config"]
+    Config_Diff_Settings["Diff Settings"]
+    Config --> Config_Diff_Settings
+    Config_Security_Options["Security Options"]
+    Config --> Config_Security_Options
+    url_compare_js --> |"Submit URLs"| get_url_content_php
+    get_url_content_php --> |"Fetch Content"| External_URLs
+    get_url_content_php --> |"Process Diff"| diff_processor_php
+    diff_processor_php --> |"Get Settings"| Config
+    diff_processor_php --> |"Return Diff Data"| get_url_content_php
+    get_url_content_php --> |"JSON Response"| url_compare_js
+```
+
+<!-- Generated on: 2025-04-21 18:12:09 -->

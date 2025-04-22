@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installation Guide - Visual Diff Merge | Setup & Configuration</title>
+    <meta name="description" content="Comprehensive installation guide for Visual Diff Merge. Learn how to install, configure, and deploy this powerful code comparison and merging tool.">
+    <meta name="keywords" content="visual diff merge installation, code comparison setup, diff viewer configuration, merge tool installation, PHP diff tool">
+    <meta name="author" content="Visual Diff Merge">
+    <meta property="og:title" content="Installation Guide - Visual Diff Merge | Setup & Configuration">
+    <meta property="og:description" content="Comprehensive installation guide for Visual Diff Merge. Learn how to install, configure, and deploy this powerful code comparison and merging tool.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://visual-diff-merge.miglisoft.com/docs/installation.html">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Installation Guide - Visual Diff Merge | Setup & Configuration">
+    <meta name="twitter:description" content="Comprehensive installation guide for Visual Diff Merge. Learn how to install, configure, and deploy this powerful code comparison and merging tool.">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Visual Diff Merge" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pavanam&display=swap">
+    <link rel="stylesheet" href="css/styles.min.css">
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!-- Global docs script -->
+    <script src="js/docs.js"></script>
+</head>
+<body>
+    <div class="docs-container">
+        <header class="docs-header">
+            <h1>Visual Diff Merge</h1>
+            <p class="tagline">A powerful visual diff and merge tool for the web</p>
+        </header>
+
+        <nav class="docs-nav">
+            <ul>
+                <li><a href="index.html">Overview</a></li>
+                <li class="active"><a href="installation.html">Installation</a></li>
+                <li><a href="usage.html">Usage</a></li>
+                <li><a href="customization.html">Customization</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="architecture.html">Architecture</a></li>
+            </ul>
+        </nav>
+
+        <div class="docs-content-wrapper">
+            <aside class="docs-sidebar">
+                <h3>On This Page</h3>
+                <ul>
+                    <li><a href="#prerequisites">Prerequisites</a></li>
+                    <li><a href="#installation">Installation</a>
+                        <ul>
+                            <li><a href="#installation-standard">Standard Installation</a></li>
+                            <li><a href="#installation-development">Development Installation</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#configuration">Configuration</a></li>
+                    <li><a href="#testing">Testing Your Installation</a></li>
+                    <li><a href="#troubleshooting">Troubleshooting</a></li>
+                    <li><a href="#server-specific">Server-Specific Configuration</a></li>
+                </ul>
+            </aside>
+
+            <main class="docs-content">
+            <section id="prerequisites">
+                <h2>Prerequisites</h2>
+                <p>
+                    Before installing Visual Diff Merge, ensure your environment meets the following requirements:
+                </p>
+
+                <h3>Server Requirements</h3>
+                <ul>
+                    <li>PHP 7.4 or higher</li>
+                    <li>Web server (Apache, Nginx, etc.)</li>
+                    <li>Composer (for PHP dependencies)</li>
+                </ul>
+
+                <h3>Development Requirements (Optional)</h3>
+                <p>
+                    These are only needed if you plan to modify the source code:
+                </p>
+                <ul>
+                    <li>Node.js 14.x or higher</li>
+                    <li>npm 6.x or higher</li>
+                </ul>
+            </section>
+
+            <section id="installation">
+                <h2>Installation</h2>
+
+                <h3 id="installation-standard">Option 1: Standard Installation (Recommended)</h3>
+                <p>
+                    If you want to use Visual Diff Merge as-is without modifying the source code:
+                </p>
+
+                <ol>
+                    <li>
+                        <strong>Clone or Download the Repository</strong>
+                        <div class="code-block">
+                            <pre><code>git clone https://github.com/migliori/visual-diff-merge.git
+cd visual-diff-merge</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Install PHP Dependencies</strong>
+                        <div class="code-block">
+                            <pre><code>composer install --no-dev</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Configure the Application</strong> (Optional)
+                        <p>You can use the default configuration or <a href="#configuration">customize the configuration</a> as needed:</p>
+                        <div class="code-block">
+                            <pre><code># Copy example configuration file
+cp api/config.example.php api/config.php
+
+# Edit the configuration as needed
+nano api/config.php  # or use any text editor</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Set Proper Permissions</strong>
+                        <p>Ensure your web server has read/write access to the necessary directories:</p>
+                        <div class="code-block">
+                            <pre><code># On Linux/Unix systems
+chmod -R 755 api/
+chmod 644 api/config.php</code></pre>
+                        </div>
+                        <p>For server-specific permission settings, see <a href="#server-specific">Server-Specific Configuration</a>.</p>
+                    </li>
+                    <li>
+                        <strong>Configure Web Server</strong>
+                        <p>Set up your web server to serve the Visual Diff Merge directory.</p>
+                    </li>
+                </ol>
+
+                <h3 id="installation-development">Option 2: Development Installation</h3>
+                <p>
+                    If you want to modify the source code:
+                </p>
+
+                <ol>
+                    <li>
+                        <strong>Clone the Repository</strong>
+                        <div class="code-block">
+                            <pre><code>git clone https://github.com/migliori/visual-diff-merge.git
+cd visual-diff-merge</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Install PHP Dependencies</strong>
+                        <div class="code-block">
+                            <pre><code>composer install</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Install Node.js Dependencies</strong>
+                        <div class="code-block">
+                            <pre><code>npm install</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Build the Assets</strong>
+                        <div class="code-block">
+                            <pre><code># For production build
+npm run build
+
+# For development with auto-rebuild
+npm run dev</code></pre>
+                        </div>
+                    </li>
+                    <li>
+                        <strong>Configure the Application</strong>
+                        <div class="code-block">
+                            <pre><code># Copy example configuration file
+cp api/config.example.php api/config.php
+
+# Edit the configuration as needed
+nano api/config.php  # or use any text editor</code></pre>
+                        </div>
+                    </li>
+                </ol>
+            </section>
+
+            <section id="configuration">
+                <h2>Configuration</h2>
+                <p>
+                    Visual Diff Merge comes with default configuration settings defined in <code>php/Config.php</code>. These default settings work out of the box for most typical use cases.
+                </p>
+
+                <h3>Customizing Configuration</h3>
+                <p>
+                    To customize the configuration:
+                </p>
+
+                <ol>
+                    <li><strong>Copy the example configuration file:</strong> Rename <code>api/config.example.php</code> to <code>api/config.php</code></li>
+                    <li><strong>Edit the configuration:</strong> Modify the settings in <code>api/config.php</code> to match your requirements</li>
+                </ol>
+
+                <div class="note-box">
+                    <p><strong>Note:</strong> The <code>api/config.php</code> file is not included in the package and is added to <code>.gitignore</code>. This allows you to maintain your custom configuration across updates without it being overwritten by repository changes.</p>
+                </div>
+
+                <p>
+                    For a comprehensive overview of styling options, see the <a href="customization.html#styling">Styling Customization</a> section.
+                </p>
+                <p>
+                    For language and localization settings, refer to the <a href="customization.html#translations">Translations</a> documentation.
+                </p>
+
+                <h3>Basic Configuration Structure</h3>
+                <div class="code-block">
+                    <pre><code class="language-php">&lt;?php
+
+return [
+    // PHP-only settings
+    'php' => [
+        'debug' => [
+            'enabled' => false,
+            'logLevel' => 2,
+            'logFile' => 'debug-php-diff.log'
+        ],
+        'diff' => [
+            'contextLines' => 3,
+            'ignoreWhitespace' => false,
+            'ignoreCase' => false
+        ],
+        'security' => [
+            'csrfProtection' => true,
+            'salt' => '',
+            'allowedDirectories' => []
+        ],
+        'paths' => [
+            'base' => ''
+        ]
+    ],
+
+    // JavaScript settings
+    'javascript' => [
+        'lang' => 'en',
+        'debug' => false,
+        'logLevel' => 2,
+        'theme' => [
+            'defaultFamily' => 'atom-one',
+            'defaultMode' => 'dark',
+            'showSelector' => true
+        ],
+        // Additional JavaScript settings...
+    ]
+];
+</code></pre>
+                </div>
+
+                <h3>Key Configuration Options</h3>
+
+                <h4>PHP Settings</h4>
+                <table class="config-table">
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Description</th>
+                            <th>Default</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>php.debug.enabled</code></td>
+                            <td>Enable or disable server-side debugging</td>
+                            <td><code>false</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>php.debug.logLevel</code></td>
+                            <td>Log detail level: 1=minimal, 2=normal, 3=verbose</td>
+                            <td><code>2</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>php.debug.logFile</code></td>
+                            <td>Path to log file (relative to the api directory)</td>
+                            <td><code>debug-php-diff.log</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>php.diff.contextLines</code></td>
+                            <td>Number of unchanged lines to show around changes</td>
+                            <td><code>3</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>php.diff.ignoreWhitespace</code></td>
+                            <td>Whether to ignore whitespace when comparing</td>
+                            <td><code>false</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>php.diff.ignoreCase</code></td>
+                            <td>Whether to ignore case when comparing</td>
+                            <td><code>false</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>php.security.csrfProtection</code></td>
+                            <td>Enable CSRF protection for API endpoints</td>
+                            <td><code>true</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>php.security.salt</code></td>
+                            <td>Salt for hashing reference IDs (leave empty to auto-generate)</td>
+                            <td><code>''</code> (auto-generated)</td>
+                        </tr>
+                        <tr>
+                            <td><code>php.security.allowedDirectories</code></td>
+                            <td>List of allowed directories that can be accessed</td>
+                            <td><code>[]</code> (only application root is allowed)</td>
+                        </tr>
+                        <tr>
+                            <td><code>php.paths.base</code></td>
+                            <td>Base application path (leave empty to auto-detect)</td>
+                            <td><code>''</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>JavaScript Settings</h4>
+                <table class="config-table">
+                    <thead>
+                        <tr>
+                            <th>Setting</th>
+                            <th>Description</th>
+                            <th>Default</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>javascript.lang</code></td>
+                            <td>Default language code (e.g., 'en', 'fr')</td>
+                            <td><code>'en'</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>javascript.debug</code></td>
+                            <td>Enable or disable client-side debugging</td>
+                            <td><code>false</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>javascript.logLevel</code></td>
+                            <td>Client-side log level: 1=minimal, 2=normal, 3=verbose</td>
+                            <td><code>2</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>javascript.theme.defaultFamily</code></td>
+                            <td>Syntax highlighting theme family (e.g., 'atom-one', 'github')</td>
+                            <td><code>'atom-one'</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>javascript.theme.defaultMode</code></td>
+                            <td>Default theme mode: 'dark' or 'light'</td>
+                            <td><code>'dark'</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>javascript.theme.showSelector</code></td>
+                            <td>Whether to show theme selector in the UI</td>
+                            <td><code>true</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>javascript.apiEndpoint</code></td>
+                            <td>Base URL for API calls (if null, will be auto-discovered)</td>
+                            <td><code>null</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Security Configuration</h3>
+                <p>
+                    For the File Browser mode, you need to configure which directories are allowed to be accessed:
+                </p>
+
+                <div class="code-block">
+                    <pre><code class="language-php">'security' => [
+    // Other security settings...
+    'allowedDirectories' => [
+        // Examples (uncomment and modify as needed):
+        // realpath(__DIR__ . '/../diff-viewer/samples'),
+        // '/var/www/html/my-project',
+        // 'C:\\Projects\\my-files'
+    ]
+]</code></pre>
+                </div>
+
+                <p>
+                    If no directories are specified, only the application root directory is accessible.
+                </p>
+
+                <h3>Internationalization</h3>
+                <p>
+                    Visual Diff Merge supports multiple languages through the PHP configuration:
+                </p>
+
+                <div class="code-block">
+                    <pre><code class="language-php">'php' => [
+    // Other PHP settings...
+    'translations' => [
+        'en' => [
+            'applyMerge' => 'Apply Merge',
+            'continueResolving' => 'Continue Resolving',
+            // Other English translations...
+        ],
+        'fr' => [
+            'applyMerge' => 'Appliquer la fusion',
+            'continueResolving' => 'Continuer la résolution',
+            // Other French translations...
+        ]
+    ],
+],
+'javascript' => [
+    // JavaScript settings...
+    'lang' => 'fr', // Set default language to use
+]</code></pre>
+                </div>
+
+                <p>
+                    The full list of translatable strings is available in the <code>api/config.example.php</code> file.
+                </p>
+            </section>
+
+            <section id="testing">
+                <h2>Testing Your Installation</h2>
+
+                <h3>Test File Browser Mode</h3>
+                <p>
+                    To test the File Browser mode:
+                </p>
+                <ol>
+                    <li>Copy some sample files to a directory within your allowed directories</li>
+                    <li>Access <code>diff-viewer/file-browser.php</code> through your web server</li>
+                    <li>Select two files for comparison</li>
+                    <li>Verify that the comparison works correctly</li>
+                </ol>
+
+                <h3>Test Other Modes</h3>
+                <p>
+                    The other modes (File Upload, Text Compare, URL Compare) don't require any special setup:
+                </p>
+                <ol>
+                    <li>Access the respective example file through your web server:
+                        <ul>
+                            <li><code>diff-viewer/file-upload.html</code></li>
+                            <li><code>diff-viewer/text-compare.html</code></li>
+                            <li><code>diff-viewer/url-compare.html</code></li>
+                        </ul>
+                    </li>
+                    <li>Follow the on-screen instructions to compare content</li>
+                    <li>Verify that the comparison works correctly</li>
+                </ol>
+            </section>
+
+            <section id="troubleshooting">
+                <h2>Troubleshooting</h2>
+
+                <h3>API Endpoint Issues</h3>
+                <p>
+                    If you get API errors:
+                </p>
+                <ol>
+                    <li>Check that your web server can access the <code>api/</code> directory</li>
+                    <li>Verify that PHP is properly configured</li>
+                    <li>Check the browser console for specific error messages</li>
+                    <li>Enable debugging in <code>api/config.php</code> and check the log file</li>
+                </ol>
+
+                <h3>File Browser Access Issues</h3>
+                <p>
+                    If you can't access files in the File Browser mode:
+                </p>
+                <ol>
+                    <li>Make sure the directories are listed in <code>php.security.allowedDirectories</code></li>
+                    <li>Check file permissions on the server</li>
+                    <li>Verify that paths are correctly specified (absolute paths recommended)</li>
+                </ol>
+
+                <h3>Blank Screen or JavaScript Errors</h3>
+                <p>
+                    If you get a blank screen or JavaScript errors:
+                </p>
+                <ol>
+                    <li>Enable debug mode in both PHP and JavaScript settings in your <code>api/config.php</code> file:
+                        <div class="code-block">
+                            <pre><code>'php' => [
+    'debug' => [
+        'enabled' => true,  // Set to true to enable PHP debugging
+        'logLevel' => 3,    // Set to 3 for verbose logging
+        'logFile' => 'debug-php-diff.log'
+    ],
+    // ...other settings...
+],
+'javascript' => [
+    'debug' => true,       // Set to true to enable JavaScript debugging
+    'logLevel' => 3,       // Set to 3 for detailed console logging
+    // ...other settings...
+]</code></pre>
+                        </div>
+                    </li>
+                    <li>Open your browser's developer console (F12 or Ctrl+Shift+I in most browsers)</li>
+                    <li>Reload the page and check the console for error messages</li>
+                    <li>Also check the PHP log file (default location: <code>api/debug-php-diff.log</code>)</li>
+                    <li>Look for "Failed to load resource" errors which may indicate path or permission issues</li>
+                    <li>If you see AJAX errors, check network requests in the browser's developer tools</li>
+                    <li>Try clearing your browser cache and cookies</li>
+                </ol>
+
+                <h3>PHP Errors</h3>
+                <p>
+                    If you get PHP errors:
+                </p>
+                <ol>
+                    <li>Verify that your PHP version is 7.4 or higher</li>
+                    <li>Check that all required PHP extensions are installed</li>
+                    <li>Ensure Composer dependencies are properly installed</li>
+                    <li>Check PHP error logs for specific messages</li>
+                </ol>
+            </section>
+
+            <section id="server-specific">
+                <h2>Server-Specific Configuration</h2>
+
+                <h3>Apache</h3>
+                <p>
+                    For Apache servers, you may need to add/modify the <code>.htaccess</code> file:
+                </p>
+                <div class="code-block">
+                    <pre><code># Allow PHP to access .php files in the api directory
+&lt;FilesMatch "\.(php)$"&gt;
+    Require all granted
+&lt;/FilesMatch&gt;
+
+# Set proper MIME types
+AddType application/javascript .js
+AddType text/css .css
+
+# Enable CORS if needed
+&lt;IfModule mod_headers.c&gt;
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+&lt;/IfModule&gt;</code></pre>
+                </div>
+
+                <h3>Nginx</h3>
+                <p>
+                    For Nginx servers, add to your server block:
+                </p>
+                <div class="code-block">
+                    <pre><code>server {
+    # Other server configuration...
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock; # Adjust to your PHP-FPM socket
+    }
+
+    # Enable CORS if needed
+    location /api/ {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'Content-Type, Authorization';
+    }
+}</code></pre>
+                </div>
+            </section>
+        </main>
+        </div>
+
+        <footer class="docs-footer">
+            <p>&copy; 2025 Visual Diff Merge - <a href="https://github.com/migliori/visual-diff-merge">GitHub Repository</a></p>
+        </footer>
+    </div>
+</body>
+</html>

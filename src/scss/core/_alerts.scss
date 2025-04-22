@@ -1,0 +1,159 @@
+@use '../abstracts/variables' as vars;
+@use '../abstracts/color-system' as colors;
+
+.vdm-alert--has-icon {
+    &.vdm-alert {
+        padding-left: 70px;
+
+        &:before {
+            padding: 13px 0 0 13px;
+        }
+    }
+
+    &.h4 {
+        padding-left: 30px;
+
+        &:before {
+            padding: 7px 0 0 13px;
+        }
+    }
+
+    &:before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        width: 50px;
+        height: 100%;
+        content: " ";
+        border-radius: 4px 0 0 4px;
+        background-repeat: no-repeat;
+        background-position: center center;
+    }
+
+    &.vdm-alert:after {
+        position: absolute;
+        top: calc(50% - 6px);
+        left: 50px;
+        width: 0;
+        height: 0;
+        content: " ";
+        border-width: 6px 0 6px 6px;
+        border-style: solid;
+    }
+
+    &.vdm-alert--success-icon {
+        &:before {
+            background-color: vars.$success-color;
+            background-size: 30%;
+        }
+    }
+
+    &.vdm-alert--success {
+        &:before {
+            background-color: vars.$success-color;
+            background-size: 30%;
+        }
+
+        &:after {
+            border-color: transparent transparent transparent #28a745;
+        }
+    }
+
+    &.vdm-alert--info {
+        &:before {
+            background-color: #17a2b8;
+            background-size: 11.25%;
+        }
+
+        &:after {
+            border-color: transparent transparent transparent #17a2b8;
+        }
+    }
+
+    &.vdm-alert--warning {
+        &:before {
+            background-color: #ffc107;
+            background-size: 33.75%;
+        }
+
+        &:after {
+            border-color: transparent transparent transparent #ffc107;
+        }
+    }
+
+    &.vdm-alert--danger {
+        &:before {
+            background-color: #dc3545;
+            background-size: 30%;
+        }
+
+        &:after {
+            border-color: transparent transparent transparent #dc3545;
+        }
+    }
+}
+
+.vdm-alert {
+    position: relative;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
+
+    :first-child {
+        margin-top: 0;
+    }
+
+    p {
+        margin-bottom: 0.5em;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    a:not(.vdm-btn) {
+        text-decoration: underline;
+    }
+
+    /* Close button styles */
+    .vdm-alert__close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0.75rem 1.25rem;
+        color: inherit;
+        background: transparent;
+        border: 0;
+        appearance: none;
+        cursor: pointer;
+        opacity: 0.5;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1;
+
+        &:hover, &:focus {
+            opacity: 0.75;
+            text-decoration: none;
+        }
+    }
+}
+
+/* Notification styles */
+.vdm-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    min-width: 250px;
+    max-width: 350px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    span {
+        flex-grow: 1;
+    }
+}
