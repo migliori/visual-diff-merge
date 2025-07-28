@@ -101,6 +101,9 @@ var ChunkManager = /*#__PURE__*/function () {
       var endTime = performance.now();
       this._performanceMetrics.initTime = endTime - startTime;
       _utils_Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log("ChunkManager: Initialization completed in ".concat(this._performanceMetrics.initTime.toFixed(2), "ms"), null, 2);
+
+      // Validate chunk structure
+      this.validateChunkStructure();
       return this.chunks;
     }
 
@@ -219,6 +222,34 @@ var ChunkManager = /*#__PURE__*/function () {
         var anyChunkIdElements = document.querySelectorAll('[data-chunk-id]');
         _utils_Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.warn("ChunkManager: ".concat(anyChunkIdElements.length, " elements have data-chunk-id attribute"), null, 2);
       }
+    }
+
+    /**
+     * Validate chunk data structure for proper merge operations
+     */
+  }, {
+    key: "validateChunkStructure",
+    value: function validateChunkStructure() {
+      var validChunks = 0;
+      var invalidChunks = 0;
+      this.chunks.forEach(function (chunk) {
+        // Check if chunk has proper old/new content arrays
+        if (!chunk.old && !chunk["new"]) {
+          _utils_Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.warn("ChunkManager: Chunk ".concat(chunk.id, " missing content arrays"), chunk, 2);
+          invalidChunks++;
+        } else if (chunk.type === 'replace' && (!chunk.old || !chunk["new"])) {
+          _utils_Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.warn("ChunkManager: Replace chunk ".concat(chunk.id, " missing old or new content"), chunk, 2);
+          invalidChunks++;
+        } else {
+          validChunks++;
+        }
+      });
+      _utils_Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log("ChunkManager: Chunk validation complete", {
+        valid: validChunks,
+        invalid: invalidChunks,
+        total: this.chunks.length
+      }, 2);
+      return invalidChunks === 0;
     }
 
     /**

@@ -1546,10 +1546,25 @@ var DebugUtility = /*#__PURE__*/function () {
       var enabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '[DiffViewer]';
       var logLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+      // Prevent reinitialization with weaker settings if already properly configured
+      if (this.enabled && this.logLevel > 1 && !enabled) {
+        console.warn("".concat(this.prefix, " Preventing debug reinitialization with weaker settings"), {
+          current: {
+            enabled: this.enabled,
+            level: this.logLevel
+          },
+          attempted: {
+            enabled: enabled,
+            level: logLevel
+          }
+        });
+        return;
+      }
       this.enabled = enabled;
       this.prefix = prefix;
-      this.logLevel = enabled ? logLevel : 1;
-      console.error('Debug initialized', {
+      this.logLevel = logLevel; // Don't tie logLevel to enabled state
+
+      console.log('Debug initialized', {
         enabled: this.enabled,
         level: this.logLevel
       });
@@ -1569,7 +1584,10 @@ var DebugUtility = /*#__PURE__*/function () {
     value: function shouldLog() {
       var _window$diffConfig;
       var level = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      return (((_window$diffConfig = window.diffConfig) === null || _window$diffConfig === void 0 ? void 0 : _window$diffConfig.debug) || this.enabled) && level <= this.logLevel;
+      // Use instance state as primary source of truth
+      // Only fall back to window.diffConfig if not explicitly initialized
+      var debugEnabled = this.enabled || this.enabled === false && ((_window$diffConfig = window.diffConfig) === null || _window$diffConfig === void 0 ? void 0 : _window$diffConfig.debug);
+      return debugEnabled && level <= this.logLevel;
     }
 
     /**

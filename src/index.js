@@ -49,9 +49,39 @@ document.addEventListener('DOMContentLoaded', addCopyrightLink);
 window.addEventListener('load', addCopyrightLink);
 
 window.enableDiffViewer = async function () {
-    // Initialize debug with configured log level
-    const debug = window.diffConfig?.debug || false;
-    const logLevel = window.diffConfig?.logLevel || 1;
+    // Enhanced config extraction with proper nested structure handling
+    let debug = false;
+    let logLevel = 1;
+
+    // Check multiple possible config structures
+    if (window.diffConfig) {
+        // Direct config properties (most common)
+        if (typeof window.diffConfig.debug !== 'undefined') {
+            debug = window.diffConfig.debug;
+            logLevel = window.diffConfig.logLevel || 1;
+        }
+        // Nested config structure (from DiffConfigManager)
+        else if (window.diffConfig.config && typeof window.diffConfig.config.debug !== 'undefined') {
+            debug = window.diffConfig.config.debug;
+            logLevel = window.diffConfig.config.logLevel || 1;
+        }
+        // Success response structure (from API calls)
+        else if (window.diffConfig.success && window.diffConfig.config) {
+            debug = window.diffConfig.config.debug || false;
+            logLevel = window.diffConfig.config.logLevel || 1;
+        }
+    }
+
+    // Add debug trace to identify the exact structure being used
+    console.log('=== DEBUG CONFIG EXTRACTION ===', {
+        windowDiffConfigExists: !!window.diffConfig,
+        configStructure: window.diffConfig ? Object.keys(window.diffConfig) : 'none',
+        directDebug: window.diffConfig?.debug,
+        nestedDebug: window.diffConfig?.config?.debug,
+        finalDebug: debug,
+        finalLogLevel: logLevel
+    });
+
     Debug.initialize(debug, '[DiffViewer]', logLevel);
 
     // Initialize centralized loader management

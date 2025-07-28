@@ -76,6 +76,9 @@ export class ChunkManager {
 
         Debug.log(`ChunkManager: Initialization completed in ${this._performanceMetrics.initTime.toFixed(2)}ms`, null, 2);
 
+        // Validate chunk structure
+        this.validateChunkStructure();
+
         return this.chunks;
     }
 
@@ -188,6 +191,35 @@ export class ChunkManager {
             const anyChunkIdElements = document.querySelectorAll('[data-chunk-id]');
             Debug.warn(`ChunkManager: ${anyChunkIdElements.length} elements have data-chunk-id attribute`, null, 2);
         }
+    }
+
+    /**
+     * Validate chunk data structure for proper merge operations
+     */
+    validateChunkStructure() {
+        let validChunks = 0;
+        let invalidChunks = 0;
+
+        this.chunks.forEach(chunk => {
+            // Check if chunk has proper old/new content arrays
+            if (!chunk.old && !chunk.new) {
+                Debug.warn(`ChunkManager: Chunk ${chunk.id} missing content arrays`, chunk, 2);
+                invalidChunks++;
+            } else if (chunk.type === 'replace' && (!chunk.old || !chunk.new)) {
+                Debug.warn(`ChunkManager: Replace chunk ${chunk.id} missing old or new content`, chunk, 2);
+                invalidChunks++;
+            } else {
+                validChunks++;
+            }
+        });
+
+        Debug.log(`ChunkManager: Chunk validation complete`, {
+            valid: validChunks,
+            invalid: invalidChunks,
+            total: this.chunks.length
+        }, 2);
+
+        return invalidChunks === 0;
     }
 
     /**

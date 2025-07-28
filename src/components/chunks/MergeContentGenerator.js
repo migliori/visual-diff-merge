@@ -12,95 +12,132 @@ export class MergeContentGenerator {
         this.chunkManager = chunkManager;
     }
 
+        /**
+     * Extract lines for a specific chunk and side
+     * @param {string} chunkId - Chunk identifier
+     * @param {string} side - Side to extract ('old' or 'new')
+     * @returns {Array} Array of lines for the chunk
+     */
+    extractChunkLines(chunkId, side) {
+        const chunk = this.chunkManager.chunks.find(c => c.id === chunkId);
+        if (!chunk) {
+            Debug.log(`MergeContentGenerator: Chunk not found: ${chunkId}`, null, 3);
+            return [];
+        }
+
+        // Get the content array based on side (old or new)
+        const contentArray = side === 'old' ? this.chunkManager.oldContent : this.chunkManager.newContent;
+
+        // Filter lines that belong to this chunk
+        const lines = contentArray.filter(line => line.chunkId === chunkId);
+
+        Debug.log(`MergeContentGenerator: Extracted ${lines.length} lines from chunk ${chunkId} (${side})`, {
+            chunkId,
+            side,
+            linesCount: lines.length,
+            totalContentLines: contentArray.length,
+            sampleLines: lines.slice(0, 3)
+        }, 3);
+
+        return lines;
+    }
+
     /**
      * Generate merged content based on selections
      * @param {Object} selections - Map of chunk IDs to selected sides
      * @returns {string} Merged content
      */
     generateMergedContent(selections) {
+        Debug.log('MergeContentGenerator: Starting merge generation', {
+            totalChunks: this.chunkManager.chunks.length,
+            selections: Object.keys(selections).length
+        }, 2);
+
         // If no selections, return right side content
         if (Object.keys(selections).length === 0) {
+            Debug.log('MergeContentGenerator: No selections, returning new content', null, 2);
             return ChunkUtils.generateFileContent(this.chunkManager.newContent);
         }
 
-        // Start with empty result array
-        const result = [];
+        const mergedLines = [];
 
-        // Group right-side lines by chunk ID for better lookups
-        const rightChunkLines = {};
-        this.chunkManager.newContent.forEach(line => {
-            if (line.chunkId) {
-                if (!rightChunkLines[line.chunkId]) {
-                    rightChunkLines[line.chunkId] = [];
-                }
-                rightChunkLines[line.chunkId].push(line);
-            }
-        });
+        // Create a map of chunk lines by chunk ID for faster lookup
+        const oldChunkLines = {};
+        const newChunkLines = {};
 
-        // Group left-side lines by chunk ID for better lookups
-        const leftChunkLines = {};
+        // Group lines by chunk ID
         this.chunkManager.oldContent.forEach(line => {
             if (line.chunkId) {
-                if (!leftChunkLines[line.chunkId]) {
-                    leftChunkLines[line.chunkId] = [];
+                if (!oldChunkLines[line.chunkId]) {
+                    oldChunkLines[line.chunkId] = [];
                 }
-                leftChunkLines[line.chunkId].push(line);
+                oldChunkLines[line.chunkId].push(line);
             }
         });
 
-        Debug.log('leftChunkLines', leftChunkLines, 3);
-        Debug.log('rightChunkLines', rightChunkLines, 3);
-        Debug.log('selections', selections, 3);
+        this.chunkManager.newContent.forEach(line => {
+            if (line.chunkId) {
+                if (!newChunkLines[line.chunkId]) {
+                    newChunkLines[line.chunkId] = [];
+                }
+                newChunkLines[line.chunkId].push(line);
+            }
+        });
 
-        // Track processed chunks to avoid duplicates
+        // Track which chunks we've processed to avoid duplicates
         const processedChunks = new Set();
 
-        // First pass: add non-chunk lines and handle chunk lines based on selection
-        for (let i = 0; i < this.chunkManager.newContent.length; i++) {
-            const line = this.chunkManager.newContent[i];
+        // Process all lines from newContent in order, but replace chunks as needed
+        for (const line of this.chunkManager.newContent) {
+            if (line.chunkId && selections[line.chunkId]) {
+                // This line belongs to a chunk with a selection
+                if (!processedChunks.has(line.chunkId)) {
+                    // First time we encounter this chunk - add all lines from selected side
+                    const selectedSide = selections[line.chunkId];
 
-            // Non-chunk content lines always get added
-            if (!line.chunkId && line.type === 'content') {
-                result.push(line.line);
-                continue;
-            }
-
-            // Skip non-content lines
-            if (line.type !== 'content') {
-                continue;
-            }
-
-            // Process chunk lines
-            if (line.chunkId && !processedChunks.has(line.chunkId)) {
-                // Mark this chunk as processed
-                processedChunks.add(line.chunkId);
-
-                // Get chunk selection (left, right, or undefined)
-                const selection = selections[line.chunkId];
-
-                // Handle based on selection
-                if (selection === 'left') {
-                    // Use left content for this chunk
-                    const leftLines = leftChunkLines[line.chunkId] || [];
-                    const contentLines = leftLines.filter(l => l.type === 'content');
-
-                    if (contentLines.length > 0) {
-                        contentLines.forEach(l => result.push(l.line));
+                    if (selectedSide === 'left') {
+                        // Add all lines from old content for this chunk
+                        const chunkLines = oldChunkLines[line.chunkId] || [];
+                        chunkLines.forEach(chunkLine => {
+                            if (chunkLine.type === 'content') {
+                                mergedLines.push(chunkLine);
+                            }
+                        });
+                    } else {
+                        // Add all lines from new content for this chunk
+                        const chunkLines = newChunkLines[line.chunkId] || [];
+                        chunkLines.forEach(chunkLine => {
+                            if (chunkLine.type === 'content') {
+                                mergedLines.push(chunkLine);
+                            }
+                        });
                     }
-                } else {
-                    // Use right content for this chunk
-                    const rightLines = rightChunkLines[line.chunkId] || [];
-                    const contentLines = rightLines.filter(l => l.type === 'content');
-
-                    if (contentLines.length > 0) {
-                        contentLines.forEach(l => result.push(l.line));
-                    }
+                    processedChunks.add(line.chunkId);
+                }
+                // Skip this individual line since we've added the whole chunk
+            } else if (!line.chunkId) {
+                // This is common content (not part of any chunk)
+                if (line.type === 'content') {
+                    mergedLines.push(line);
                 }
             }
+            // Skip lines that belong to chunks without selections
         }
 
-        // Return the combined content
-        return result.join('\n');
+        Debug.log('MergeContentGenerator: Processing complete', {
+            totalMergedLines: mergedLines.length,
+            processedChunks: Array.from(processedChunks),
+            sampleLines: mergedLines.slice(0, 3).map(l => l.line?.substring(0, 50) + '...' || 'empty')
+        }, 3);
+
+        const mergedContent = ChunkUtils.generateFileContent(mergedLines);
+
+        Debug.log('MergeContentGenerator: Merge generation complete', {
+            totalLines: mergedLines.length,
+            contentLength: mergedContent.length
+        }, 2);
+
+        return mergedContent;
     }
 
     /**

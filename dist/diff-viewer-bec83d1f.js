@@ -744,6 +744,9 @@ var ChunkManager = /*#__PURE__*/function () {
       var endTime = performance.now();
       this._performanceMetrics.initTime = endTime - startTime;
       Debug/* Debug */.y.log("ChunkManager: Initialization completed in ".concat(this._performanceMetrics.initTime.toFixed(2), "ms"), null, 2);
+
+      // Validate chunk structure
+      this.validateChunkStructure();
       return this.chunks;
     }
 
@@ -862,6 +865,34 @@ var ChunkManager = /*#__PURE__*/function () {
         var anyChunkIdElements = document.querySelectorAll('[data-chunk-id]');
         Debug/* Debug */.y.warn("ChunkManager: ".concat(anyChunkIdElements.length, " elements have data-chunk-id attribute"), null, 2);
       }
+    }
+
+    /**
+     * Validate chunk data structure for proper merge operations
+     */
+  }, {
+    key: "validateChunkStructure",
+    value: function validateChunkStructure() {
+      var validChunks = 0;
+      var invalidChunks = 0;
+      this.chunks.forEach(function (chunk) {
+        // Check if chunk has proper old/new content arrays
+        if (!chunk.old && !chunk["new"]) {
+          Debug/* Debug */.y.warn("ChunkManager: Chunk ".concat(chunk.id, " missing content arrays"), chunk, 2);
+          invalidChunks++;
+        } else if (chunk.type === 'replace' && (!chunk.old || !chunk["new"])) {
+          Debug/* Debug */.y.warn("ChunkManager: Replace chunk ".concat(chunk.id, " missing old or new content"), chunk, 2);
+          invalidChunks++;
+        } else {
+          validChunks++;
+        }
+      });
+      Debug/* Debug */.y.log("ChunkManager: Chunk validation complete", {
+        valid: validChunks,
+        invalid: invalidChunks,
+        total: this.chunks.length
+      }, 2);
+      return invalidChunks === 0;
     }
 
     /**
@@ -1956,7 +1987,7 @@ var DiffViewer = /*#__PURE__*/function () {
           hasOldFileName: window.diffConfig && 'oldFileName' in window.diffConfig,
           oldFileName: ((_window$diffConfig13 = window.diffConfig) === null || _window$diffConfig13 === void 0 ? void 0 : _window$diffConfig13.oldFileName) || '(none)'
         }
-      }, 1);
+      }, 3);
       return DiffViewer_objectSpread({}, this.runtimeProps);
     }
 

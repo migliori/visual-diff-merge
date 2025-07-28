@@ -22,10 +22,20 @@ class DebugUtility {
      * @param {number} logLevel - Log level (1=high-level, 2=detailed, 3=verbose)
      */
     initialize (enabled = false, prefix = '[DiffViewer]', logLevel = 1) {
+        // Prevent reinitialization with weaker settings if already properly configured
+        if (this.enabled && this.logLevel > 1 && !enabled) {
+            console.warn(`${this.prefix} Preventing debug reinitialization with weaker settings`, {
+                current: { enabled: this.enabled, level: this.logLevel },
+                attempted: { enabled, level: logLevel }
+            });
+            return;
+        }
+
         this.enabled = enabled;
         this.prefix = prefix;
-        this.logLevel = enabled ? logLevel : 1;
-        console.error('Debug initialized', { enabled: this.enabled, level: this.logLevel });
+        this.logLevel = logLevel; // Don't tie logLevel to enabled state
+
+        console.log('Debug initialized', { enabled: this.enabled, level: this.logLevel });
         this.log('Debug initialized', { enabled: this.enabled, level: this.logLevel });
     }
 
@@ -35,7 +45,10 @@ class DebugUtility {
      * @returns {boolean} - Whether the message should be logged
      */
     shouldLog(level = 1) {
-        return (window.diffConfig?.debug || this.enabled) && level <= this.logLevel;
+        // Use instance state as primary source of truth
+        // Only fall back to window.diffConfig if not explicitly initialized
+        const debugEnabled = this.enabled || (this.enabled === false && window.diffConfig?.debug);
+        return debugEnabled && level <= this.logLevel;
     }
 
     /**

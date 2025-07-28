@@ -1376,6 +1376,258 @@ _defineProperty(TranslationManager, "_instance", null);
 
 /***/ }),
 
+/***/ 444:
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   l: () => (/* binding */ DiffConfigManager)
+/* harmony export */ });
+/* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(979);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
+function _classPrivateFieldInitSpec(e, t, a) { _checkPrivateRedeclaration(e, t), t.set(e, a); }
+function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
+function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
+function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
+function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
+/**
+ * DiffConfigManager.js
+ *
+ * Singleton utility to centralize management of the diffConfig configuration object.
+ * This provides a single source of truth for the diffConfig settings used throughout the application.
+ */
+
+
+
+/**
+ * Manages the diffConfig configuration settings as a singleton
+ */
+var _diffConfig = /*#__PURE__*/new WeakMap();
+var _DiffConfigManager_brand = /*#__PURE__*/new WeakSet();
+var DiffConfigManager = /*#__PURE__*/function () {
+  /**
+   * Private constructor - use getInstance() instead
+   * @private
+   */
+  function DiffConfigManager() {
+    _classCallCheck(this, DiffConfigManager);
+    /**
+     * Update the global window.diffConfig object
+     * @private
+     */
+    _classPrivateMethodInitSpec(this, _DiffConfigManager_brand);
+    /**
+     * Centralized diffConfig object
+     * @type {Object}
+     * @private
+     */
+    _classPrivateFieldInitSpec(this, _diffConfig, {});
+    // Initialize the diffConfig with any existing window.diffConfig
+    if (typeof window !== 'undefined' && window.diffConfig) {
+      _Debug__WEBPACK_IMPORTED_MODULE_0__/* .Debug */ .y.log('DiffConfigManager: Initializing with existing window.diffConfig', window.diffConfig, 2);
+      _classPrivateFieldSet(_diffConfig, this, _objectSpread({}, window.diffConfig));
+    } else {
+      _classPrivateFieldSet(_diffConfig, this, {
+        debug: false,
+        logLevel: 1,
+        old: {},
+        "new": {}
+      });
+    }
+
+    // Make the diffConfig available globally through window.diffConfig
+    _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+  }
+
+  /**
+   * Get the singleton instance
+   * @returns {DiffConfigManager} The singleton instance
+   */
+  return _createClass(DiffConfigManager, [{
+    key: "initialize",
+    value:
+    /**
+     * Initialize with configuration
+     * @param {Object} config - The initial configuration
+     */
+    function initialize() {
+      var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      _Debug__WEBPACK_IMPORTED_MODULE_0__/* .Debug */ .y.log('DiffConfigManager: Initializing with config', config, 2);
+      _classPrivateFieldSet(_diffConfig, this, _objectSpread(_objectSpread({}, _classPrivateFieldGet(_diffConfig, this)), config));
+      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+    }
+
+    /**
+     * Get the current diffConfig
+     * @returns {Object} The current diffConfig
+     */
+  }, {
+    key: "getDiffConfig",
+    value: function getDiffConfig() {
+      return _classPrivateFieldGet(_diffConfig, this);
+    }
+
+    /**
+     * Set a new diffConfig, completely replacing the current one
+     * @param {Object} config - The new configuration to use
+     */
+  }, {
+    key: "setDiffConfig",
+    value: function setDiffConfig() {
+      var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      _Debug__WEBPACK_IMPORTED_MODULE_0__/* .Debug */ .y.log('DiffConfigManager: Setting new diffConfig', config, 2);
+      _classPrivateFieldSet(_diffConfig, this, _objectSpread({}, config));
+      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+    }
+
+    /**
+     * Reset the diffConfig to default values, possibly with new overrides
+     * @param {Object} overrides - Optional configuration overrides to apply after reset
+     */
+  }, {
+    key: "reset",
+    value: function reset() {
+      var overrides = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      _Debug__WEBPACK_IMPORTED_MODULE_0__/* .Debug */ .y.log('DiffConfigManager: Resetting diffConfig with overrides', overrides, 2);
+      _classPrivateFieldSet(_diffConfig, this, _objectSpread({
+        debug: false,
+        logLevel: 1,
+        old: {},
+        "new": {}
+      }, overrides));
+      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+    }
+
+    /**
+     * Update part of the configuration
+     * @param {Object} partialConfig - The partial configuration to update
+     */
+  }, {
+    key: "update",
+    value: function update() {
+      var partialConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      _Debug__WEBPACK_IMPORTED_MODULE_0__/* .Debug */ .y.log('DiffConfigManager: Updating diffConfig with', partialConfig, 3);
+
+      // Check if the partialConfig has a nested 'config' property
+      if (partialConfig && partialConfig.config && _typeof(partialConfig.config) === 'object') {
+        _Debug__WEBPACK_IMPORTED_MODULE_0__/* .Debug */ .y.log('DiffConfigManager: Extracting nested config property', partialConfig.config, 3);
+        // Use the nested config object instead of the wrapper
+        _classPrivateFieldSet(_diffConfig, this, _assertClassBrand(_DiffConfigManager_brand, this, _mergeDeep).call(this, _classPrivateFieldGet(_diffConfig, this), partialConfig.config));
+      } else {
+        // Use the original object if no nested config property
+        _classPrivateFieldSet(_diffConfig, this, _assertClassBrand(_DiffConfigManager_brand, this, _mergeDeep).call(this, _classPrivateFieldGet(_diffConfig, this), partialConfig));
+      }
+      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+    }
+
+    /**
+     * Set a specific configuration value by key
+     * @param {string} key - The configuration key
+     * @param {*} value - The value to set
+     */
+  }, {
+    key: "set",
+    value: function set(key, value) {
+      _Debug__WEBPACK_IMPORTED_MODULE_0__/* .Debug */ .y.log("DiffConfigManager: Setting ".concat(key), value, 3);
+      _classPrivateFieldGet(_diffConfig, this)[key] = value;
+      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+    }
+
+    /**
+     * Get a specific configuration value by key
+     * @param {string} key - The configuration key
+     * @param {*} defaultValue - Default value if the key doesn't exist
+     * @returns {*} The configuration value
+     */
+  }, {
+    key: "get",
+    value: function get(key) {
+      var defaultValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      return key in _classPrivateFieldGet(_diffConfig, this) ? _classPrivateFieldGet(_diffConfig, this)[key] : defaultValue;
+    }
+
+    /**
+     * Remove a specific configuration key
+     * @param {string} key - The configuration key to remove
+     */
+  }, {
+    key: "remove",
+    value: function remove(key) {
+      if (key in _classPrivateFieldGet(_diffConfig, this)) {
+        _Debug__WEBPACK_IMPORTED_MODULE_0__/* .Debug */ .y.log("DiffConfigManager: Removing ".concat(key), null, 3);
+        delete _classPrivateFieldGet(_diffConfig, this)[key];
+        _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+      }
+    }
+  }], [{
+    key: "getInstance",
+    value: function getInstance() {
+      if (!_instance._) {
+        _instance._ = new DiffConfigManager();
+      }
+      return _instance._;
+    }
+  }]);
+}();
+function _updateGlobalDiffConfig() {
+  if (typeof window !== 'undefined') {
+    window.diffConfig = _objectSpread({}, _classPrivateFieldGet(_diffConfig, this));
+  }
+}
+/**
+ * Deep merge two objects recursively
+ * @param {Object} target - Target object
+ * @param {Object} source - Source object to merge
+ * @returns {Object} The merged object
+ * @private
+ */
+function _mergeDeep(target, source) {
+  var _this = this;
+  var output = _objectSpread({}, target);
+  if (_assertClassBrand(_DiffConfigManager_brand, this, _isObject).call(this, target) && _assertClassBrand(_DiffConfigManager_brand, this, _isObject).call(this, source)) {
+    Object.keys(source).forEach(function (key) {
+      if (_assertClassBrand(_DiffConfigManager_brand, _this, _isObject).call(_this, source[key])) {
+        if (!(key in target)) {
+          output[key] = source[key];
+        } else {
+          output[key] = _assertClassBrand(_DiffConfigManager_brand, _this, _mergeDeep).call(_this, target[key], source[key]);
+        }
+      } else {
+        output[key] = source[key];
+      }
+    });
+  }
+  return output;
+}
+/**
+ * Check if a value is an object
+ * @param {*} item - The value to check
+ * @returns {boolean} True if the value is an object
+ * @private
+ */
+function _isObject(item) {
+  return item && _typeof(item) === 'object' && !Array.isArray(item);
+}
+/**
+ * Private instance - follows singleton pattern
+ * @type {DiffConfigManager}
+ * @private
+ */
+var _instance = {
+  _: null
+};
+/* unused harmony default export */ var __WEBPACK_DEFAULT_EXPORT__ = ((/* unused pure expression or super */ null && (DiffConfigManager)));
+
+/***/ }),
+
 /***/ 454:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -1791,7 +2043,7 @@ var AlertManager = /*#__PURE__*/function (_BaseSingleton) {
         _Debug__WEBPACK_IMPORTED_MODULE_1__/* .Debug */ .y.log('AlertManager: Placing alert relative to target element', {
           target: mergedOptions.targetElement,
           placement: mergedOptions.placement
-        }, 2);
+        }, 3);
         if (mergedOptions.placement === 'before') {
           // Insert before the target element
           mergedOptions.targetElement.parentNode.insertBefore(alertElement, mergedOptions.targetElement);
@@ -3768,10 +4020,30 @@ var DebugUtility = /*#__PURE__*/function () {
       var enabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '[DiffViewer]';
       var logLevel = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+      // Prevent reinitialization with weaker settings if already properly configured
+      if (this.enabled && this.logLevel > 1 && !enabled) {
+        console.warn("".concat(this.prefix, " Preventing debug reinitialization with weaker settings"), {
+          current: {
+            enabled: this.enabled,
+            level: this.logLevel
+          },
+          attempted: {
+            enabled: enabled,
+            level: logLevel
+          }
+        });
+        return;
+      }
       this.enabled = enabled;
       this.prefix = prefix;
-      this.logLevel = enabled ? logLevel : 1;
+      this.logLevel = logLevel; // Don't tie logLevel to enabled state
+
+      console.log('Debug initialized', {
+        enabled: this.enabled,
+        level: this.logLevel
+      });
       this.log('Debug initialized', {
+        enabled: this.enabled,
         level: this.logLevel
       });
     }
@@ -3786,7 +4058,10 @@ var DebugUtility = /*#__PURE__*/function () {
     value: function shouldLog() {
       var _window$diffConfig;
       var level = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      return (((_window$diffConfig = window.diffConfig) === null || _window$diffConfig === void 0 ? void 0 : _window$diffConfig.debug) || this.enabled) && level <= this.logLevel;
+      // Use instance state as primary source of truth
+      // Only fall back to window.diffConfig if not explicitly initialized
+      var debugEnabled = this.enabled || this.enabled === false && ((_window$diffConfig = window.diffConfig) === null || _window$diffConfig === void 0 ? void 0 : _window$diffConfig.debug);
+      return debugEnabled && level <= this.logLevel;
     }
 
     /**

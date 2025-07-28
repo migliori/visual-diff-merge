@@ -760,6 +760,9 @@ var ChunkRenderer = /*#__PURE__*/function () {
 /* harmony import */ var _utils_ChunkUtils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(840);
 /* harmony import */ var _utils_Debug__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(979);
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -781,101 +784,142 @@ var MergeContentGenerator = /*#__PURE__*/function () {
   }
 
   /**
-   * Generate merged content based on selections
-   * @param {Object} selections - Map of chunk IDs to selected sides
-   * @returns {string} Merged content
-   */
+  * Extract lines for a specific chunk and side
+  * @param {string} chunkId - Chunk identifier
+  * @param {string} side - Side to extract ('old' or 'new')
+  * @returns {Array} Array of lines for the chunk
+  */
   return _createClass(MergeContentGenerator, [{
+    key: "extractChunkLines",
+    value: function extractChunkLines(chunkId, side) {
+      var chunk = this.chunkManager.chunks.find(function (c) {
+        return c.id === chunkId;
+      });
+      if (!chunk) {
+        _utils_Debug__WEBPACK_IMPORTED_MODULE_1__/* .Debug */ .y.log("MergeContentGenerator: Chunk not found: ".concat(chunkId), null, 3);
+        return [];
+      }
+
+      // Get the content array based on side (old or new)
+      var contentArray = side === 'old' ? this.chunkManager.oldContent : this.chunkManager.newContent;
+
+      // Filter lines that belong to this chunk
+      var lines = contentArray.filter(function (line) {
+        return line.chunkId === chunkId;
+      });
+      _utils_Debug__WEBPACK_IMPORTED_MODULE_1__/* .Debug */ .y.log("MergeContentGenerator: Extracted ".concat(lines.length, " lines from chunk ").concat(chunkId, " (").concat(side, ")"), {
+        chunkId: chunkId,
+        side: side,
+        linesCount: lines.length,
+        totalContentLines: contentArray.length,
+        sampleLines: lines.slice(0, 3)
+      }, 3);
+      return lines;
+    }
+
+    /**
+     * Generate merged content based on selections
+     * @param {Object} selections - Map of chunk IDs to selected sides
+     * @returns {string} Merged content
+     */
+  }, {
     key: "generateMergedContent",
     value: function generateMergedContent(selections) {
+      _utils_Debug__WEBPACK_IMPORTED_MODULE_1__/* .Debug */ .y.log('MergeContentGenerator: Starting merge generation', {
+        totalChunks: this.chunkManager.chunks.length,
+        selections: Object.keys(selections).length
+      }, 2);
+
       // If no selections, return right side content
       if (Object.keys(selections).length === 0) {
+        _utils_Debug__WEBPACK_IMPORTED_MODULE_1__/* .Debug */ .y.log('MergeContentGenerator: No selections, returning new content', null, 2);
         return _utils_ChunkUtils__WEBPACK_IMPORTED_MODULE_0__/* .ChunkUtils */ .N.generateFileContent(this.chunkManager.newContent);
       }
+      var mergedLines = [];
 
-      // Start with empty result array
-      var result = [];
+      // Create a map of chunk lines by chunk ID for faster lookup
+      var oldChunkLines = {};
+      var newChunkLines = {};
 
-      // Group right-side lines by chunk ID for better lookups
-      var rightChunkLines = {};
-      this.chunkManager.newContent.forEach(function (line) {
-        if (line.chunkId) {
-          if (!rightChunkLines[line.chunkId]) {
-            rightChunkLines[line.chunkId] = [];
-          }
-          rightChunkLines[line.chunkId].push(line);
-        }
-      });
-
-      // Group left-side lines by chunk ID for better lookups
-      var leftChunkLines = {};
+      // Group lines by chunk ID
       this.chunkManager.oldContent.forEach(function (line) {
         if (line.chunkId) {
-          if (!leftChunkLines[line.chunkId]) {
-            leftChunkLines[line.chunkId] = [];
+          if (!oldChunkLines[line.chunkId]) {
+            oldChunkLines[line.chunkId] = [];
           }
-          leftChunkLines[line.chunkId].push(line);
+          oldChunkLines[line.chunkId].push(line);
         }
       });
-      _utils_Debug__WEBPACK_IMPORTED_MODULE_1__/* .Debug */ .y.log('leftChunkLines', leftChunkLines, 3);
-      _utils_Debug__WEBPACK_IMPORTED_MODULE_1__/* .Debug */ .y.log('rightChunkLines', rightChunkLines, 3);
-      _utils_Debug__WEBPACK_IMPORTED_MODULE_1__/* .Debug */ .y.log('selections', selections, 3);
+      this.chunkManager.newContent.forEach(function (line) {
+        if (line.chunkId) {
+          if (!newChunkLines[line.chunkId]) {
+            newChunkLines[line.chunkId] = [];
+          }
+          newChunkLines[line.chunkId].push(line);
+        }
+      });
 
-      // Track processed chunks to avoid duplicates
+      // Track which chunks we've processed to avoid duplicates
       var processedChunks = new Set();
 
-      // First pass: add non-chunk lines and handle chunk lines based on selection
-      for (var i = 0; i < this.chunkManager.newContent.length; i++) {
-        var line = this.chunkManager.newContent[i];
-
-        // Non-chunk content lines always get added
-        if (!line.chunkId && line.type === 'content') {
-          result.push(line.line);
-          continue;
-        }
-
-        // Skip non-content lines
-        if (line.type !== 'content') {
-          continue;
-        }
-
-        // Process chunk lines
-        if (line.chunkId && !processedChunks.has(line.chunkId)) {
-          // Mark this chunk as processed
-          processedChunks.add(line.chunkId);
-
-          // Get chunk selection (left, right, or undefined)
-          var selection = selections[line.chunkId];
-
-          // Handle based on selection
-          if (selection === 'left') {
-            // Use left content for this chunk
-            var leftLines = leftChunkLines[line.chunkId] || [];
-            var contentLines = leftLines.filter(function (l) {
-              return l.type === 'content';
-            });
-            if (contentLines.length > 0) {
-              contentLines.forEach(function (l) {
-                return result.push(l.line);
-              });
+      // Process all lines from newContent in order, but replace chunks as needed
+      var _iterator = _createForOfIteratorHelper(this.chunkManager.newContent),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var line = _step.value;
+          if (line.chunkId && selections[line.chunkId]) {
+            // This line belongs to a chunk with a selection
+            if (!processedChunks.has(line.chunkId)) {
+              // First time we encounter this chunk - add all lines from selected side
+              var selectedSide = selections[line.chunkId];
+              if (selectedSide === 'left') {
+                // Add all lines from old content for this chunk
+                var chunkLines = oldChunkLines[line.chunkId] || [];
+                chunkLines.forEach(function (chunkLine) {
+                  if (chunkLine.type === 'content') {
+                    mergedLines.push(chunkLine);
+                  }
+                });
+              } else {
+                // Add all lines from new content for this chunk
+                var _chunkLines = newChunkLines[line.chunkId] || [];
+                _chunkLines.forEach(function (chunkLine) {
+                  if (chunkLine.type === 'content') {
+                    mergedLines.push(chunkLine);
+                  }
+                });
+              }
+              processedChunks.add(line.chunkId);
             }
-          } else {
-            // Use right content for this chunk
-            var rightLines = rightChunkLines[line.chunkId] || [];
-            var _contentLines = rightLines.filter(function (l) {
-              return l.type === 'content';
-            });
-            if (_contentLines.length > 0) {
-              _contentLines.forEach(function (l) {
-                return result.push(l.line);
-              });
+            // Skip this individual line since we've added the whole chunk
+          } else if (!line.chunkId) {
+            // This is common content (not part of any chunk)
+            if (line.type === 'content') {
+              mergedLines.push(line);
             }
           }
+          // Skip lines that belong to chunks without selections
         }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
       }
-
-      // Return the combined content
-      return result.join('\n');
+      _utils_Debug__WEBPACK_IMPORTED_MODULE_1__/* .Debug */ .y.log('MergeContentGenerator: Processing complete', {
+        totalMergedLines: mergedLines.length,
+        processedChunks: Array.from(processedChunks),
+        sampleLines: mergedLines.slice(0, 3).map(function (l) {
+          var _l$line;
+          return ((_l$line = l.line) === null || _l$line === void 0 ? void 0 : _l$line.substring(0, 50)) + '...' || 0;
+        })
+      }, 3);
+      var mergedContent = _utils_ChunkUtils__WEBPACK_IMPORTED_MODULE_0__/* .ChunkUtils */ .N.generateFileContent(mergedLines);
+      _utils_Debug__WEBPACK_IMPORTED_MODULE_1__/* .Debug */ .y.log('MergeContentGenerator: Merge generation complete', {
+        totalLines: mergedLines.length,
+        contentLength: mergedContent.length
+      }, 2);
+      return mergedContent;
     }
 
     /**
@@ -2752,7 +2796,7 @@ var MergeUIController = /*#__PURE__*/function () {
         oldFileName: oldFileName,
         newFile: newFile,
         oldFile: oldFile
-      }, 2);
+      }, 3);
 
       // Create merged filenames
       var newFileWithoutExt = newFile.substring(0, newFile.lastIndexOf('.')) || newFile;
@@ -2772,7 +2816,7 @@ var MergeUIController = /*#__PURE__*/function () {
         saveToBoth: true,
         saveToBothWithSuffix: true
       };
-      _utils_Debug__WEBPACK_IMPORTED_MODULE_0__/* .Debug */ .y.log('MergeUIController: Save options configuration', saveOptions, 2);
+      _utils_Debug__WEBPACK_IMPORTED_MODULE_0__/* .Debug */ .y.log('MergeUIController: Save options configuration', saveOptions, 3);
 
       // IMPORTANT: Always clear ALL existing options to ensure we start fresh
       while (this.mergeDestination.options.length > 0) {
