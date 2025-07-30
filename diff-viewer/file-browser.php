@@ -6,8 +6,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // Use the namespaced class
 use VisualDiffMerge\FileBrowser;
 
-// OPTION 1 (ACTIVE): Directory-based file scanning
-// =================================================
+// OPTION 1 (ACTIVE): Directory-based file scanning with common files comparison
+// =============================================================================
 // Configuration - Specify directories to scan for files
 $config = [
     'old' => [
@@ -25,9 +25,13 @@ $config = [
 // Initialize the FileBrowser
 $fileBrowser = new FileBrowser();
 
-// Get files from directories
-$oldFiles = $fileBrowser->getFiles($config['old']['path'], $config['old']['baseUrl']);
-$newFiles = $fileBrowser->getFiles($config['new']['path'], $config['new']['baseUrl']);
+// Get common files from both directories organized by subdirectory
+$commonFiles = $fileBrowser->compareDirectories(
+    $config['old']['path'],
+    $config['new']['path'],
+    $config['old']['baseUrl'],
+    $config['new']['baseUrl']
+);
 
 /*
 // OPTION 2 (INACTIVE): Explicit file list
@@ -138,27 +142,43 @@ $newFiles = $fileBrowser->getFiles($config['new']['files'], $config['new']['base
 
         <div class="card p-3 mb-4">
             <form id="vdm-file-comparison-form" class="vdm-form vdm-d-flex vdm-flex-column">
-                <div class="file-selectors d-flex flex-wrap justify-content-between mb-3">
-                    <div class="mb-2 flex-grow-1 me-3" style="min-width: 45%;">
-                        <label for="old-file" class="mb-1 d-block">Old File:</label>
-                        <select id="old-file" class="form-control" data-type="old">
-                            <?php foreach ($oldFiles as $file) : ?>
-                                    <option value="<?= htmlspecialchars($file['path']) ?>"
-                                            data-ref-id="<?= htmlspecialchars($file['ref_id']) ?>">
-                                        <?= htmlspecialchars($file['language']) ?> (<?= htmlspecialchars($file['name']) ?>)
-                                    </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="mb-2 flex-grow-1" style="min-width: 45%;">
-                        <label for="new-file" class="mb-1 d-block">New File:</label>
-                        <select id="new-file" class="form-control" data-type="new">
-                            <?php foreach ($newFiles as $file) : ?>
-                                    <option value="<?= htmlspecialchars($file['path']) ?>"
-                                           data-ref-id="<?= htmlspecialchars($file['ref_id']) ?>">
-                                        <?= htmlspecialchars($file['language']) ?> (<?= htmlspecialchars($file['name']) ?>)
-                                    </option>
-                            <?php endforeach; ?>
+                <div class="file-selectors mb-3">
+                    <div class="mb-2">
+                        <label for="compare-file" class="mb-1 d-block">Select File to Compare:</label>
+                        <select id="compare-file" class="form-control">
+                            <?php
+                            // First, display root files (files without subdirectory)
+                            if (isset($commonFiles['']) && !empty($commonFiles[''])) {
+                                foreach ($commonFiles[''] as $file) {
+                                    echo '<option value="' . htmlspecialchars($file['path']) . '"' .
+                                         ' data-old-ref-id="' . htmlspecialchars($file['old_ref_id']) . '"' .
+                                         ' data-new-ref-id="' . htmlspecialchars($file['new_ref_id']) . '"' .
+                                         ' data-old-path="' . htmlspecialchars($file['old_path']) . '"' .
+                                         ' data-new-path="' . htmlspecialchars($file['new_path']) . '">' .
+                                         htmlspecialchars($file['language']) . ' (' . htmlspecialchars($file['name']) . ')' .
+                                         '</option>';
+                                }
+                            }
+
+                            // Then, display files organized by subdirectory
+                            foreach ($commonFiles as $subdirectory => $files) {
+                                if ($subdirectory === '') {
+                                    continue; // Skip root files as they are already displayed
+                                }
+
+                                echo '<optgroup label="' . htmlspecialchars($subdirectory) . '">';
+                                foreach ($files as $file) {
+                                    echo '<option value="' . htmlspecialchars($file['path']) . '"' .
+                                         ' data-old-ref-id="' . htmlspecialchars($file['old_ref_id']) . '"' .
+                                         ' data-new-ref-id="' . htmlspecialchars($file['new_ref_id']) . '"' .
+                                         ' data-old-path="' . htmlspecialchars($file['old_path']) . '"' .
+                                         ' data-new-path="' . htmlspecialchars($file['new_path']) . '">' .
+                                         htmlspecialchars($file['language']) . ' (' . htmlspecialchars($file['name']) . ')' .
+                                         '</option>';
+                                }
+                                echo '</optgroup>';
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>

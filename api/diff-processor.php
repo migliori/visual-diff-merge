@@ -300,19 +300,19 @@ try {
     // Validate and ensure proper chunk structure for merge operations
     if (isset($diffData['chunks']) && is_array($diffData['chunks'])) {
         foreach ($diffData['chunks'] as &$chunk) {
-            // Ensure each chunk has proper old/new arrays
+            // Ensure each chunk has proper old/new arrays (now handled by DiffViewer::enrichChunksWithContent)
             if ($chunk['type'] === 'replace') {
                 // For replace chunks, ensure both old and new content exist
                 $chunk['old'] = isset($chunk['old']) ? $chunk['old'] : [];
                 $chunk['new'] = isset($chunk['new']) ? $chunk['new'] : [];
             } elseif ($chunk['type'] === 'insert') {
                 // For insert chunks, old should be empty, new should have content
-                $chunk['old'] = [];
+                $chunk['old'] = isset($chunk['old']) ? $chunk['old'] : [];
                 $chunk['new'] = isset($chunk['new']) ? $chunk['new'] : [];
             } elseif ($chunk['type'] === 'delete') {
                 // For delete chunks, new should be empty, old should have content
                 $chunk['old'] = isset($chunk['old']) ? $chunk['old'] : [];
-                $chunk['new'] = [];
+                $chunk['new'] = isset($chunk['new']) ? $chunk['new'] : [];
             }
 
             // Debug chunk structure

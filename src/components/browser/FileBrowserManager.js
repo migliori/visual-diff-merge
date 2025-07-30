@@ -20,8 +20,17 @@ export class FileBrowserManager {
      * @param {Object} options - Configuration options
      */
     constructor(options = {}) {
+        // Check if we have the new single select or the old dual selects
+        this.compareFileSelect = document.getElementById('compare-file');
         this.oldFileSelect = document.getElementById('old-file');
         this.newFileSelect = document.getElementById('new-file');
+
+        // Debug: Log which elements were found
+        Debug.log('FileBrowserManager: Constructor - Element detection', {
+            compareFileSelect: !!this.compareFileSelect,
+            oldFileSelect: !!this.oldFileSelect,
+            newFileSelect: !!this.newFileSelect
+        }, 2);
 
         // Initialize the DiffConfigManager with the options
         const configManager = DiffConfigManager.getInstance();
@@ -45,19 +54,19 @@ export class FileBrowserManager {
     init() {
         Debug.log('FileBrowserManager: Initializing', null, 2);
 
-        // Add event listeners to selectors
-        if (this.oldFileSelect) {
+        // Check if we have the new single select system
+        if (this.compareFileSelect) {
+            Debug.log('FileBrowserManager: Using new single file select system', null, 2);
+            // No need for sync in single select mode
+        } else if (this.oldFileSelect && this.newFileSelect) {
+            Debug.log('FileBrowserManager: Using legacy dual file select system', null, 2);
+            // Add event listeners to selectors for legacy mode
             this.oldFileSelect.addEventListener('change', () => this.syncFileSelections());
-        } else {
-            Debug.warn('FileBrowserManager: Old file select element not found', null, 1);
-        }
-
-        if (this.newFileSelect) {
             this.newFileSelect.addEventListener('change', () => {
                 // When user manually selects a new file, we don't sync
             });
         } else {
-            Debug.warn('FileBrowserManager: New file select element not found', null, 1);
+            Debug.warn('FileBrowserManager: No valid file select elements found', null, 1);
         }
 
         // Form submit handler
@@ -291,20 +300,67 @@ export class FileBrowserManager {
      */
     getSelectedFilesData() {
         Debug.log('FileBrowserManager: Getting selected files data', null, 3);
-        return {
-            old: {
-                path: this.oldFileSelect.value,
-                // SECURITY: Only retrieve file reference ID, not server path
-                refId: this.oldFileSelect.options[this.oldFileSelect.selectedIndex]
-                    .getAttribute('data-ref-id')
-            },
-            new: {
-                path: this.newFileSelect.value,
-                // SECURITY: Only retrieve file reference ID, not server path
-                refId: this.newFileSelect.options[this.newFileSelect.selectedIndex]
-                    .getAttribute('data-ref-id')
+
+        // Check if we're using the new single select system
+        if (this.compareFileSelect) {
+            Debug.log('FileBrowserManager: Using single select system', null, 3);
+
+            if (this.compareFileSelect.selectedIndex < 0) {
+                throw new Error('No file selected');
             }
-        };
+
+            const selectedOption = this.compareFileSelect.options[this.compareFileSelect.selectedIndex];
+            if (!selectedOption) {
+                throw new Error('Selected option not found');
+            }
+
+            const oldRefId = selectedOption.getAttribute('data-old-ref-id');
+            const newRefId = selectedOption.getAttribute('data-new-ref-id');
+            const oldPath = selectedOption.getAttribute('data-old-path');
+            const newPath = selectedOption.getAttribute('data-new-path');
+
+            if (!oldRefId || !newRefId) {
+                throw new Error('Missing file reference IDs in selected option');
+            }
+
+            Debug.log('FileBrowserManager: Single select data', {
+                oldRefId, newRefId, oldPath, newPath
+            }, 3);
+
+            return {
+                old: {
+                    path: oldPath,
+                    // SECURITY: Only retrieve file reference ID, not server path
+                    refId: oldRefId
+                },
+                new: {
+                    path: newPath,
+                    // SECURITY: Only retrieve file reference ID, not server path
+                    refId: newRefId
+                }
+            };
+        }
+
+        // Fallback to legacy dual select system
+        if (this.oldFileSelect && this.newFileSelect) {
+            Debug.log('FileBrowserManager: Using legacy dual select system', null, 3);
+            return {
+                old: {
+                    path: this.oldFileSelect.value,
+                    // SECURITY: Only retrieve file reference ID, not server path
+                    refId: this.oldFileSelect.options[this.oldFileSelect.selectedIndex]
+                        .getAttribute('data-ref-id')
+                },
+                new: {
+                    path: this.newFileSelect.value,
+                    // SECURITY: Only retrieve file reference ID, not server path
+                    refId: this.newFileSelect.options[this.newFileSelect.selectedIndex]
+                        .getAttribute('data-ref-id')
+                }
+            };
+        }
+
+        throw new Error('No valid file selection elements found');
     }
 
     /**
@@ -762,10 +818,16 @@ export class FileBrowserManager {
     }
 
     /**
-     * Sync file selections
+     * Sync file selections (only for legacy dual select system)
      */
     syncFileSelections() {
         Debug.log('FileBrowserManager: Syncing file selections', null, 3);
+
+        // Only sync if we're using the legacy dual select system
+        if (this.compareFileSelect) {
+            Debug.log('FileBrowserManager: Skipping sync - using single select system', null, 3);
+            return;
+        }
 
         if (!this.oldFileSelect || !this.newFileSelect) {
             Debug.warn('FileBrowserManager: Cannot sync file selections - select elements not found', null, 2);

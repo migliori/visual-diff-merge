@@ -484,6 +484,9 @@ class DiffViewer
         // Now ensure chunk sizes are properly balanced
         $this->normalizeChunkSizes($result);
 
+        // Enrich chunks with content arrays for JavaScript compatibility
+        $this->enrichChunksWithContent($result);
+
         return $result;
     }
 
@@ -573,6 +576,37 @@ class DiffViewer
                 }
                 unset($otherChunk);
             }
+        }
+    }
+
+    /**
+     * Enrich chunks with content arrays for JavaScript compatibility
+     *
+     * @param array &$diffData Reference to diffData containing old, new, and chunks
+     */
+    private function enrichChunksWithContent(array &$diffData): void
+    {
+        foreach ($diffData['chunks'] as &$chunk) {
+            $chunkId = $chunk['id'];
+
+            // Get old lines for this chunk
+            $oldLines = array_filter($diffData['old'], function ($line) use ($chunkId) {
+                return isset($line['chunkId']) && $line['chunkId'] === $chunkId && $line['type'] === 'content';
+            });
+
+            // Get new lines for this chunk
+            $newLines = array_filter($diffData['new'], function ($line) use ($chunkId) {
+                return isset($line['chunkId']) && $line['chunkId'] === $chunkId && $line['type'] === 'content';
+            });
+
+            // Convert to simple arrays of line content
+            $chunk['old'] = array_values(array_map(function ($line) {
+                return $line['line'];
+            }, $oldLines));
+
+            $chunk['new'] = array_values(array_map(function ($line) {
+                return $line['line'];
+            }, $newLines));
         }
     }
     /**

@@ -214,4 +214,133 @@ class FileBrowser
             'filename' => basename($filePath)
         ];
     }
+
+    /**
+     * Compare two directories and return common files organized by subdirectory
+     *
+     * @param string $oldPath Path to the old directory
+     * @param string $newPath Path to the new directory
+     * @param string $oldBaseUrl Base URL for old files
+     * @param string $newBaseUrl Base URL for new files
+     * @return array Array of common files organized by subdirectory
+     */
+    public function compareDirectories($oldPath, $newPath, $oldBaseUrl, $newBaseUrl)
+    {
+        // Get all files recursively from both directories
+        $oldFiles = $this->scanDirectoryRecursive($oldPath, $oldBaseUrl, $oldPath);
+        $newFiles = $this->scanDirectoryRecursive($newPath, $newBaseUrl, $newPath);
+
+        // Find common files (files that exist in both directories with same relative path)
+        $commonFiles = [];
+
+        foreach ($oldFiles as $relativePath => $oldFileData) {
+            if (isset($newFiles[$relativePath])) {
+                // Determine the subdirectory for grouping
+                $subdirectory = $this->getSubdirectoryName($relativePath);
+
+                if (!isset($commonFiles[$subdirectory])) {
+                    $commonFiles[$subdirectory] = [];
+                }
+
+                // Create combined file data with both old and new references
+                $commonFiles[$subdirectory][] = [
+                    'path' => $relativePath,
+                    'name' => basename($relativePath),
+                    'language' => $oldFileData['language'],
+                    'old_ref_id' => $oldFileData['ref_id'],
+                    'new_ref_id' => $newFiles[$relativePath]['ref_id'],
+                    'old_path' => $oldFileData['browser_path'],
+                    'new_path' => $newFiles[$relativePath]['browser_path']
+                ];
+            }
+        }
+
+        return $commonFiles;
+    }
+
+    /**
+     * Scan a directory recursively and return all files with their relative paths
+     *
+     * @param string $directory Directory to scan
+     * @param string $baseUrl Base URL for browser paths
+     * @param string $rootPath Root path for calculating relative paths
+     * @return array Array of files indexed by relative path
+     */
+    private function scanDirectoryRecursive($directory, $baseUrl, $rootPath)
+    {
+        $files = [];
+
+        if (!is_dir($directory)) {
+            return $files;
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+
+        foreach ($iterator as $file) {
+            if ($file->isFile()) {
+                $filePath = $file->getRealPath();
+                $relativePath = $this->getRelativePath($rootPath, $filePath);
+
+                $filename = basename($filePath);
+                $ext = pathinfo($filename, PATHINFO_EXTENSION);
+                $language = $this->getLanguageName($ext);
+
+                // Calculate browser path with relative path preserved
+                if (!empty($baseUrl)) {
+                    $browserPath = rtrim($baseUrl, '/') . '/' . $relativePath;
+                } else {
+                    $browserPath = $relativePath;
+                }
+
+                // Generate a secure reference ID for the server path
+                $refId = $this->pathManager->registerPath($filePath);
+
+                $files[$relativePath] = [
+                    'server_path' => $filePath,
+                    'browser_path' => $browserPath,
+                    'ref_id' => $refId,
+                    'language' => $language,
+                    'name' => $filename
+                ];
+            }
+        }
+
+        return $files;
+    }
+
+    /**
+     * Get relative path from root to file
+     *
+     * @param string $rootPath Root directory path
+     * @param string $filePath Full file path
+     * @return string Relative path
+     */
+    private function getRelativePath($rootPath, $filePath)
+    {
+        $rootPath = rtrim(str_replace('\\', '/', realpath($rootPath)), '/');
+        $filePath = str_replace('\\', '/', realpath($filePath));
+
+        return ltrim(str_replace($rootPath, '', $filePath), '/');
+    }
+
+    /**
+     * Get subdirectory name for grouping (empty string for root files)
+     *
+     * @param string $relativePath Relative path of the file
+     * @return string Subdirectory name or empty string for root files
+     */
+    private function getSubdirectoryName($relativePath)
+    {
+        $pathParts = explode('/', $relativePath);
+
+        // If file is in root (only filename), return empty string
+        if (count($pathParts) <= 1) {
+            return '';
+        }
+
+        // Return the immediate subdirectory name
+        return $pathParts[0];
+    }
 }
