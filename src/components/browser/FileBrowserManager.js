@@ -150,7 +150,13 @@ export class FileBrowserManager {
 
             // 6. Initialize the UI manager
             this.loaderManager.updateLoaderMessage(loaderId, this.translationManager.get('loadingDiff', 'Initializing viewer...'));
-            await this.initializeUIManager();
+            const uiManagerSuccess = await this.initializeUIManager();
+
+            if (!uiManagerSuccess) {
+                Debug.error('FileBrowserManager: Failed to initialize UI manager', null, 1);
+                this.loaderManager.hideMainLoader(loaderId);
+                return;
+            }
 
             // 7. Initialize diff viewer
             await this.initializeDiffViewer();
@@ -202,15 +208,28 @@ export class FileBrowserManager {
 
         // Import the BrowserUIManager if available
         if (typeof BrowserUIManager !== 'undefined') {
-            // Create new instance with the global window.diffConfig
-            window.vdmBrowserUIManager = new BrowserUIManager(window.diffConfig);
+            try {
+                // Create new instance with the global window.diffConfig
+                window.vdmBrowserUIManager = new BrowserUIManager(window.diffConfig);
 
-            // Initialize with container
-            return window.vdmBrowserUIManager.initialize(Selectors.CONTAINER.WRAPPER);
+                // Initialize with container
+                const initResult = await window.vdmBrowserUIManager.initialize(Selectors.CONTAINER.WRAPPER);
+
+                if (initResult) {
+                    return true;
+                } else {
+                    Debug.warn('FileBrowserManager: BrowserUIManager initialize returned false, falling back to manual UI creation', null, 1);
+                    return this.createBasicUIElements();
+                }
+            } catch (error) {
+                Debug.error('FileBrowserManager: BrowserUIManager initialize failed', error, 1);
+                Debug.warn('FileBrowserManager: Falling back to manual UI creation due to BrowserUIManager error', null, 1);
+                return this.createBasicUIElements();
+            }
         } else {
             Debug.warn('FileBrowserManager: BrowserUIManager not available, UI elements must be created manually', null, 1);
-            // Will fall back to manual UI creation
-            return false;
+            // Fallback: Create basic UI elements manually
+            return this.createBasicUIElements();
         }
     }
 
@@ -376,7 +395,12 @@ export class FileBrowserManager {
             // SECURITY: Always use fileRefId when available
             if (refId) {
                 Debug.log('FileBrowserManager: Using reference ID for file', { filePath, refId }, 3);
-                const apiUrl = `../api/get-file-content.php?refId=${encodeURIComponent(refId)}`;
+
+                // Get API URL from configuration, fallback to relative path
+                const baseApiUrl = window.diffConfig?.apiBaseUrl || '../api/';
+                const apiUrl = `${baseApiUrl}get-file-content.php?refId=${encodeURIComponent(refId)}`;
+
+                Debug.log('FileBrowserManager: API URL', { apiUrl, baseApiUrl }, 3);
                 const response = await fetch(apiUrl);
 
                 if (!response.ok) {
@@ -514,13 +538,15 @@ export class FileBrowserManager {
                 Debug.log('FileBrowserManager: Endpoint discovery found endpoint', diffProcessorEndpoint, 2);
             } else {
                 // Fall back to config or default
-                diffProcessorEndpoint = window.diffConfig?.apiEndpoints?.diffProcessor || '../api/diff-processor.php';
+                const baseApiUrl = window.diffConfig?.apiBaseUrl || '../api/';
+                diffProcessorEndpoint = window.diffConfig?.apiEndpoints?.diffProcessor || `${baseApiUrl}diff-processor.php`;
                 Debug.log('FileBrowserManager: Using fallback endpoint', diffProcessorEndpoint, 2);
             }
         } catch (error) {
             Debug.warn('FileBrowserManager: Error discovering endpoints', error, 1);
             // Fall back to config or default
-            diffProcessorEndpoint = window.diffConfig?.apiEndpoints?.diffProcessor || '../api/diff-processor.php';
+            const baseApiUrl = window.diffConfig?.apiBaseUrl || '../api/';
+            diffProcessorEndpoint = window.diffConfig?.apiEndpoints?.diffProcessor || `${baseApiUrl}diff-processor.php`;
         }
 
         const response = await fetch(diffProcessorEndpoint, {
@@ -926,6 +952,65 @@ export class FileBrowserManager {
 
         // Make sure any existing diff viewer instances are destroyed
         this.cleanupPreviousInstance();
+    }
+
+    /**
+     * Create basic UI elements manually when BrowserUIManager is not available
+     * @returns {boolean} Success status
+     */
+    createBasicUIElements() {
+        Debug.log('FileBrowserManager: Creating basic UI elements manually', null, 2);
+
+        // Get the container wrapper element
+        const containerWrapper = document.getElementById(Selectors.CONTAINER.WRAPPER.replace('#', ''));
+        if (!containerWrapper) {
+            Debug.error('FileBrowserManager: Container wrapper not found', Selectors.CONTAINER.WRAPPER, 1);
+            return false;
+        }
+
+        // Create the main diff viewer container
+        const diffViewerId = Selectors.DIFF.VIEWER.replace('#', '');
+        let diffViewer = document.getElementById(diffViewerId);
+
+        if (!diffViewer) {
+            diffViewer = document.createElement('div');
+            diffViewer.id = diffViewerId;
+            diffViewer.className = 'vdm-diff-ui';
+            containerWrapper.appendChild(diffViewer);
+
+            Debug.log('FileBrowserManager: Created diff viewer element', { id: diffViewerId }, 2);
+        }
+
+        // Create the diff container inside the viewer
+        const diffContainerId = Selectors.DIFF.CONTAINER.replace('#', '');
+        let diffContainer = document.getElementById(diffContainerId);
+
+        if (!diffContainer) {
+            diffContainer = document.createElement('div');
+            diffContainer.id = diffContainerId;
+            diffContainer.className = 'vdm-diff__container';
+            diffViewer.appendChild(diffContainer);
+
+            Debug.log('FileBrowserManager: Created diff container element', { id: diffContainerId }, 2);
+        }
+
+        // Create the basic structure for left and right panes
+        if (!diffContainer.querySelector('.vdm-diff__pane--left')) {
+            const leftPane = document.createElement('div');
+            leftPane.className = 'vdm-diff__pane vdm-diff__pane--left';
+            leftPane.innerHTML = '<div class="vdm-diff__content"></div>';
+            diffContainer.appendChild(leftPane);
+        }
+
+        if (!diffContainer.querySelector('.vdm-diff__pane--right')) {
+            const rightPane = document.createElement('div');
+            rightPane.className = 'vdm-diff__pane vdm-diff__pane--right';
+            rightPane.innerHTML = '<div class="vdm-diff__content"></div>';
+            diffContainer.appendChild(rightPane);
+        }
+
+        Debug.log('FileBrowserManager: Basic UI elements created successfully', null, 2);
+        return true;
     }
 }
 

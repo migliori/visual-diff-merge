@@ -12,7 +12,7 @@ return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 var __webpack_exports__ = {};
 
-// UNUSED EXPORTS: FileBrowserManager
+// UNUSED EXPORTS: BrowserUIManager, FileBrowserManager
 
 ;// ./src/utils/Debug.js
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
@@ -2292,7 +2292,7 @@ var FileBrowserManager = /*#__PURE__*/function () {
     key: "handleComparison",
     value: (function () {
       var _handleComparison = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
-        var alertManager, containerWrapper, loaderId, fileData, contents, result, viewerElement;
+        var alertManager, containerWrapper, loaderId, fileData, contents, result, uiManagerSuccess, viewerElement;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -2360,13 +2360,22 @@ var FileBrowserManager = /*#__PURE__*/function () {
               _context.next = 34;
               return this.initializeUIManager();
             case 34:
-              _context.next = 36;
+              uiManagerSuccess = _context.sent;
+              if (uiManagerSuccess) {
+                _context.next = 39;
+                break;
+              }
+              Debug.error('FileBrowserManager: Failed to initialize UI manager', null, 1);
+              this.loaderManager.hideMainLoader(loaderId);
+              return _context.abrupt("return");
+            case 39:
+              _context.next = 41;
               return this.initializeDiffViewer();
-            case 36:
-              _context.next = 44;
+            case 41:
+              _context.next = 49;
               break;
-            case 38:
-              _context.prev = 38;
+            case 43:
+              _context.prev = 43;
               _context.t0 = _context["catch"](8);
               Debug.error('FileBrowserManager: Error during comparison', _context.t0, 1);
               // Hide the loader if there's an error
@@ -2375,11 +2384,11 @@ var FileBrowserManager = /*#__PURE__*/function () {
               // Get elements for error display
               viewerElement = document.getElementById('vdm-diff__viewer');
               this.handleError(_context.t0, null, viewerElement);
-            case 44:
+            case 49:
             case "end":
               return _context.stop();
           }
-        }, _callee, this, [[8, 38]]);
+        }, _callee, this, [[8, 43]]);
       }));
       function handleComparison(_x) {
         return _handleComparison.apply(this, arguments);
@@ -2422,6 +2431,7 @@ var FileBrowserManager = /*#__PURE__*/function () {
     key: "initializeUIManager",
     value: (function () {
       var _initializeUIManager = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var initResult;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -2429,23 +2439,47 @@ var FileBrowserManager = /*#__PURE__*/function () {
 
               // Import the BrowserUIManager if available
               if (!(typeof BrowserUIManager !== 'undefined')) {
-                _context2.next = 6;
+                _context2.next = 22;
                 break;
               }
+              _context2.prev = 2;
               // Create new instance with the global window.diffConfig
               window.vdmBrowserUIManager = new BrowserUIManager(window.diffConfig);
 
               // Initialize with container
-              return _context2.abrupt("return", window.vdmBrowserUIManager.initialize(constants_Selectors.CONTAINER.WRAPPER));
+              _context2.next = 6;
+              return window.vdmBrowserUIManager.initialize(constants_Selectors.CONTAINER.WRAPPER);
             case 6:
+              initResult = _context2.sent;
+              if (!initResult) {
+                _context2.next = 11;
+                break;
+              }
+              return _context2.abrupt("return", true);
+            case 11:
+              Debug.warn('FileBrowserManager: BrowserUIManager initialize returned false, falling back to manual UI creation', null, 1);
+              return _context2.abrupt("return", this.createBasicUIElements());
+            case 13:
+              _context2.next = 20;
+              break;
+            case 15:
+              _context2.prev = 15;
+              _context2.t0 = _context2["catch"](2);
+              Debug.error('FileBrowserManager: BrowserUIManager initialize failed', _context2.t0, 1);
+              Debug.warn('FileBrowserManager: Falling back to manual UI creation due to BrowserUIManager error', null, 1);
+              return _context2.abrupt("return", this.createBasicUIElements());
+            case 20:
+              _context2.next = 24;
+              break;
+            case 22:
               Debug.warn('FileBrowserManager: BrowserUIManager not available, UI elements must be created manually', null, 1);
-              // Will fall back to manual UI creation
-              return _context2.abrupt("return", false);
-            case 8:
+              // Fallback: Create basic UI elements manually
+              return _context2.abrupt("return", this.createBasicUIElements());
+            case 24:
             case "end":
               return _context2.stop();
           }
-        }, _callee2);
+        }, _callee2, this, [[2, 15]]);
       }));
       function initializeUIManager() {
         return _initializeUIManager.apply(this, arguments);
@@ -2630,61 +2664,68 @@ var FileBrowserManager = /*#__PURE__*/function () {
               // Use the API endpoint to safely retrieve file content
               fetchFile = /*#__PURE__*/function () {
                 var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(filePath, refId) {
-                  var apiUrl, response, data, _response;
+                  var _window$diffConfig, baseApiUrl, apiUrl, response, data, _response;
                   return _regeneratorRuntime().wrap(function _callee4$(_context4) {
                     while (1) switch (_context4.prev = _context4.next) {
                       case 0:
                         if (!refId) {
-                          _context4.next = 14;
+                          _context4.next = 16;
                           break;
                         }
                         Debug.log('FileBrowserManager: Using reference ID for file', {
                           filePath: filePath,
                           refId: refId
                         }, 3);
-                        apiUrl = "../api/get-file-content.php?refId=".concat(encodeURIComponent(refId));
-                        _context4.next = 5;
+
+                        // Get API URL from configuration, fallback to relative path
+                        baseApiUrl = ((_window$diffConfig = window.diffConfig) === null || _window$diffConfig === void 0 ? void 0 : _window$diffConfig.apiBaseUrl) || '../api/';
+                        apiUrl = "".concat(baseApiUrl, "get-file-content.php?refId=").concat(encodeURIComponent(refId));
+                        Debug.log('FileBrowserManager: API URL', {
+                          apiUrl: apiUrl,
+                          baseApiUrl: baseApiUrl
+                        }, 3);
+                        _context4.next = 7;
                         return fetch(apiUrl);
-                      case 5:
+                      case 7:
                         response = _context4.sent;
                         if (response.ok) {
-                          _context4.next = 8;
+                          _context4.next = 10;
                           break;
                         }
                         throw new Error("Failed to load file: ".concat(filePath, " (Status: ").concat(response.status, ")"));
-                      case 8:
-                        _context4.next = 10;
-                        return response.json();
                       case 10:
+                        _context4.next = 12;
+                        return response.json();
+                      case 12:
                         data = _context4.sent;
                         return _context4.abrupt("return", data.content);
-                      case 14:
+                      case 16:
                         Debug.log('FileBrowserManager: Using direct path for file', {
                           filePath: filePath
                         }, 3);
 
                         // SECURITY: Ensure the path is not absolute or contains dangerous patterns
                         if (!filePath.match(/^(\/|\\|https?:|file:|[a-zA-Z]:\\)/i)) {
-                          _context4.next = 17;
+                          _context4.next = 19;
                           break;
                         }
                         throw new Error("Invalid file path format: ".concat(filePath));
-                      case 17:
-                        _context4.next = 19;
-                        return fetch(filePath);
                       case 19:
+                        _context4.next = 21;
+                        return fetch(filePath);
+                      case 21:
                         _response = _context4.sent;
                         if (_response.ok) {
-                          _context4.next = 22;
+                          _context4.next = 24;
                           break;
                         }
                         throw new Error("Failed to load file: ".concat(filePath, " (Status: ").concat(_response.status, ")"));
-                      case 22:
-                        _context4.next = 24;
-                        return _response.text();
                       case 24:
+                        _context4.next = 26;
+                        return _response.text();
+                      case 26:
                         return _context4.abrupt("return", _context4.sent);
-                      case 25:
+                      case 27:
                       case "end":
                         return _context4.stop();
                     }
@@ -2812,7 +2853,7 @@ var FileBrowserManager = /*#__PURE__*/function () {
     key: "processDiff",
     value: (function () {
       var _processDiff = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-        var diffProcessorEndpoint, _window$diffConfig, _window$diffConfig2, response, result, translationManager, lang;
+        var diffProcessorEndpoint, _window$diffConfig2, _window$diffConfig3, baseApiUrl, _window$diffConfig4, _window$diffConfig5, _baseApiUrl, response, result, translationManager, lang;
         return _regeneratorRuntime().wrap(function _callee6$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
@@ -2828,23 +2869,25 @@ var FileBrowserManager = /*#__PURE__*/function () {
             case 5:
               diffProcessorEndpoint = _context6.sent;
               Debug.log('FileBrowserManager: Endpoint discovery found endpoint', diffProcessorEndpoint, 2);
-              _context6.next = 11;
+              _context6.next = 12;
               break;
             case 9:
               // Fall back to config or default
-              diffProcessorEndpoint = ((_window$diffConfig = window.diffConfig) === null || _window$diffConfig === void 0 || (_window$diffConfig = _window$diffConfig.apiEndpoints) === null || _window$diffConfig === void 0 ? void 0 : _window$diffConfig.diffProcessor) || '../api/diff-processor.php';
+              baseApiUrl = ((_window$diffConfig2 = window.diffConfig) === null || _window$diffConfig2 === void 0 ? void 0 : _window$diffConfig2.apiBaseUrl) || '../api/';
+              diffProcessorEndpoint = ((_window$diffConfig3 = window.diffConfig) === null || _window$diffConfig3 === void 0 || (_window$diffConfig3 = _window$diffConfig3.apiEndpoints) === null || _window$diffConfig3 === void 0 ? void 0 : _window$diffConfig3.diffProcessor) || "".concat(baseApiUrl, "diff-processor.php");
               Debug.log('FileBrowserManager: Using fallback endpoint', diffProcessorEndpoint, 2);
-            case 11:
-              _context6.next = 17;
+            case 12:
+              _context6.next = 19;
               break;
-            case 13:
-              _context6.prev = 13;
+            case 14:
+              _context6.prev = 14;
               _context6.t0 = _context6["catch"](1);
               Debug.warn('FileBrowserManager: Error discovering endpoints', _context6.t0, 1);
               // Fall back to config or default
-              diffProcessorEndpoint = ((_window$diffConfig2 = window.diffConfig) === null || _window$diffConfig2 === void 0 || (_window$diffConfig2 = _window$diffConfig2.apiEndpoints) === null || _window$diffConfig2 === void 0 ? void 0 : _window$diffConfig2.diffProcessor) || '../api/diff-processor.php';
-            case 17:
-              _context6.next = 19;
+              _baseApiUrl = ((_window$diffConfig4 = window.diffConfig) === null || _window$diffConfig4 === void 0 ? void 0 : _window$diffConfig4.apiBaseUrl) || '../api/';
+              diffProcessorEndpoint = ((_window$diffConfig5 = window.diffConfig) === null || _window$diffConfig5 === void 0 || (_window$diffConfig5 = _window$diffConfig5.apiEndpoints) === null || _window$diffConfig5 === void 0 ? void 0 : _window$diffConfig5.diffProcessor) || "".concat(_baseApiUrl, "diff-processor.php");
+            case 19:
+              _context6.next = 21;
               return fetch(diffProcessorEndpoint, {
                 method: 'POST',
                 headers: {
@@ -2852,10 +2895,10 @@ var FileBrowserManager = /*#__PURE__*/function () {
                 },
                 body: JSON.stringify(window.diffConfig)
               });
-            case 19:
+            case 21:
               response = _context6.sent;
               if (response.ok) {
-                _context6.next = 23;
+                _context6.next = 25;
                 break;
               }
               Debug.error('FileBrowserManager: API request failed', {
@@ -2863,18 +2906,18 @@ var FileBrowserManager = /*#__PURE__*/function () {
                 statusText: response.statusText
               }, 1);
               throw new Error("API request failed: ".concat(response.status, " ").concat(response.statusText));
-            case 23:
-              _context6.next = 25;
-              return response.json();
             case 25:
+              _context6.next = 27;
+              return response.json();
+            case 27:
               result = _context6.sent;
               if (!result.error) {
-                _context6.next = 29;
+                _context6.next = 31;
                 break;
               }
               Debug.error('FileBrowserManager: API returned error', result.error, 1);
               throw new Error(result.error);
-            case 29:
+            case 31:
               // Initialize TranslationManager with server-provided data
               translationManager = TranslationManager.getInstance();
               if (result.config && result.config.translations) {
@@ -2899,11 +2942,11 @@ var FileBrowserManager = /*#__PURE__*/function () {
                 });
               }
               return _context6.abrupt("return", result);
-            case 33:
+            case 35:
             case "end":
               return _context6.stop();
           }
-        }, _callee6, null, [[1, 13]]);
+        }, _callee6, null, [[1, 14]]);
       }));
       function processDiff() {
         return _processDiff.apply(this, arguments);
@@ -3263,6 +3306,65 @@ var FileBrowserManager = /*#__PURE__*/function () {
       // Make sure any existing diff viewer instances are destroyed
       this.cleanupPreviousInstance();
     }
+
+    /**
+     * Create basic UI elements manually when BrowserUIManager is not available
+     * @returns {boolean} Success status
+     */
+  }, {
+    key: "createBasicUIElements",
+    value: function createBasicUIElements() {
+      Debug.log('FileBrowserManager: Creating basic UI elements manually', null, 2);
+
+      // Get the container wrapper element
+      var containerWrapper = document.getElementById(constants_Selectors.CONTAINER.WRAPPER.replace('#', ''));
+      if (!containerWrapper) {
+        Debug.error('FileBrowserManager: Container wrapper not found', constants_Selectors.CONTAINER.WRAPPER, 1);
+        return false;
+      }
+
+      // Create the main diff viewer container
+      var diffViewerId = constants_Selectors.DIFF.VIEWER.replace('#', '');
+      var diffViewer = document.getElementById(diffViewerId);
+      if (!diffViewer) {
+        diffViewer = document.createElement('div');
+        diffViewer.id = diffViewerId;
+        diffViewer.className = 'vdm-diff-ui';
+        containerWrapper.appendChild(diffViewer);
+        Debug.log('FileBrowserManager: Created diff viewer element', {
+          id: diffViewerId
+        }, 2);
+      }
+
+      // Create the diff container inside the viewer
+      var diffContainerId = constants_Selectors.DIFF.CONTAINER.replace('#', '');
+      var diffContainer = document.getElementById(diffContainerId);
+      if (!diffContainer) {
+        diffContainer = document.createElement('div');
+        diffContainer.id = diffContainerId;
+        diffContainer.className = 'vdm-diff__container';
+        diffViewer.appendChild(diffContainer);
+        Debug.log('FileBrowserManager: Created diff container element', {
+          id: diffContainerId
+        }, 2);
+      }
+
+      // Create the basic structure for left and right panes
+      if (!diffContainer.querySelector('.vdm-diff__pane--left')) {
+        var leftPane = document.createElement('div');
+        leftPane.className = 'vdm-diff__pane vdm-diff__pane--left';
+        leftPane.innerHTML = '<div class="vdm-diff__content"></div>';
+        diffContainer.appendChild(leftPane);
+      }
+      if (!diffContainer.querySelector('.vdm-diff__pane--right')) {
+        var rightPane = document.createElement('div');
+        rightPane.className = 'vdm-diff__pane vdm-diff__pane--right';
+        rightPane.innerHTML = '<div class="vdm-diff__content"></div>';
+        diffContainer.appendChild(rightPane);
+      }
+      Debug.log('FileBrowserManager: Basic UI elements created successfully', null, 2);
+      return true;
+    }
   }]);
 }();
 
@@ -3273,11 +3375,1133 @@ if (typeof window !== 'undefined') {
     window.fileBrowserManager = new FileBrowserManager();
   });
 }
+;// ./src/utils/IconRegistry.js
+function IconRegistry_typeof(o) { "@babel/helpers - typeof"; return IconRegistry_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, IconRegistry_typeof(o); }
+function IconRegistry_classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function IconRegistry_defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, IconRegistry_toPropertyKey(o.key), o); } }
+function IconRegistry_createClass(e, r, t) { return r && IconRegistry_defineProperties(e.prototype, r), t && IconRegistry_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function IconRegistry_toPropertyKey(t) { var i = IconRegistry_toPrimitive(t, "string"); return "symbol" == IconRegistry_typeof(i) ? i : i + ""; }
+function IconRegistry_toPrimitive(t, r) { if ("object" != IconRegistry_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != IconRegistry_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+/**
+ * Central registry for SVG icons
+ * This eliminates the need for external icon libraries
+ */
+var IconRegistry = /*#__PURE__*/function () {
+  function IconRegistry() {
+    IconRegistry_classCallCheck(this, IconRegistry);
+  }
+  return IconRegistry_createClass(IconRegistry, null, [{
+    key: "getIcon",
+    value:
+    /**
+     * Get SVG markup for the specified icon
+     * @param {string} iconName - Name of the icon
+     * @param {Object} options - Additional options for the icon
+     * @returns {string} SVG markup
+     */
+    function getIcon(iconName) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var _options$classes = options.classes,
+        classes = _options$classes === void 0 ? '' : _options$classes,
+        _options$width = options.width,
+        width = _options$width === void 0 ? 16 : _options$width,
+        _options$height = options.height,
+        height = _options$height === void 0 ? 16 : _options$height,
+        _options$title = options.title,
+        title = _options$title === void 0 ? '' : _options$title,
+        _options$ariaHidden = options.ariaHidden,
+        ariaHidden = _options$ariaHidden === void 0 ? true : _options$ariaHidden;
+
+      // Get the SVG path data
+      var pathData = this._getIconPathData(iconName);
+      if (!pathData) {
+        console.warn("Icon not found: ".concat(iconName));
+        return '';
+      }
+
+      // Create title element for accessibility if provided
+      var titleElement = title ? "<title>".concat(title, "</title>") : '';
+
+      // Generate the SVG with the right attributes
+      return "<svg\n            class=\"vdm-icon ".concat(classes, "\"\n            width=\"").concat(width, "\"\n            height=\"").concat(height, "\"\n            viewBox=\"").concat(pathData.viewBox || '0 0 512 512', "\"\n            ").concat(ariaHidden ? 'aria-hidden="true"' : 'role="img"', "\n            focusable=\"false\"\n        >\n            ").concat(titleElement, "\n            ").concat(pathData.paths, "\n        </svg>");
+    }
+
+    /**
+     * Get the path data for an icon
+     * @private
+     * @param {string} iconName - Name of the icon
+     * @returns {Object|null} Icon path data or null if not found
+     */
+  }, {
+    key: "_getIconPathData",
+    value: function _getIconPathData(iconName) {
+      // Map of icon names to their SVG path data
+      var icons = {
+        'chevron-up': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/>'
+        },
+        'chevron-down': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/>'
+        },
+        'eye': {
+          viewBox: '0 0 576 512',
+          paths: '<path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"/>'
+        },
+        'sun': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"/>'
+        },
+        'moon': {
+          viewBox: '0 0 384 512',
+          paths: '<path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"/>'
+        },
+        'file': {
+          viewBox: '0 0 384 512',
+          paths: '<path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128z"/>'
+        },
+        'file-circle-plus': {
+          viewBox: '0 0 576 512',
+          paths: '<path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384v38.6C310.1 219.5 256 287.4 256 368c0 59.1 29.1 111.3 73.7 143.3c-3.2 .5-6.4 .7-9.7 .7H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128zM288 368a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-80c-8.8 0-16 7.2-16 16v48H368c-8.8 0-16 7.2-16 16s7.2 16 16 16h48v48c0 8.8 7.2 16 16 16s16-7.2 16-16V384h48c8.8 0 16-7.2 16-16s-7.2-16-16-16H448V304c0-8.8-7.2-16-16-16z"/>'
+        },
+        'file-lines': {
+          viewBox: '0 0 384 512',
+          paths: '<path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM112 256H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64H272c8.8 0 16 7.2 16 16s-7.2 16-16 16H112c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/>'
+        },
+        'file-copy': {
+          viewBox: '0 0 576 512',
+          paths: '<path d="M384 480h48c20.9 0 38.7-13.4 45.3-32H416c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16h61.3C470.7 157.4 452.9 144 432 144H384V64c0-35.3-28.7-64-64-64H64C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H384zM128 64H320V144H128V64zM400 240V416H144V192H352c26.5 0 48 21.5 48 48zm176-48c0-8.8-7.2-16-16-16H432c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H560c8.8 0 16-7.2 16-16V192z"/>'
+        },
+        'plus-circle': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 344V280H168c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H280v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/>'
+        },
+        'exclamation-triangle': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>'
+        },
+        'copy': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M272 0H396.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H272c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128H192v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z"/>'
+        },
+        // Add more icons as needed
+        'check-circle': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/>'
+        },
+        'chevron-right': {
+          viewBox: '0 0 320 512',
+          paths: '<path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/>'
+        },
+        'download': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/>'
+        },
+        'uncheck-circle': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24v112c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zm-32 224a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>'
+        },
+        'info-circle': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/>'
+        },
+        'exclamation-circle': {
+          viewBox: '0 0 512 512',
+          paths: '<path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM256 128c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>'
+        },
+        'checkbox-unchecked': {
+          viewBox: '0 0 24 24',
+          paths: '<path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>'
+        },
+        'checkbox-checked': {
+          viewBox: '0 0 24 24',
+          paths: '<path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>'
+        }
+      };
+      return icons[iconName] || null;
+    }
+
+    /**
+     * Create DOM element for an icon
+     * @param {string} iconName - Name of the icon
+     * @param {Object} options - Additional options for the icon
+     * @returns {Element} The created SVG element
+     */
+  }, {
+    key: "createIcon",
+    value: function createIcon(iconName) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var svgString = this.getIcon(iconName, options);
+      if (!svgString) return null;
+      var template = document.createElement('template');
+      template.innerHTML = svgString.trim();
+      return template.content.firstChild;
+    }
+  }]);
+}();
+;// ./src/utils/DOMUtils.js
+function DOMUtils_typeof(o) { "@babel/helpers - typeof"; return DOMUtils_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, DOMUtils_typeof(o); }
+function DOMUtils_slicedToArray(r, e) { return DOMUtils_arrayWithHoles(r) || DOMUtils_iterableToArrayLimit(r, e) || DOMUtils_unsupportedIterableToArray(r, e) || DOMUtils_nonIterableRest(); }
+function DOMUtils_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function DOMUtils_iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function DOMUtils_arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function DOMUtils_toConsumableArray(r) { return DOMUtils_arrayWithoutHoles(r) || DOMUtils_iterableToArray(r) || DOMUtils_unsupportedIterableToArray(r) || DOMUtils_nonIterableSpread(); }
+function DOMUtils_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function DOMUtils_unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return DOMUtils_arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? DOMUtils_arrayLikeToArray(r, a) : void 0; } }
+function DOMUtils_iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function DOMUtils_arrayWithoutHoles(r) { if (Array.isArray(r)) return DOMUtils_arrayLikeToArray(r); }
+function DOMUtils_arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function DOMUtils_classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function DOMUtils_defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, DOMUtils_toPropertyKey(o.key), o); } }
+function DOMUtils_createClass(e, r, t) { return r && DOMUtils_defineProperties(e.prototype, r), t && DOMUtils_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function DOMUtils_toPropertyKey(t) { var i = DOMUtils_toPrimitive(t, "string"); return "symbol" == DOMUtils_typeof(i) ? i : i + ""; }
+function DOMUtils_toPrimitive(t, r) { if ("object" != DOMUtils_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != DOMUtils_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+
+// Cache for DOM queries
+var elementCache = new Map();
+
+/**
+ * Reusable DOM manipulation utilities
+ */
+var DOMUtils = /*#__PURE__*/function () {
+  function DOMUtils() {
+    DOMUtils_classCallCheck(this, DOMUtils);
+  }
+  return DOMUtils_createClass(DOMUtils, null, [{
+    key: "setupButtonHandler",
+    value:
+    /**
+     * Set up a button handler with proper cleanup
+     * @param {string} buttonId - Button element ID
+     * @param {Function} handlerFn - Event handler function
+     * @param {string} logName - Name for logging
+     * @returns {Object|null} Handler information or null if element not found
+     */
+    function setupButtonHandler(buttonId, handlerFn) {
+      var logName = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+      var button = document.getElementById(buttonId);
+      if (!button) {
+        Debug.warn("DOMUtils: Button ".concat(buttonId, " not found"), null, 2);
+        return null;
+      }
+      var instanceId = Date.now();
+
+      // Clean up if needed
+      if (button._handlerId && button._handlerId !== instanceId) {
+        // Clone to remove all event listeners
+        var newBtn = button.cloneNode(true);
+        if (button.parentNode) {
+          button.parentNode.replaceChild(newBtn, button);
+        }
+        Debug.log("DOMUtils: Cleaned up previous handler for ".concat(logName || buttonId), null, 2);
+        handlerFn(newBtn);
+        newBtn._handlerId = instanceId;
+        return {
+          element: newBtn,
+          id: instanceId
+        };
+      } else {
+        button._handlerId = instanceId;
+        handlerFn(button);
+        return {
+          element: button,
+          id: instanceId
+        };
+      }
+    }
+
+    /**
+     * Get element by ID with error handling
+     * @param {string} id - Element ID
+     * @returns {Element|null} The found element or null
+     */
+  }, {
+    key: "getElement",
+    value: function getElement(id) {
+      if (!id) {
+        Debug.error('DOMUtils.getElement: Empty ID provided', null, 1);
+        return null;
+      }
+
+      // Check cache first
+      if (elementCache.has(id)) {
+        return elementCache.get(id);
+      }
+
+      // Try direct getElementById first
+      var element = document.getElementById(id);
+
+      // If not found and the id doesn't include a #, try with a selector
+      if (!element) {
+        try {
+          if (!id.includes('#') && !id.includes('.')) {
+            // If just an ID without # prefix, try with # prefix
+            element = document.querySelector('#' + id);
+          } else {
+            // Try as selector
+            element = document.querySelector(id);
+          }
+        } catch (e) {
+          Debug.error("DOMUtils.getElement: Error with selector: ".concat(e.message), null, 1);
+        }
+      }
+      if (!element) {
+        Debug.error("DOMUtils.getElement: Element with ID '".concat(id, "' not found"), null, 1);
+      } else {
+        // Cache the found element
+        elementCache.set(id, element);
+      }
+      return element;
+    }
+
+    /**
+     * Update toggle button appearance
+     * @param {string} currentValue - Current toggle value
+     * @param {Object} elements - Object containing button, icon, and text elements
+     * @param {Object} options - Configuration options
+     */
+  }, {
+    key: "updateToggleButton",
+    value: function updateToggleButton(currentValue, elements, options) {
+      var toggleBtn = elements.toggleBtn,
+        toggleIcon = elements.toggleIcon,
+        toggleText = elements.toggleText;
+      var firstOption = options.firstOption,
+        secondOption = options.secondOption,
+        firstClass = options.firstClass,
+        secondClass = options.secondClass,
+        firstText = options.firstText,
+        secondText = options.secondText,
+        firstTooltip = options.firstTooltip,
+        secondTooltip = options.secondTooltip;
+      if (!toggleBtn || !toggleIcon || !toggleText) {
+        Debug.warn('DOMUtils: Missing elements for toggle button update');
+        return;
+      }
+      Debug.log("DOMUtils: Updating toggle button to ".concat(currentValue), null, 2);
+
+      // Set the button class based on current value
+      if (currentValue === firstOption) {
+        toggleIcon.className = firstClass;
+        toggleText.textContent = firstText;
+        toggleBtn.title = firstTooltip || firstText;
+        toggleBtn.setAttribute('data-value', firstOption);
+      } else if (currentValue === secondOption) {
+        toggleIcon.className = secondClass;
+        toggleText.textContent = secondText;
+        toggleBtn.title = secondTooltip || secondText;
+        toggleBtn.setAttribute('data-value', secondOption);
+      } else {
+        Debug.warn("DOMUtils: Invalid toggle value: ".concat(currentValue));
+      }
+    }
+
+    /**
+     * Show a standardized message in a container
+     * @param {string} containerId - Container element ID
+     * @param {string} message - Message content
+     * @param {string} type - Message type: 'info', 'success', 'warning', 'danger'
+     * @param {Object} options - Additional options
+     * @returns {boolean} Success status
+     */
+  }, {
+    key: "showMessage",
+    value: function showMessage(containerId, message) {
+      var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'info';
+      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+      var container = document.getElementById(containerId);
+      if (!container) {
+        Debug.warn("DOMUtils: Container #".concat(containerId, " not found for message"), null, 2);
+        return false;
+      }
+
+      // Default options
+      var _options$_iconName = options._iconName,
+        _iconName = _options$_iconName === void 0 ? null : _options$_iconName,
+        _options$className = options.className,
+        className = _options$className === void 0 ? 'mt-5' : _options$className,
+        _options$elementId = options.elementId,
+        elementId = _options$elementId === void 0 ? '' : _options$elementId,
+        _options$keepExisting = options.keepExisting,
+        keepExisting = _options$keepExisting === void 0 ? false : _options$keepExisting;
+
+      // Use AlertManager to create the alert
+      var alertManager = utils_AlertManager.getInstance();
+
+      // Clear existing content unless we're keeping it
+      if (!keepExisting) {
+        container.innerHTML = '';
+      }
+
+      // Check if HAS_ICON exists in UTILITY and provide a fallback if it doesn't
+      var iconClass = '';
+      try {
+        if (constants_Selectors.UTILITY && constants_Selectors.UTILITY.HAS_ICON) {
+          iconClass = constants_Selectors.UTILITY.HAS_ICON.name();
+        } else {
+          // Fallback if HAS_ICON is not defined
+          iconClass = 'vdm-has-icon';
+          Debug.log('DOMUtils: Using fallback icon class because Selectors.UTILITY.HAS_ICON is undefined', null, 2);
+        }
+      } catch (e) {
+        // Fallback if any error occurs
+        iconClass = 'vdm-has-icon';
+        Debug.warn('DOMUtils: Error getting icon class, using fallback', e, 2);
+      }
+
+      // Create the alert with AlertManager
+      var alertElement = alertManager.showAlert(message, type, {
+        timeout: 0,
+        // Don't auto-dismiss
+        translate: false,
+        // Don't translate the message
+        className: "".concat(iconClass, " ").concat(className)
+      });
+
+      // Set ID if specified
+      if (elementId) {
+        alertElement.id = elementId;
+      }
+
+      // Append to container
+      container.appendChild(alertElement);
+      return true;
+    }
+
+    /**
+     * Toggle element visibility
+     * @param {string} elementId - Element ID
+     * @param {boolean} visible - Whether element should be visible
+     * @param {string} displayMode - Display mode when visible
+     * @returns {boolean} Success status
+     */
+  }, {
+    key: "toggleVisibility",
+    value: function toggleVisibility(elementId, visible) {
+      var displayMode = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'block';
+      var element = document.getElementById(elementId);
+      if (!element) {
+        Debug.warn("DOMUtils: Element #".concat(elementId, " not found for visibility toggle"), null, 2);
+        return false;
+      }
+      element.style.display = visible ? displayMode : 'none';
+      return true;
+    }
+
+    /**
+     * Add or remove a class from an element
+     * @param {string} elementId - Element ID
+     * @param {string} className - Class name to toggle
+     * @param {boolean} add - Whether to add or remove the class
+     * @returns {boolean} Success status
+     */
+  }, {
+    key: "toggleClass",
+    value: function toggleClass(elementId, className) {
+      var add = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      var element = document.getElementById(elementId);
+      if (!element) {
+        Debug.warn("DOMUtils: Element #".concat(elementId, " not found for class toggle"), null, 2);
+        return false;
+      }
+      if (add) {
+        element.classList.add(className);
+      } else {
+        element.classList.remove(className);
+      }
+      return true;
+    }
+
+    /**
+     * Create an element with specified attributes
+     * @param {string} tagName - Element tag name
+     * @param {string|null} id - Element ID
+     * @param {string|Array} classes - CSS classes
+     * @param {Object} attributes - Additional attributes
+     * @returns {HTMLElement} Created element
+     */
+  }, {
+    key: "createElement",
+    value: function createElement() {
+      var tagName = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'div';
+      var id = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var classes = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+      var attributes = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+      var element = document.createElement(tagName);
+
+      // Set ID if provided
+      if (id) {
+        element.id = id;
+      }
+
+      // Add classes - handle both arrays and space-separated strings
+      if (classes) {
+        var classList;
+        if (Array.isArray(classes)) {
+          classList = classes;
+        } else if (typeof classes === 'string') {
+          classList = classes.split(/\s+/).filter(Boolean);
+        } else {
+          classList = [];
+        }
+        if (classList.length > 0) {
+          var _element$classList;
+          (_element$classList = element.classList).add.apply(_element$classList, DOMUtils_toConsumableArray(classList));
+        }
+      }
+
+      // Set attributes
+      Object.entries(attributes).forEach(function (_ref) {
+        var _ref2 = DOMUtils_slicedToArray(_ref, 2),
+          key = _ref2[0],
+          value = _ref2[1];
+        if (value !== undefined && value !== null) {
+          element.setAttribute(key, value);
+        }
+      });
+      return element;
+    }
+
+    /**
+     * Create and append an element to a container
+     * @param {string} tagName - Element tag name
+     * @param {Element|string} container - Container element or ID
+     * @param {Object} options - Element options
+     * @returns {HTMLElement|null} Created element or null if container not found
+     */
+  }, {
+    key: "createAndAppendElement",
+    value: function createAndAppendElement(tagName, container) {
+      var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      // Get container element if ID was provided
+      var containerElement = typeof container === 'string' ? document.getElementById(container) : container;
+      if (!containerElement) {
+        Debug.warn("DOMUtils: Container not found for createAndAppendElement", null, 2);
+        return null;
+      }
+
+      // Extract options
+      var _options$id = options.id,
+        id = _options$id === void 0 ? null : _options$id,
+        _options$classes = options.classes,
+        classes = _options$classes === void 0 ? [] : _options$classes,
+        _options$attributes = options.attributes,
+        attributes = _options$attributes === void 0 ? {} : _options$attributes,
+        _options$content = options.content,
+        content = _options$content === void 0 ? null : _options$content;
+
+      // Create element
+      var element = DOMUtils.createElement(tagName, id, classes, attributes);
+
+      // Set content if provided
+      if (content !== null) {
+        if (typeof content === 'string') {
+          element.innerHTML = content;
+        } else if (content instanceof Node) {
+          element.appendChild(content);
+        }
+      }
+
+      // Append to container
+      containerElement.appendChild(element);
+      return element;
+    }
+
+    /**
+     * Set element content safely
+     * @param {string} elementId - Element ID
+     * @param {string} content - HTML content
+     * @returns {boolean} Success status
+     */
+  }, {
+    key: "setContent",
+    value: function setContent(elementId, content) {
+      var element = document.getElementById(elementId);
+      if (!element) {
+        Debug.warn("DOMUtils: Element #".concat(elementId, " not found for content update"), null, 2);
+        return false;
+      }
+      element.innerHTML = content;
+      return true;
+    }
+
+    /**
+     * Get elements by selector
+     * @param {string} selector - CSS selector
+     * @param {Element|Document|string} context - Search context or ID
+     * @returns {NodeList|null} Selected elements or null if context not found
+     */
+  }, {
+    key: "getElements",
+    value: function getElements(selector) {
+      var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+      // Get context element if ID was provided
+      var contextElement = typeof context === 'string' ? document.getElementById(context) : context;
+      if (!contextElement) {
+        Debug.warn("DOMUtils: Context not found for selector: ".concat(selector), null, 2);
+        return null;
+      }
+      return contextElement.querySelectorAll(selector);
+    }
+
+    /**
+     * Append HTML content to an element
+     * @param {string} elementId - Element ID
+     * @param {string} content - HTML content to append
+     * @returns {boolean} Success status
+     */
+  }, {
+    key: "appendContent",
+    value: function appendContent(elementId, content) {
+      var element = document.getElementById(elementId);
+      if (!element) {
+        Debug.warn("DOMUtils: Element #".concat(elementId, " not found for content append"), null, 2);
+        return false;
+      }
+      element.insertAdjacentHTML('beforeend', content);
+      return true;
+    }
+
+    /**
+     * Remove an element safely
+     * @param {string|Element} elementOrId - Element or element ID to remove
+     * @returns {boolean} Success status
+     */
+  }, {
+    key: "removeElement",
+    value: function removeElement(elementOrId) {
+      var element = typeof elementOrId === 'string' ? document.getElementById(elementOrId) : element;
+      if (!(element !== null && element !== void 0 && element.parentNode)) {
+        Debug.warn("DOMUtils: Element not found or has no parent for removal", null, 2);
+        return false;
+      }
+      element.parentNode.removeChild(element);
+      return true;
+    }
+
+    /**
+     * Setup event handlers on elements matching a selector
+     * @param {string} selector - CSS selector to match elements
+     * @param {string} eventType - Event type (e.g., 'click', 'change')
+     * @param {function} handler - Event handler function
+     * @param {Object} options - Additional options
+     * @returns {number} Number of elements that received the handler
+     */
+  }, {
+    key: "setupEventHandlers",
+    value: function setupEventHandlers(selector, eventType, handler) {
+      var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+      var _options$context = options.context,
+        context = _options$context === void 0 ? document : _options$context,
+        _options$removeExisti = options.removeExisting,
+        removeExisting = _options$removeExisti === void 0 ? false : _options$removeExisti,
+        _options$styles = options.styles,
+        styles = _options$styles === void 0 ? null : _options$styles;
+      var elements = DOMUtils.getElements(selector, context);
+      if (!elements) return 0;
+
+      // Remove existing handlers if requested
+      if (removeExisting) {
+        elements.forEach(function (element) {
+          element.removeEventListener(eventType, handler);
+        });
+      }
+
+      // Add new handlers and apply styles
+      elements.forEach(function (element) {
+        element.addEventListener(eventType, handler);
+
+        // Apply styles if provided
+        if (styles) {
+          Object.entries(styles).forEach(function (_ref3) {
+            var _ref4 = DOMUtils_slicedToArray(_ref3, 2),
+              property = _ref4[0],
+              value = _ref4[1];
+            element.style[property] = value;
+          });
+        }
+      });
+      return elements.length;
+    }
+
+    /**
+     * Create an icon element
+     * @param {string} iconName - Name of the icon
+     * @param {Object} options - Icon options
+     * @returns {Element} SVG icon element
+     */
+  }, {
+    key: "createIcon",
+    value: function createIcon(iconName) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      return IconRegistry.createIcon(iconName, options);
+    }
+
+    /**
+     * Get icon HTML string
+     * @param {string} iconName - Name of the icon
+     * @param {Object} options - Icon options
+     * @returns {string} SVG icon HTML
+     */
+  }, {
+    key: "getIconHtml",
+    value: function getIconHtml(iconName) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      return IconRegistry.getIcon(iconName, options);
+    }
+  }]);
+}();
+;// ./src/components/viewer/BrowserUIManager.js
+function BrowserUIManager_typeof(o) { "@babel/helpers - typeof"; return BrowserUIManager_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, BrowserUIManager_typeof(o); }
+function BrowserUIManager_classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function BrowserUIManager_defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, BrowserUIManager_toPropertyKey(o.key), o); } }
+function BrowserUIManager_createClass(e, r, t) { return r && BrowserUIManager_defineProperties(e.prototype, r), t && BrowserUIManager_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function BrowserUIManager_toPropertyKey(t) { var i = BrowserUIManager_toPrimitive(t, "string"); return "symbol" == BrowserUIManager_typeof(i) ? i : i + ""; }
+function BrowserUIManager_toPrimitive(t, r) { if ("object" != BrowserUIManager_typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != BrowserUIManager_typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+
+/**
+ * Manages browser UI generation for file-browser.php
+ * This component handles the dynamic generation of UI elements that were previously
+ * hardcoded in the PHP file, ensuring proper use of selectors and translations.
+ */
+var BrowserUIManager_BrowserUIManager = /*#__PURE__*/function () {
+  /**
+   * @param {DiffViewer|Object} diffViewer - Parent diff viewer instance or options object
+   */
+  function BrowserUIManager(diffViewer) {
+    var _window$diffConfig, _this$options;
+    BrowserUIManager_classCallCheck(this, BrowserUIManager);
+    // Handle both DiffViewer instance or options object
+    if (diffViewer && diffViewer.options) {
+      this.diffViewer = diffViewer;
+      this.options = diffViewer.options;
+    } else {
+      this.diffViewer = null;
+      this.options = diffViewer || {};
+    }
+    this.container = null;
+    this.elements = {
+      themeSwitcher: null,
+      diffContainer: null,
+      mergeControls: null
+    };
+
+    // Get the translation manager instance
+    this.translationManager = TranslationManager.getInstance();
+
+    // Log translation state for debugging
+    var translationsSource;
+
+    // Extract nested ternary operations into separate statements
+    var hasWindowConfig = !!((_window$diffConfig = window.diffConfig) !== null && _window$diffConfig !== void 0 && _window$diffConfig.translations);
+    var hasOptionsTranslations = !!((_this$options = this.options) !== null && _this$options !== void 0 && _this$options.translations);
+    if (this.translationManager.isInitialized()) {
+      translationsSource = 'TranslationManager';
+    } else if (hasWindowConfig) {
+      translationsSource = 'window.diffConfig';
+    } else if (hasOptionsTranslations) {
+      translationsSource = 'options';
+    } else {
+      translationsSource = 'none';
+    }
+    var lang = this.translationManager.getLanguage();
+    Debug.log("BrowserUIManager: Created with \"".concat(lang, "\" translations from ").concat(translationsSource), this.translationManager.getAllTranslations(), 2);
+  }
+
+  /**
+   * Set the DiffViewer instance
+   * @param {DiffViewer} diffViewer - The DiffViewer instance
+   */
+  return BrowserUIManager_createClass(BrowserUIManager, [{
+    key: "setDiffViewer",
+    value: function setDiffViewer(diffViewer) {
+      if (diffViewer && diffViewer.options) {
+        this.diffViewer = diffViewer;
+        this.options = diffViewer.options;
+        Debug.log('BrowserUIManager: Updated DiffViewer reference', null, 3);
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * Get translations from options
+     * @returns {Object} Translations object
+     */
+  }, {
+    key: "getTranslations",
+    value: function getTranslations() {
+      var _window$diffConfig2, _this$options2;
+      // First, try to get translations from the TranslationManager
+      if (this.translationManager && this.translationManager.isInitialized()) {
+        Debug.log('BrowserUIManager: Using translations from TranslationManager', this.translationManager.getAllTranslations(), 3);
+        return this.translationManager.getAllTranslations();
+      }
+
+      // Second, try to auto-initialize TranslationManager with window.diffConfig
+      if ((_window$diffConfig2 = window.diffConfig) !== null && _window$diffConfig2 !== void 0 && _window$diffConfig2.translations && BrowserUIManager_typeof(window.diffConfig.translations) === 'object') {
+        Debug.log('BrowserUIManager: Auto-initializing TranslationManager from window.diffConfig', window.diffConfig.translations, 3);
+        this.translationManager.initialize(window.diffConfig.lang || 'en', window.diffConfig.translations);
+        return this.translationManager.getAllTranslations();
+      }
+
+      // Fall back to local options if nothing else works
+      if ((_this$options2 = this.options) !== null && _this$options2 !== void 0 && _this$options2.translations && BrowserUIManager_typeof(this.options.translations) === 'object') {
+        Debug.log('BrowserUIManager: Using translations from local options', this.options.translations, 3);
+        return this.options.translations;
+      }
+      Debug.log('BrowserUIManager: No translations found, using empty object', null, 3);
+      return {};
+    }
+
+    /**
+     * Initialize UI components
+     * @param {string} containerSelector - Container element selector
+     */
+  }, {
+    key: "initialize",
+    value: function initialize() {
+      var containerSelector = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : constants_Selectors.CONTAINER.WRAPPER;
+      Debug.log('BrowserUIManager: Initializing UI components', null, 2);
+      this.container = document.querySelector(containerSelector);
+      if (!this.container) {
+        Debug.error('BrowserUIManager: Container element not found', null, 2);
+        return false;
+      }
+
+      // Change the order of generation - create diff container first
+      this.generateDiffContainer();
+      this.generateThemeSwitcher();
+      this.generateMergeControls();
+      Debug.log('BrowserUIManager: UI components generated', null, 2);
+      return true;
+    }
+
+    /**
+     * Generate theme switcher UI
+     */
+  }, {
+    key: "generateThemeSwitcher",
+    value: function generateThemeSwitcher() {
+      Debug.log('BrowserUIManager: Generating theme switcher', null, 3);
+
+      // Get the ID without the # prefix for createElement
+      var themeSwitcherId = constants_Selectors.THEME.SWITCHER.name();
+      var themeLoadingId = constants_Selectors.THEME.LOADING_INDICATOR.name();
+      var themeToggleId = constants_Selectors.THEME.TOGGLE.name();
+
+      // Create theme switcher element
+      var themeSwitcher = document.createElement('div');
+      themeSwitcher.id = themeSwitcherId;
+      themeSwitcher.className = "".concat(constants_Selectors.UTILITY.FLEX.name(), " ").concat(constants_Selectors.UTILITY.JUSTIFY_CONTENT_BETWEEN.name(), " ").concat(constants_Selectors.UTILITY.PADDING_2.name());
+      themeSwitcher.style.cssText = 'display: none !important; position: relative;';
+
+      // Create theme switcher wrapper
+      var switcherWrapper = document.createElement('div');
+      switcherWrapper.className = constants_Selectors.THEME_SWITCHER.WRAPPER.name();
+
+      // Get SVG icons for light/dark mode
+      var sunIcon = DOMUtils.getIconHtml('sun', {
+        classes: constants_Selectors.UTILITY.MARGIN_END_2.name()
+      });
+      var moonIcon = DOMUtils.getIconHtml('moon', {
+        classes: constants_Selectors.UTILITY.MARGIN_START_2.name()
+      });
+
+      // Create theme switcher content with toggle
+      switcherWrapper.innerHTML = "\n            <span class=\"".concat(constants_Selectors.THEME_SWITCHER.LABEL.name(), " ").concat(constants_Selectors.UTILITY.MARGIN_END_2.name(), "\">").concat(sunIcon, "</span>\n            <label class=\"").concat(constants_Selectors.THEME_SWITCHER.CONTROL.name(), "\" for=\"").concat(themeToggleId, "\">\n                <input type=\"checkbox\" id=\"").concat(themeToggleId, "\" checked>\n                <span class=\"").concat(constants_Selectors.THEME_SWITCHER.SLIDER.name(), " ").concat(constants_Selectors.THEME_SWITCHER.SLIDER_ROUND.name(), "\"></span>\n            </label>\n            <span class=\"").concat(constants_Selectors.THEME_SWITCHER.LABEL.name(), " ").concat(constants_Selectors.UTILITY.MARGIN_START_2.name(), " \">").concat(moonIcon, "</span>\n        ");
+
+      // Append elements to theme switcher
+      themeSwitcher.appendChild(switcherWrapper);
+
+      // Create a separate container for the loader outside the theme switcher hierarchy
+      var loadingContainer = document.createElement('div');
+      loadingContainer.id = themeLoadingId;
+      loadingContainer.style.display = 'none';
+      loadingContainer.style.position = 'absolute';
+      loadingContainer.style.zIndex = '1000';
+
+      // Append theme switcher to container
+      this.container.appendChild(themeSwitcher);
+
+      // Append loading container to body for proper positioning
+      document.body.appendChild(loadingContainer);
+
+      // Store reference
+      this.elements.themeSwitcher = themeSwitcher;
+      this.elements.themeLoadingContainer = loadingContainer;
+
+      // Watch for the vdm-diff__container to have 'loaded' class
+      var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function () {
+          var diffContainer = document.getElementById(constants_Selectors.DIFF.CONTAINER.name());
+          if (diffContainer && diffContainer.classList.contains('loaded')) {
+            // If the container is loaded, make the theme switcher visible
+            if (themeSwitcher) {
+              themeSwitcher.style.cssText = 'display: flex !important; position: relative;';
+            }
+            // Disconnect the observer once we've made the change
+            observer.disconnect();
+          }
+        });
+      });
+
+      // Start observing the container's parent element for child changes
+      var containerParent = this.container || document.body;
+      observer.observe(containerParent, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ['class']
+      });
+    }
+
+    /**
+     * Generate diff container UI
+     */
+  }, {
+    key: "generateDiffContainer",
+    value: function generateDiffContainer() {
+      var _this = this;
+      Debug.log('BrowserUIManager: Generating diff container', null, 3);
+
+      // Get IDs without the # prefix for createElement
+      var diffContainerId = constants_Selectors.DIFF.CONTAINER.name();
+      var viewerId = constants_Selectors.DIFF.VIEWER.name();
+
+      // Create diff container
+      var diffContainer = document.createElement('div');
+      diffContainer.id = diffContainerId;
+
+      // Create viewer element
+      var viewerElement = document.createElement('div');
+      viewerElement.id = viewerId;
+      viewerElement.className = constants_Selectors.UTILITY.MARGIN_TOP_2.name();
+      viewerElement.style.display = 'none';
+
+      // Set up a mutation observer to watch for display changes on the viewer element
+      var observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'style' && viewerElement.style.display !== 'none') {
+            // If viewer becomes visible, show the theme switcher
+            if (_this.elements.themeSwitcher) {
+              _this.elements.themeSwitcher.style.display = 'flex';
+            }
+          }
+        });
+      });
+
+      // Start observing the viewer element for style changes
+      observer.observe(viewerElement, {
+        attributes: true
+      });
+
+      // Append elements to diff container
+      diffContainer.appendChild(viewerElement);
+
+      // Append diff container to container
+      this.container.appendChild(diffContainer);
+
+      // Store reference and log creation
+      this.elements.diffContainer = diffContainer;
+
+      // Verify the element was created
+      var createdViewer = document.getElementById(viewerId);
+      Debug.log("BrowserUIManager: Viewer element (".concat(viewerId, ") created successfully: ").concat(!!createdViewer), null, 3);
+    }
+
+    /**
+     * Generate merge controls UI using translations from DiffViewer
+     */
+  }, {
+    key: "generateMergeControls",
+    value: function generateMergeControls() {
+      Debug.log('BrowserUIManager: Generating merge controls structure only', null, 3);
+
+      // Get translations from options
+      var translations = this.getTranslations();
+
+      // Get IDs without the # prefix for createElement
+      var previewButtonId = constants_Selectors.MERGE.BUTTON_PREVIEW.name();
+      var toggleButtonId = constants_Selectors.MERGE.DESTINATION_TOGGLE.name();
+      var toggleIconId = constants_Selectors.MERGE.TOGGLE_ICON.name();
+      var toggleTextId = constants_Selectors.MERGE.TOGGLE_TEXT.name();
+      var dropdownId = constants_Selectors.MERGE.DESTINATION_DROPDOWN.name();
+      var applyButtonId = constants_Selectors.MERGE.BUTTON_APPLY.name();
+
+      // Create merge controls container
+      var mergeControls = document.createElement('div');
+      mergeControls.className = "".concat(constants_Selectors.MERGE.CONTROLS_ACTIONS.name(), " ").concat(constants_Selectors.UTILITY.FLEX.name(), " ").concat(constants_Selectors.UTILITY.ALIGN_ITEMS_CENTER.name(), " ").concat(constants_Selectors.UTILITY.JUSTIFY_CONTENT_BETWEEN.name(), " ").concat(constants_Selectors.UTILITY.MARGIN_Y_2.name(), " ").concat(constants_Selectors.UTILITY.PADDING_2.name());
+
+      // Create preview button section
+      var previewSection = document.createElement('div');
+      var previewButton = document.createElement('button');
+      previewButton.id = previewButtonId;
+      previewButton.className = "".concat(constants_Selectors.UTILITY.BUTTON.name(), " ").concat(constants_Selectors.UTILITY.BUTTON_INFO.name());
+      previewButton.type = 'button';
+      previewButton.innerHTML = "".concat(DOMUtils.getIconHtml('eye', {
+        classes: constants_Selectors.UTILITY.MARGIN_END_2.name()
+      })).concat(translations.preview || 'Preview');
+      previewSection.appendChild(previewButton);
+
+      // Create merge controls section
+      var mergeSection = document.createElement('div');
+      mergeSection.className = "".concat(constants_Selectors.UTILITY.FLEX.name(), " ").concat(constants_Selectors.UTILITY.ALIGN_ITEMS_CENTER.name());
+
+      // Create a group for toggle button and dropdown - using input-group styling approach
+      var toggleGroup = document.createElement('div');
+      toggleGroup.className = "".concat(constants_Selectors.UTILITY.FLEX.name(), " ").concat(constants_Selectors.UTILITY.ALIGN_ITEMS_STRETCH.name(), " ").concat(constants_Selectors.UTILITY.MARGIN_END_3.name());
+      // Add class for styling instead of inline style
+      toggleGroup.classList.add('vdm-input-group');
+
+      // Create destination toggle button
+      var toggleButton = document.createElement('button');
+      toggleButton.id = toggleButtonId;
+      toggleButton.className = "".concat(constants_Selectors.UTILITY.BUTTON.name(), " ").concat(constants_Selectors.UTILITY.BUTTON_FLAT.name(), " vdm-input-group__prepend");
+      toggleButton.type = 'button'; // Explicitly set type to button
+
+      var toggleIcon = document.createElement('span');
+      toggleIcon.id = toggleIconId;
+      toggleIcon.innerHTML = DOMUtils.getIconHtml('plus-circle', {
+        classes: constants_Selectors.UTILITY.MARGIN_END_2.name()
+      });
+      var toggleText = document.createElement('span');
+      toggleText.id = toggleTextId;
+      toggleText.setAttribute('title', translations.saveToOriginalTooltip || 'Replace the current file with merged content');
+      toggleText.textContent = translations.saveToOriginal || 'Save to original';
+      toggleButton.appendChild(toggleIcon);
+      toggleButton.appendChild(toggleText);
+
+      // Create empty destination dropdown - IMPORTANT CHANGE: No options added
+      var dropdown = document.createElement('select');
+      dropdown.id = dropdownId;
+      dropdown.className = "".concat(constants_Selectors.UTILITY.FORM_SELECT.name(), " vdm-input-group__append vdm-select-auto-width");
+      // No options are added here - This will be handled by MergeUIController
+
+      // Add toggle button and dropdown to the toggle group with no spacing between them
+      toggleGroup.appendChild(toggleButton);
+      toggleGroup.appendChild(dropdown);
+
+      // Create apply merge button
+      var applyButton = document.createElement('button');
+      applyButton.id = applyButtonId;
+      applyButton.className = "".concat(constants_Selectors.UTILITY.BUTTON.name(), " ").concat(constants_Selectors.UTILITY.BUTTON_PRIMARY.name(), " vdm-nowrap");
+      applyButton.type = 'button';
+      applyButton.innerHTML = (translations.applyMerge || 'Apply Merge') + " ".concat(DOMUtils.getIconHtml('file-circle-plus', {
+        classes: constants_Selectors.UTILITY.MARGIN_START_2.name()
+      }));
+      applyButton.style.whiteSpace = 'nowrap';
+      applyButton.style.display = 'inline-flex';
+      applyButton.style.alignItems = 'center';
+
+      // Append toggle group and apply button to merge section
+      mergeSection.appendChild(toggleGroup);
+      mergeSection.appendChild(applyButton);
+
+      // Append sections to merge controls
+      mergeControls.appendChild(previewSection);
+      mergeControls.appendChild(mergeSection);
+
+      // Append merge controls to container
+      this.container.appendChild(mergeControls);
+
+      // Store reference
+      this.elements.mergeControls = mergeControls;
+      Debug.log('BrowserUIManager: Created empty merge controls structure (options will be populated by MergeUIController)', null, 2);
+    }
+
+    /**
+     * Show theme loading indicator using the LoaderManager
+     */
+  }, {
+    key: "showThemeLoading",
+    value: function showThemeLoading() {
+      var loadingContainer = this.elements.themeLoadingContainer;
+      var themeSwitcher = this.elements.themeSwitcher;
+      if (loadingContainer && themeSwitcher) {
+        // Get the translated message
+        var message = TranslationManager.getInstance().get('loadingTheme', 'Loading theme...');
+
+        // Use proper CSS classes for styling
+        loadingContainer.innerHTML = "\n                <div class=\"vdm-theme__loading-spinner\"></div>\n                <span>".concat(message, "</span>\n            ");
+
+        // Add styling for the translucid background and rounded corners
+        loadingContainer.className = 'vdm-theme__loading-indicator';
+
+        // Get the position of the theme switcher
+        var rect = themeSwitcher.getBoundingClientRect();
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Position the loader just above the theme switcher
+        loadingContainer.style.top = rect.top + scrollTop - 40 + 'px';
+
+        // Make the loader visible
+        loadingContainer.style.display = 'flex';
+      }
+    }
+
+    /**
+     * Hide theme loading indicator
+     */
+  }, {
+    key: "hideThemeLoading",
+    value: function hideThemeLoading() {
+      var loadingContainer = this.elements.themeLoadingContainer;
+      if (loadingContainer) {
+        loadingContainer.style.display = 'none';
+      }
+    }
+
+    /**
+     * Clean up event handlers and resources
+     */
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      Debug.log('BrowserUIManager: Destroying UI components', null, 2);
+
+      // Hide any active theme loader
+      this.hideThemeLoading();
+
+      // Remove generated elements
+      if (this.elements.themeSwitcher && this.elements.themeSwitcher.parentNode) {
+        this.elements.themeSwitcher.parentNode.removeChild(this.elements.themeSwitcher);
+      }
+      if (this.elements.diffContainer && this.elements.diffContainer.parentNode) {
+        this.elements.diffContainer.parentNode.removeChild(this.elements.diffContainer);
+      }
+      if (this.elements.mergeControls && this.elements.mergeControls.parentNode) {
+        this.elements.mergeControls.parentNode.removeChild(this.elements.mergeControls);
+      }
+
+      // Reset references
+      this.elements = {
+        themeSwitcher: null,
+        diffContainer: null,
+        mergeControls: null
+      };
+
+      // Clear DiffViewer reference
+      this.diffViewer = null;
+      Debug.log('BrowserUIManager: UI components destroyed', null, 2);
+    }
+  }]);
+}();
 ;// ./src/file-browser.js
 /**
  * File Browser entry point
  * Exports the FileBrowserManager for use in the file browser example
  */
+
 
 
 
@@ -3287,6 +4511,7 @@ if (typeof window !== 'undefined') {
 // Also expose to window object for backwards compatibility
 if (typeof window !== 'undefined') {
   window.FileBrowserManager = FileBrowserManager;
+  window.BrowserUIManager = BrowserUIManager_BrowserUIManager;
 }
 __webpack_exports__ = __webpack_exports__["default"];
 /******/ 	return __webpack_exports__;
