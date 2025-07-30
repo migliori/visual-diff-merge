@@ -55,7 +55,6 @@
                 <ul>
                     <li><a href="#usage-modes">Usage Modes</a></li>
                     <li><a href="#file-browser">File Browser Mode</a></li>
-                    <li><a href="#ajax-integration">AJAX Integration</a></li>
                     <li><a href="#file-upload">File Upload Mode</a></li>
                     <li><a href="#text-compare">Text Compare Mode</a></li>
                     <li><a href="#url-compare">URL Compare Mode</a></li>
@@ -279,16 +278,14 @@ $newFiles = $fileBrowser->getFiles($config['new']['files'], $config['new']['base
                                     <li>Content is sent to diff-processor.php for processing</li>
                                     <li>Result is displayed in the diff viewer</li>
                                 </ol>
-                            </div>
 
-                            <div id="ajax-integration" class="mode-section">
-                                <h3>AJAX Integration</h3>
+                                <h4>AJAX Integration</h4>
                                 <p>
                                     When loading File Browser content via AJAX, <code>DOMContentLoaded</code> doesn't fire again,
                                     so you need to manually initialize the FileBrowserManager.
                                 </p>
 
-                                <h4>Solution</h4>
+                                <h5>Solution</h5>
                                 <p>After loading your content via AJAX, add this script:</p>
 
                                 <div class="code-block">
@@ -301,7 +298,7 @@ setTimeout(() => {
 &lt;/script&gt;</code></pre>
                                 </div>
 
-                                <h4>With Fetch API</h4>
+                                <h5>With Fetch API</h5>
                                 <div class="code-block">
                                     <pre><code>fetch('path/to/file-browser.php')
     .then(response => response.text())
@@ -318,7 +315,7 @@ setTimeout(() => {
 
                                 <p>That's it! No configuration needed - FileBrowserManager handles everything automatically.</p>
 
-                                <h4>Custom API Path</h4>
+                                <h5>Custom API Path</h5>
                                 <p>If your API files are not in the default <code>../api/</code> location, configure the API base URL:</p>
                                 <div class="code-block">
                                     <pre><code>&lt;script&gt;
