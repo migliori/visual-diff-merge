@@ -32,20 +32,36 @@ export class FileBrowserManager {
             newFileSelect: !!this.newFileSelect
         }, 2);
 
-        // Initialize the DiffConfigManager with the options
-        const configManager = DiffConfigManager.getInstance();
-        configManager.initialize({
-            container: 'vdm-diff__viewer',
-            ...options
-        });
-
         // Initialize loader manager
         this.loaderManager = LoaderManager.getInstance();
 
         // Initialize translation manager
         this.translationManager = TranslationManager.getInstance();
 
-        this.init();
+        // Initialize asynchronously to ensure server config is loaded
+        this.initAsync(options);
+    }
+
+    /**
+     * Async initialization to ensure server config is loaded first
+     * @param {Object} options - Configuration options
+     */
+    async initAsync(options = {}) {
+        try {
+            // Initialize the DiffConfigManager with the options
+            const configManager = DiffConfigManager.getInstance();
+            await configManager.initialize({
+                container: 'vdm-diff__viewer',
+                ...options
+            });
+
+            // Now proceed with normal initialization
+            this.init();
+        } catch (error) {
+            Debug.error('FileBrowserManager: Error during async initialization', error, 1);
+            // Proceed with normal initialization even if server config failed
+            this.init();
+        }
     }
 
     /**
@@ -302,7 +318,38 @@ export class FileBrowserManager {
             window.diffViewer = new DiffViewer(window.diffConfig);
 
             // Initialize the viewer
-            return window.diffViewer.initialize();
+            const initResult = await window.diffViewer.initialize();
+
+            Debug.log('FileBrowserManager: DiffViewer initialization result', initResult, 2);
+            Debug.log('FileBrowserManager: BrowserUIManager available', !!window.vdmBrowserUIManager, 2);
+
+            // Ensure theme elements are available and visible when diff UI is successfully displayed
+            if (initResult) {
+                // Always ensure the BrowserUIManager has generated theme elements and make them visible
+                if (window.vdmBrowserUIManager) {
+                    // First ensure theme switcher exists (regenerate if needed)
+                    const themeSwitcherId = Selectors.THEME.SWITCHER.name();
+                    const themeSwitcherExists = !!document.getElementById(themeSwitcherId);
+                    Debug.log('FileBrowserManager: Theme switcher exists in DOM', themeSwitcherExists, 2);
+
+                    if (!themeSwitcherExists) {
+                        Debug.log('FileBrowserManager: Theme switcher not found, regenerating', null, 2);
+                        window.vdmBrowserUIManager.generateThemeSwitcher();
+                    }
+
+                    // Always call showThemeElements to ensure proper visibility
+                    if (typeof window.vdmBrowserUIManager.showThemeElements === 'function') {
+                        Debug.log('FileBrowserManager: Calling showThemeElements after DiffViewer initialization', null, 2);
+                        window.vdmBrowserUIManager.showThemeElements();
+                    }
+                } else {
+                    Debug.warn('FileBrowserManager: BrowserUIManager not available, cannot show theme elements', null, 1);
+                }
+            } else {
+                Debug.warn('FileBrowserManager: DiffViewer initialization failed, not showing theme elements', null, 1);
+            }
+
+            return initResult;
         } else if (typeof window.enableDiffViewer === 'function') {
             // Fall back to the global enableDiffViewer function if available
             Debug.log('FileBrowserManager: DiffViewer not available, falling back to enableDiffViewer', null, 2);
@@ -396,8 +443,9 @@ export class FileBrowserManager {
             if (refId) {
                 Debug.log('FileBrowserManager: Using reference ID for file', { filePath, refId }, 3);
 
-                // Get API URL from configuration, fallback to relative path
-                const baseApiUrl = window.diffConfig?.apiBaseUrl || '../api/';
+                // Get API URL from DiffConfigManager (which has the latest server config)
+                const configManager = DiffConfigManager.getInstance();
+                const baseApiUrl = configManager.get('apiBaseUrl') || window.diffConfig?.apiBaseUrl || '../api/';
                 const apiUrl = `${baseApiUrl}get-file-content.php?refId=${encodeURIComponent(refId)}`;
 
                 Debug.log('FileBrowserManager: API URL', { apiUrl, baseApiUrl }, 3);
@@ -537,15 +585,17 @@ export class FileBrowserManager {
                 diffProcessorEndpoint = await window.vdmEndpointDiscovery.getEndpoint('diffProcessor');
                 Debug.log('FileBrowserManager: Endpoint discovery found endpoint', diffProcessorEndpoint, 2);
             } else {
-                // Fall back to config or default
-                const baseApiUrl = window.diffConfig?.apiBaseUrl || '../api/';
+                // Fall back to config or default - use DiffConfigManager for latest server config
+                const configManager = DiffConfigManager.getInstance();
+                const baseApiUrl = configManager.get('apiBaseUrl') || window.diffConfig?.apiBaseUrl || '../api/';
                 diffProcessorEndpoint = window.diffConfig?.apiEndpoints?.diffProcessor || `${baseApiUrl}diff-processor.php`;
                 Debug.log('FileBrowserManager: Using fallback endpoint', diffProcessorEndpoint, 2);
             }
         } catch (error) {
             Debug.warn('FileBrowserManager: Error discovering endpoints', error, 1);
-            // Fall back to config or default
-            const baseApiUrl = window.diffConfig?.apiBaseUrl || '../api/';
+            // Fall back to config or default - use DiffConfigManager for latest server config
+            const configManager = DiffConfigManager.getInstance();
+            const baseApiUrl = configManager.get('apiBaseUrl') || window.diffConfig?.apiBaseUrl || '../api/';
             diffProcessorEndpoint = window.diffConfig?.apiEndpoints?.diffProcessor || `${baseApiUrl}diff-processor.php`;
         }
 
@@ -718,8 +768,23 @@ export class FileBrowserManager {
             }
         }
 
+        // Preserve existing apiBaseUrl before updating window.diffConfig
+        const existingApiBaseUrl = window.diffConfig?.apiBaseUrl;
+
         // Make diffConfig globally available
         window.diffConfig = { ...this.diffConfig };
+
+        // Restore apiBaseUrl if it was previously set (client-side preference)
+        // But give priority to server-provided apiBaseUrl
+        if (result.config?.apiBaseUrl) {
+            // Server provided apiBaseUrl takes priority
+            window.diffConfig.apiBaseUrl = result.config.apiBaseUrl;
+            this.diffConfig.apiBaseUrl = result.config.apiBaseUrl;
+        } else if (existingApiBaseUrl) {
+            // Fall back to existing client-side apiBaseUrl
+            window.diffConfig.apiBaseUrl = existingApiBaseUrl;
+            this.diffConfig.apiBaseUrl = existingApiBaseUrl;
+        }
     }
 
     /**
@@ -805,24 +870,43 @@ export class FileBrowserManager {
         const containerWrapper = document.getElementById(Selectors.CONTAINER.WRAPPER.replace('#', ''));
 
         if (containerWrapper) {
-            // Save any .vdm-user-content elements before clearing
-            const userContentElements = containerWrapper.querySelectorAll('.vdm-user-content');
-            const savedUserContent = [];
+            Debug.log('FileBrowserManager: Container wrapper found, current HTML length:', containerWrapper.innerHTML.length, 2);
 
+            // Log all current children before preservation
+            const currentChildren = Array.from(containerWrapper.children);
+            Debug.log('FileBrowserManager: Current children before preservation:', currentChildren.map(child => `${child.tagName}#${child.id || 'no-id'}.${child.className || 'no-class'}`), 2);
+
+            // Save elements that should be preserved before clearing
+            const elementsToPreserve = [];
+
+            // Save .vdm-user-content elements
+            const userContentElements = containerWrapper.querySelectorAll('.vdm-user-content');
             userContentElements.forEach(element => {
-                savedUserContent.push(element.cloneNode(true));
+                elementsToPreserve.push(element);
+                element.remove(); // Remove from DOM temporarily
             });
 
+            // Note: We no longer preserve theme selectors during clearUI as they will be
+            // recreated appropriately based on whether diff UI is needed or not
+
             // Clear the container content while keeping its structure
+            Debug.log(`FileBrowserManager: Clearing container innerHTML, current content: "${containerWrapper.innerHTML.substring(0, 100)}..."`, null, 2);
             containerWrapper.innerHTML = '';
 
-            // Restore saved .vdm-user-content elements
-            if (savedUserContent.length > 0) {
-                Debug.log(`FileBrowserManager: Restoring ${savedUserContent.length} user content elements`, null, 2);
-                savedUserContent.forEach(element => {
+            // Restore only user content elements (theme selectors will be recreated as needed)
+            if (elementsToPreserve.length > 0) {
+                Debug.log(`FileBrowserManager: Restoring ${elementsToPreserve.length} preserved elements (user content only)`, null, 2);
+                elementsToPreserve.forEach((element, index) => {
+                    Debug.log(`FileBrowserManager: Restoring element ${index + 1}: ${element.tagName}#${element.id || 'no-id'}.${element.className || 'no-class'}`, null, 3);
                     containerWrapper.appendChild(element);
                 });
+            } else {
+                Debug.log('FileBrowserManager: No elements to restore', null, 2);
             }
+
+            // Log final state
+            const finalChildren = Array.from(containerWrapper.children);
+            Debug.log('FileBrowserManager: Final children after restoration:', finalChildren.map(child => `${child.tagName}#${child.id || 'no-id'}.${child.className || 'no-class'}`), 2);
         }
 
         // Clear any result messages
@@ -904,6 +988,14 @@ export class FileBrowserManager {
         // Make sure the container wrapper is visible
         if (containerWrapper) {
             containerWrapper.classList.remove('vdm-d-none');
+        }
+
+        // Hide or remove theme selector when no diff UI is needed
+        this.hideThemeSelector();
+
+        // Also hide theme elements via BrowserUIManager if available
+        if (window.vdmBrowserUIManager && typeof window.vdmBrowserUIManager.hideThemeElements === 'function') {
+            window.vdmBrowserUIManager.hideThemeElements();
         }
 
         // Get translation manager and retrieve the message
@@ -1011,6 +1103,34 @@ export class FileBrowserManager {
 
         Debug.log('FileBrowserManager: Basic UI elements created successfully', null, 2);
         return true;
+    }
+
+    /**
+     * Hide theme selector and switcher when no diff UI is needed (identical files)
+     */
+    hideThemeSelector() {
+        Debug.log('FileBrowserManager: Hiding theme selector for identical content', null, 2);
+
+        // Hide theme switcher container
+        const themeSwitcher = document.getElementById(Selectors.THEME.SWITCHER.name());
+        if (themeSwitcher) {
+            themeSwitcher.style.display = 'none';
+            Debug.log('FileBrowserManager: Hidden theme switcher container', themeSwitcher.id, 2);
+        }
+
+        // Hide theme selector wrapper if it exists independently
+        const themeSelectorWrapper = document.querySelector(`.${Selectors.THEME_SWITCHER.WRAPPER.name()}`);
+        if (themeSelectorWrapper) {
+            themeSelectorWrapper.style.display = 'none';
+            Debug.log('FileBrowserManager: Hidden theme selector wrapper', null, 2);
+        }
+
+        // Hide individual theme selector if it exists
+        const themeSelector = document.getElementById(Selectors.THEME.SELECTOR.name());
+        if (themeSelector) {
+            themeSelector.style.display = 'none';
+            Debug.log('FileBrowserManager: Hidden theme selector', themeSelector.id, 2);
+        }
     }
 }
 

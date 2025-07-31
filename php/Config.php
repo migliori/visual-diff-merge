@@ -178,6 +178,22 @@ class Config
             $config['php']['paths']['base'] = realpath(__DIR__ . '/..');
         }
 
+        // Auto-detect apiBaseUrl if not set
+        if (empty($config['javascript']['apiBaseUrl'])) {
+            // Try to auto-detect the API base URL from the current request
+            $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+            $scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
+
+            // Remove '/api' from the end if it exists, then add '/api/'
+            $scriptDir = rtrim($scriptDir, '/');
+            if (basename($scriptDir) === 'api') {
+                $scriptDir = dirname($scriptDir);
+            }
+
+            $config['javascript']['apiBaseUrl'] = $protocol . '://' . $host . $scriptDir . '/api/';
+        }
+
         // Store merged configuration
         static::$config = $config;
     }

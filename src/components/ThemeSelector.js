@@ -49,6 +49,7 @@ export class ThemeSelector extends BaseSingleton {
         this.themeManager = ThemeManager.getInstance();
         this.translationManager = TranslationManager.getInstance();
         this.browserUIManager = null;
+        this.boundHandleThemeChange = this.handleThemeChange.bind(this); // Store bound function
 
         // Store instance
         instance = this;
@@ -66,7 +67,52 @@ export class ThemeSelector extends BaseSingleton {
 
         Debug.log('ThemeSelector: Initializing', null, 2);
 
-        // Create container for the theme selector
+        // Check if selector already exists in DOM and reuse it
+        const existingSelector = document.getElementById(Selectors.THEME.SELECTOR.name());
+        if (existingSelector) {
+            Debug.log('ThemeSelector: Reusing existing selector in DOM', null, 2);
+            this.selectElement = existingSelector;
+            this.container = existingSelector.parentNode;
+
+            // Update selector to reflect current theme
+            this.updateSelector();
+
+            // Ensure event listener is attached (remove old one first to avoid duplicates)
+            this.selectElement.removeEventListener('change', this.boundHandleThemeChange);
+            this.selectElement.addEventListener('change', this.boundHandleThemeChange);
+
+            Debug.log('ThemeSelector: Reused existing selector successfully', null, 2);
+            return true;
+        }
+
+        // If BrowserUIManager is available, let it create the selector
+        if (this.browserUIManager) {
+            const selectorElements = this.browserUIManager.generateThemeSelector();
+            if (selectorElements) {
+                Debug.log('ThemeSelector: Using selector created by BrowserUIManager', null, 2);
+                this.container = selectorElements.container;
+                this.selectElement = selectorElements.selectElement;
+
+                // Populate options and set up event handlers
+                const populated = this.populateSelectorOptions();
+                if (!populated) {
+                    // If population failed, try again after a short delay (themes might not be loaded yet)
+                    Debug.log('ThemeSelector: Initial population failed, retrying after delay', null, 2);
+                    setTimeout(() => {
+                        this.populateSelectorOptions();
+                        this.updateSelector();
+                    }, 100);
+                }
+
+                this.updateSelector();
+                this.selectElement.addEventListener('change', this.boundHandleThemeChange);
+
+                Debug.log('ThemeSelector: Initialized with BrowserUIManager selector successfully', null, 2);
+                return true;
+            }
+        }
+
+        // Fallback: Create container for the theme selector (only if doesn't exist)
         this.createSelectorElement();
 
         // Add the selector to the DOM
@@ -77,6 +123,14 @@ export class ThemeSelector extends BaseSingleton {
 
         // Add listener to ThemeManager to update selector when theme changes
         this.themeManager.addListener(this.updateSelector.bind(this));
+
+        // Also add a listener to repopulate options if themes become available later
+        this.themeManager.addListener(() => {
+            if (this.selectElement && this.selectElement.options.length === 0) {
+                Debug.log('ThemeSelector: Themes became available, repopulating options', null, 2);
+                this.populateSelectorOptions();
+            }
+        });
 
         Debug.log('ThemeSelector: Initialized successfully', null, 2);
         return true;
@@ -108,25 +162,34 @@ export class ThemeSelector extends BaseSingleton {
     }
 
     /**
-     * Create the theme selector dropdown
+     * Populate selector options with available themes
      */
-    createSelectorElement() {
+    populateSelectorOptions() {
+        Debug.log('ThemeSelector: Starting to populate selector options', null, 2);
+
+        if (!this.selectElement) {
+            Debug.warn('ThemeSelector: No select element available for population', null, 2);
+            return false;
+        }
+
+        if (!this.themeManager) {
+            Debug.warn('ThemeSelector: No theme manager available for population', null, 2);
+            return false;
+        }
+
         const currentTheme = this.themeManager.getCurrentTheme();
+        Debug.log('ThemeSelector: Current theme', currentTheme, 2);
 
-        // Create the container using DOMUtils with proper array of classes
-        this.container = DOMUtils.createElement('div', null, [Selectors.THEME_SELECTOR.WRAPPER.name(), Selectors.UTILITY.MARGIN_END_3.name()]);
-
-        // Create select element using DOMUtils
-        this.selectElement = DOMUtils.createAndAppendElement('select', this.container, {
-            id: Selectors.THEME.SELECTOR.name(),
-            classes: [Selectors.UTILITY.FORM_SELECT.name(), Selectors.UTILITY.FORM_SELECT.name()]
-        });
+        // Clear existing options first
+        this.selectElement.innerHTML = '';
 
         // Add options from available themes
         const availableThemes = this.themeManager.getAvailableThemeFamilies();
+        Debug.log('ThemeSelector: Available themes', { availableThemes, count: availableThemes?.length || 0 }, 2);
+
         if (!availableThemes || availableThemes.length === 0) {
             Debug.warn('ThemeSelector: No available themes found', null, 2);
-            return;
+            return false;
         }
 
         availableThemes.forEach(themeKey => {
@@ -139,11 +202,31 @@ export class ThemeSelector extends BaseSingleton {
             });
         });
 
-        Debug.log('ThemeSelector: Created selector with options',
+        Debug.log('ThemeSelector: Populated selector with options',
                   { count: availableThemes.length }, 2);
+        return true;
+    }
 
-        // Add change event handler
-        this.selectElement.addEventListener('change', this.handleThemeChange.bind(this));
+    /**
+     * Create the theme selector dropdown
+     */
+    createSelectorElement() {
+        Debug.log('ThemeSelector: Creating new selector element', null, 2);
+
+        // Create the container using DOMUtils with proper array of classes
+        this.container = DOMUtils.createElement('div', null, [Selectors.THEME_SELECTOR.WRAPPER.name(), Selectors.UTILITY.MARGIN_END_3.name()]);
+
+        // Create select element using DOMUtils
+        this.selectElement = DOMUtils.createAndAppendElement('select', this.container, {
+            id: Selectors.THEME.SELECTOR.name(),
+            classes: [Selectors.UTILITY.FORM_SELECT.name(), Selectors.UTILITY.FORM_SELECT.name()]
+        });
+
+        // Populate options using the separate method
+        this.populateSelectorOptions();
+
+        // Add change event handler using stored bound function
+        this.selectElement.addEventListener('change', this.boundHandleThemeChange);
     }
 
     /**
@@ -183,10 +266,19 @@ export class ThemeSelector extends BaseSingleton {
     updateSelector(theme) {
         if (!this.selectElement) return;
 
-        const currentTheme = theme || this.themeManager.getCurrentTheme();
-        this.selectElement.value = currentTheme.family;
+        // If the selector has no options, try to populate them
+        if (this.selectElement.options.length === 0) {
+            Debug.log('ThemeSelector: Selector has no options, attempting to populate', null, 2);
+            this.populateSelectorOptions();
+        }
 
-        Debug.log(`ThemeSelector: Selector updated to ${theme?.family || currentTheme.family}`, null, 3);
+        const currentTheme = theme || this.themeManager.getCurrentTheme();
+        if (this.selectElement.options.length > 0) {
+            this.selectElement.value = currentTheme.family;
+        }
+
+        Debug.log(`ThemeSelector: Selector updated to ${theme?.family || currentTheme.family}`,
+                 { optionsCount: this.selectElement.options.length }, 3);
     }
 
     /**
@@ -230,5 +322,14 @@ export class ThemeSelector extends BaseSingleton {
             }
             Debug.error('ThemeSelector: Error changing theme:', error, 2);
         }
+    }
+
+    /**
+     * Set the BrowserUIManager reference
+     * @param {BrowserUIManager} browserUIManager - The BrowserUIManager instance
+     */
+    setBrowserUIManager(browserUIManager) {
+        this.browserUIManager = browserUIManager;
+        Debug.log('ThemeSelector: BrowserUIManager reference set', null, 3);
     }
 }

@@ -77,6 +77,7 @@ var ThemeSelector = /*#__PURE__*/function (_BaseSingleton) {
     _this.themeManager = ThemeManager/* ThemeManager */.N.getInstance();
     _this.translationManager = TranslationManager/* TranslationManager */.n.getInstance();
     _this.browserUIManager = null;
+    _this.boundHandleThemeChange = _this.handleThemeChange.bind(_this); // Store bound function
 
     // Store instance
     instance = _this;
@@ -90,6 +91,7 @@ var ThemeSelector = /*#__PURE__*/function (_BaseSingleton) {
   return _createClass(ThemeSelector, [{
     key: "initialize",
     value: function initialize() {
+      var _this2 = this;
       // Check if theme selector should be enabled using the new config structure
       if (!this._isThemeSelectorEnabled()) {
         Debug/* Debug */.y.log('ThemeSelector: Theme selector disabled in configuration', null, 2);
@@ -97,7 +99,49 @@ var ThemeSelector = /*#__PURE__*/function (_BaseSingleton) {
       }
       Debug/* Debug */.y.log('ThemeSelector: Initializing', null, 2);
 
-      // Create container for the theme selector
+      // Check if selector already exists in DOM and reuse it
+      var existingSelector = document.getElementById(Selectors/* default */.A.THEME.SELECTOR.name());
+      if (existingSelector) {
+        Debug/* Debug */.y.log('ThemeSelector: Reusing existing selector in DOM', null, 2);
+        this.selectElement = existingSelector;
+        this.container = existingSelector.parentNode;
+
+        // Update selector to reflect current theme
+        this.updateSelector();
+
+        // Ensure event listener is attached (remove old one first to avoid duplicates)
+        this.selectElement.removeEventListener('change', this.boundHandleThemeChange);
+        this.selectElement.addEventListener('change', this.boundHandleThemeChange);
+        Debug/* Debug */.y.log('ThemeSelector: Reused existing selector successfully', null, 2);
+        return true;
+      }
+
+      // If BrowserUIManager is available, let it create the selector
+      if (this.browserUIManager) {
+        var selectorElements = this.browserUIManager.generateThemeSelector();
+        if (selectorElements) {
+          Debug/* Debug */.y.log('ThemeSelector: Using selector created by BrowserUIManager', null, 2);
+          this.container = selectorElements.container;
+          this.selectElement = selectorElements.selectElement;
+
+          // Populate options and set up event handlers
+          var populated = this.populateSelectorOptions();
+          if (!populated) {
+            // If population failed, try again after a short delay (themes might not be loaded yet)
+            Debug/* Debug */.y.log('ThemeSelector: Initial population failed, retrying after delay', null, 2);
+            setTimeout(function () {
+              _this2.populateSelectorOptions();
+              _this2.updateSelector();
+            }, 100);
+          }
+          this.updateSelector();
+          this.selectElement.addEventListener('change', this.boundHandleThemeChange);
+          Debug/* Debug */.y.log('ThemeSelector: Initialized with BrowserUIManager selector successfully', null, 2);
+          return true;
+        }
+      }
+
+      // Fallback: Create container for the theme selector (only if doesn't exist)
       this.createSelectorElement();
 
       // Add the selector to the DOM
@@ -108,6 +152,14 @@ var ThemeSelector = /*#__PURE__*/function (_BaseSingleton) {
 
       // Add listener to ThemeManager to update selector when theme changes
       this.themeManager.addListener(this.updateSelector.bind(this));
+
+      // Also add a listener to repopulate options if themes become available later
+      this.themeManager.addListener(function () {
+        if (_this2.selectElement && _this2.selectElement.options.length === 0) {
+          Debug/* Debug */.y.log('ThemeSelector: Themes became available, repopulating options', null, 2);
+          _this2.populateSelectorOptions();
+        }
+      });
       Debug/* Debug */.y.log('ThemeSelector: Initialized successfully', null, 2);
       return true;
     }
@@ -141,13 +193,59 @@ var ThemeSelector = /*#__PURE__*/function (_BaseSingleton) {
     }
 
     /**
+     * Populate selector options with available themes
+     */
+  }, {
+    key: "populateSelectorOptions",
+    value: function populateSelectorOptions() {
+      var _this3 = this;
+      Debug/* Debug */.y.log('ThemeSelector: Starting to populate selector options', null, 2);
+      if (!this.selectElement) {
+        Debug/* Debug */.y.warn('ThemeSelector: No select element available for population', null, 2);
+        return false;
+      }
+      if (!this.themeManager) {
+        Debug/* Debug */.y.warn('ThemeSelector: No theme manager available for population', null, 2);
+        return false;
+      }
+      var currentTheme = this.themeManager.getCurrentTheme();
+      Debug/* Debug */.y.log('ThemeSelector: Current theme', currentTheme, 2);
+
+      // Clear existing options first
+      this.selectElement.innerHTML = '';
+
+      // Add options from available themes
+      var availableThemes = this.themeManager.getAvailableThemeFamilies();
+      Debug/* Debug */.y.log('ThemeSelector: Available themes', {
+        availableThemes: availableThemes,
+        count: (availableThemes === null || availableThemes === void 0 ? void 0 : availableThemes.length) || 0
+      }, 2);
+      if (!availableThemes || availableThemes.length === 0) {
+        Debug/* Debug */.y.warn('ThemeSelector: No available themes found', null, 2);
+        return false;
+      }
+      availableThemes.forEach(function (themeKey) {
+        DOMUtils/* DOMUtils */.e.createAndAppendElement('option', _this3.selectElement, {
+          attributes: {
+            value: themeKey,
+            selected: themeKey === currentTheme.family
+          },
+          content: _this3.formatThemeName(themeKey)
+        });
+      });
+      Debug/* Debug */.y.log('ThemeSelector: Populated selector with options', {
+        count: availableThemes.length
+      }, 2);
+      return true;
+    }
+
+    /**
      * Create the theme selector dropdown
      */
   }, {
     key: "createSelectorElement",
     value: function createSelectorElement() {
-      var _this2 = this;
-      var currentTheme = this.themeManager.getCurrentTheme();
+      Debug/* Debug */.y.log('ThemeSelector: Creating new selector element', null, 2);
 
       // Create the container using DOMUtils with proper array of classes
       this.container = DOMUtils/* DOMUtils */.e.createElement('div', null, [Selectors/* default */.A.THEME_SELECTOR.WRAPPER.name(), Selectors/* default */.A.UTILITY.MARGIN_END_3.name()]);
@@ -158,27 +256,11 @@ var ThemeSelector = /*#__PURE__*/function (_BaseSingleton) {
         classes: [Selectors/* default */.A.UTILITY.FORM_SELECT.name(), Selectors/* default */.A.UTILITY.FORM_SELECT.name()]
       });
 
-      // Add options from available themes
-      var availableThemes = this.themeManager.getAvailableThemeFamilies();
-      if (!availableThemes || availableThemes.length === 0) {
-        Debug/* Debug */.y.warn('ThemeSelector: No available themes found', null, 2);
-        return;
-      }
-      availableThemes.forEach(function (themeKey) {
-        DOMUtils/* DOMUtils */.e.createAndAppendElement('option', _this2.selectElement, {
-          attributes: {
-            value: themeKey,
-            selected: themeKey === currentTheme.family
-          },
-          content: _this2.formatThemeName(themeKey)
-        });
-      });
-      Debug/* Debug */.y.log('ThemeSelector: Created selector with options', {
-        count: availableThemes.length
-      }, 2);
+      // Populate options using the separate method
+      this.populateSelectorOptions();
 
-      // Add change event handler
-      this.selectElement.addEventListener('change', this.handleThemeChange.bind(this));
+      // Add change event handler using stored bound function
+      this.selectElement.addEventListener('change', this.boundHandleThemeChange);
     }
 
     /**
@@ -221,9 +303,19 @@ var ThemeSelector = /*#__PURE__*/function (_BaseSingleton) {
     key: "updateSelector",
     value: function updateSelector(theme) {
       if (!this.selectElement) return;
+
+      // If the selector has no options, try to populate them
+      if (this.selectElement.options.length === 0) {
+        Debug/* Debug */.y.log('ThemeSelector: Selector has no options, attempting to populate', null, 2);
+        this.populateSelectorOptions();
+      }
       var currentTheme = theme || this.themeManager.getCurrentTheme();
-      this.selectElement.value = currentTheme.family;
-      Debug/* Debug */.y.log("ThemeSelector: Selector updated to ".concat((theme === null || theme === void 0 ? void 0 : theme.family) || currentTheme.family), null, 3);
+      if (this.selectElement.options.length > 0) {
+        this.selectElement.value = currentTheme.family;
+      }
+      Debug/* Debug */.y.log("ThemeSelector: Selector updated to ".concat((theme === null || theme === void 0 ? void 0 : theme.family) || currentTheme.family), {
+        optionsCount: this.selectElement.options.length
+      }, 3);
     }
 
     /**
@@ -234,7 +326,7 @@ var ThemeSelector = /*#__PURE__*/function (_BaseSingleton) {
     key: "handleThemeChange",
     value: function handleThemeChange(event) {
       var _this$diffViewer3,
-        _this3 = this;
+        _this4 = this;
       var selectedTheme = event.target.value;
 
       // Try to get the BrowserUIManager instance if not already set
@@ -250,14 +342,14 @@ var ThemeSelector = /*#__PURE__*/function (_BaseSingleton) {
         // Apply the theme and then hide the loader when complete
         this.themeManager.setThemeFamily(selectedTheme).then(function () {
           // Hide the loader after theme is loaded
-          if (_this3.browserUIManager) {
-            _this3.browserUIManager.hideThemeLoading();
+          if (_this4.browserUIManager) {
+            _this4.browserUIManager.hideThemeLoading();
           }
           Debug/* Debug */.y.log("ThemeSelector: Theme changed to ".concat(selectedTheme), null, 2);
         })["catch"](function (error) {
           // Hide loader on error
-          if (_this3.browserUIManager) {
-            _this3.browserUIManager.hideThemeLoading();
+          if (_this4.browserUIManager) {
+            _this4.browserUIManager.hideThemeLoading();
           }
           Debug/* Debug */.y.error('ThemeSelector: Error changing theme:', error, 2);
         });
@@ -268,6 +360,17 @@ var ThemeSelector = /*#__PURE__*/function (_BaseSingleton) {
         }
         Debug/* Debug */.y.error('ThemeSelector: Error changing theme:', error, 2);
       }
+    }
+
+    /**
+     * Set the BrowserUIManager reference
+     * @param {BrowserUIManager} browserUIManager - The BrowserUIManager instance
+     */
+  }, {
+    key: "setBrowserUIManager",
+    value: function setBrowserUIManager(browserUIManager) {
+      this.browserUIManager = browserUIManager;
+      Debug/* Debug */.y.log('ThemeSelector: BrowserUIManager reference set', null, 3);
     }
   }], [{
     key: "getInstance",
@@ -2115,6 +2218,9 @@ var DiffViewer = /*#__PURE__*/function () {
       // Update references in components that need the BrowserUIManager
       if (this.themeToggle) {
         this.themeToggle.setBrowserUIManager(browserUIManager);
+      }
+      if (this.themeSelector) {
+        this.themeSelector.setBrowserUIManager(browserUIManager);
       }
       Debug/* Debug */.y.log('DiffViewer: BrowserUIManager reference set', null, 2);
       return this;

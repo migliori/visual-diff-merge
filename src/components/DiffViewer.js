@@ -517,6 +517,10 @@ export class DiffViewer {
             this.themeToggle.setBrowserUIManager(browserUIManager);
         }
 
+        if (this.themeSelector) {
+            this.themeSelector.setBrowserUIManager(browserUIManager);
+        }
+
         Debug.log('DiffViewer: BrowserUIManager reference set', null, 2);
         return this;
     }

@@ -247,6 +247,7 @@ return [
         'lang' => 'en',
         'debug' => false,
         'logLevel' => 2,
+        'apiBaseUrl' => null,  // Auto-detect API path, or set custom path
         'theme' => [
             'defaultFamily' => 'atom-one',
             'defaultMode' => 'dark',
@@ -365,7 +366,12 @@ return [
                         </tr>
                         <tr>
                             <td><code>javascript.apiEndpoint</code></td>
-                            <td>Base URL for API calls (if null, will be auto-discovered)</td>
+                            <td>Base URL for API calls (legacy - use apiBaseUrl instead)</td>
+                            <td><code>null</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>javascript.apiBaseUrl</code></td>
+                            <td>Base URL for API calls (recommended). Used when integrating into custom applications where the API path differs from the default. If null, will be auto-detected based on script location.</td>
                             <td><code>null</code></td>
                         </tr>
                     </tbody>

@@ -48,6 +48,55 @@ export class DiffConfigManager {
     }
 
     /**
+     * Load configuration from server if needed
+     * @returns {Promise<void>}
+     */
+    async ensureServerConfigLoaded() {
+        // Check if we already have a server-provided apiBaseUrl
+        if (this.#diffConfig.apiBaseUrl) {
+            Debug.log('DiffConfigManager: Server config already loaded with apiBaseUrl', this.#diffConfig.apiBaseUrl, 2);
+            return;
+        }
+
+        try {
+            Debug.log('DiffConfigManager: Loading server configuration...', null, 2);
+
+            // Try to determine the API base URL from script location
+            let apiBaseUrl = '';
+            const scripts = document.querySelectorAll('script[src*="visual-diff-merge"]');
+            if (scripts.length > 0) {
+                const scriptSrc = scripts[0].src;
+                const match = scriptSrc.match(/^(.+\/visual-diff-merge[^\/]*)\//);
+                if (match) {
+                    apiBaseUrl = match[1] + '/api/';
+                }
+            }
+
+            if (!apiBaseUrl) {
+                Debug.log('DiffConfigManager: Could not determine API base URL from script location', null, 2);
+                return;
+            }
+
+            // Fetch configuration from server
+            const configResponse = await fetch(apiBaseUrl + 'endpoint-config.php');
+            if (configResponse.ok) {
+                const serverConfig = await configResponse.json();
+
+                // The endpoint returns the config directly, not nested in a 'javascript' property
+                if (serverConfig && typeof serverConfig === 'object') {
+                    Debug.log('DiffConfigManager: Loaded server configuration', serverConfig, 2);
+                    this.#diffConfig = { ...this.#diffConfig, ...serverConfig };
+                    this.#updateGlobalDiffConfig();
+                }
+            } else {
+                Debug.warn('DiffConfigManager: Failed to load server configuration', configResponse.status, 1);
+            }
+        } catch (error) {
+            Debug.warn('DiffConfigManager: Error loading server configuration', error, 1);
+        }
+    }
+
+    /**
      * Get the singleton instance
      * @returns {DiffConfigManager} The singleton instance
      */
@@ -62,8 +111,13 @@ export class DiffConfigManager {
      * Initialize with configuration
      * @param {Object} config - The initial configuration
      */
-    initialize(config = {}) {
+    async initialize(config = {}) {
         Debug.log('DiffConfigManager: Initializing with config', config, 2);
+
+        // First, ensure server config is loaded if needed
+        await this.ensureServerConfigLoaded();
+
+        // Then apply the provided config
         this.#diffConfig = { ...this.#diffConfig, ...config };
         this.#updateGlobalDiffConfig();
     }

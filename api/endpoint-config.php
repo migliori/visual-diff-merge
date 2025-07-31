@@ -53,6 +53,11 @@ if (!empty($clientConfig)) {
     if (isset($clientConfig['apiEndpoint'])) {
         $response['apiEndpoint'] = $clientConfig['apiEndpoint'];
     }
+
+    // API base URL (if specified in config)
+    if (isset($clientConfig['apiBaseUrl'])) {
+        $response['apiBaseUrl'] = $clientConfig['apiBaseUrl'];
+    }
 }
 
 // Output JSON response

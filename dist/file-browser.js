@@ -1938,7 +1938,10 @@ var AlertManager = /*#__PURE__*/function (_BaseSingleton) {
 }(BaseSingleton);
 /* harmony default export */ const utils_AlertManager = (AlertManager);
 ;// ./src/utils/DiffConfigManager.js
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == DiffConfigManager_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(DiffConfigManager_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function DiffConfigManager_typeof(o) { "@babel/helpers - typeof"; return DiffConfigManager_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, DiffConfigManager_typeof(o); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function DiffConfigManager_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function DiffConfigManager_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? DiffConfigManager_ownKeys(Object(t), !0).forEach(function (r) { DiffConfigManager_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : DiffConfigManager_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function DiffConfigManager_defineProperty(e, r, t) { return (r = DiffConfigManager_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -2003,27 +2006,129 @@ var DiffConfigManager = /*#__PURE__*/function () {
   }
 
   /**
-   * Get the singleton instance
-   * @returns {DiffConfigManager} The singleton instance
+   * Load configuration from server if needed
+   * @returns {Promise<void>}
    */
   return DiffConfigManager_createClass(DiffConfigManager, [{
+    key: "ensureServerConfigLoaded",
+    value: (function () {
+      var _ensureServerConfigLoaded = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var apiBaseUrl, scripts, scriptSrc, match, configResponse, serverConfig;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              if (!_classPrivateFieldGet(_diffConfig, this).apiBaseUrl) {
+                _context.next = 3;
+                break;
+              }
+              Debug.log('DiffConfigManager: Server config already loaded with apiBaseUrl', _classPrivateFieldGet(_diffConfig, this).apiBaseUrl, 2);
+              return _context.abrupt("return");
+            case 3:
+              _context.prev = 3;
+              Debug.log('DiffConfigManager: Loading server configuration...', null, 2);
+
+              // Try to determine the API base URL from script location
+              apiBaseUrl = '';
+              scripts = document.querySelectorAll('script[src*="visual-diff-merge"]');
+              if (scripts.length > 0) {
+                scriptSrc = scripts[0].src;
+                match = scriptSrc.match(/^(.+\/visual-diff-merge[^\/]*)\//);
+                if (match) {
+                  apiBaseUrl = match[1] + '/api/';
+                }
+              }
+              if (apiBaseUrl) {
+                _context.next = 11;
+                break;
+              }
+              Debug.log('DiffConfigManager: Could not determine API base URL from script location', null, 2);
+              return _context.abrupt("return");
+            case 11:
+              _context.next = 13;
+              return fetch(apiBaseUrl + 'endpoint-config.php');
+            case 13:
+              configResponse = _context.sent;
+              if (!configResponse.ok) {
+                _context.next = 21;
+                break;
+              }
+              _context.next = 17;
+              return configResponse.json();
+            case 17:
+              serverConfig = _context.sent;
+              // The endpoint returns the config directly, not nested in a 'javascript' property
+              if (serverConfig && DiffConfigManager_typeof(serverConfig) === 'object') {
+                Debug.log('DiffConfigManager: Loaded server configuration', serverConfig, 2);
+                _classPrivateFieldSet(_diffConfig, this, DiffConfigManager_objectSpread(DiffConfigManager_objectSpread({}, _classPrivateFieldGet(_diffConfig, this)), serverConfig));
+                _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+              }
+              _context.next = 22;
+              break;
+            case 21:
+              Debug.warn('DiffConfigManager: Failed to load server configuration', configResponse.status, 1);
+            case 22:
+              _context.next = 27;
+              break;
+            case 24:
+              _context.prev = 24;
+              _context.t0 = _context["catch"](3);
+              Debug.warn('DiffConfigManager: Error loading server configuration', _context.t0, 1);
+            case 27:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, this, [[3, 24]]);
+      }));
+      function ensureServerConfigLoaded() {
+        return _ensureServerConfigLoaded.apply(this, arguments);
+      }
+      return ensureServerConfigLoaded;
+    }()
+    /**
+     * Get the singleton instance
+     * @returns {DiffConfigManager} The singleton instance
+     */
+    )
+  }, {
     key: "initialize",
-    value:
+    value: (
     /**
      * Initialize with configuration
      * @param {Object} config - The initial configuration
      */
-    function initialize() {
-      var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      Debug.log('DiffConfigManager: Initializing with config', config, 2);
-      _classPrivateFieldSet(_diffConfig, this, DiffConfigManager_objectSpread(DiffConfigManager_objectSpread({}, _classPrivateFieldGet(_diffConfig, this)), config));
-      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
-    }
+    function () {
+      var _initialize = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var config,
+          _args2 = arguments;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              config = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : {};
+              Debug.log('DiffConfigManager: Initializing with config', config, 2);
 
+              // First, ensure server config is loaded if needed
+              _context2.next = 4;
+              return this.ensureServerConfigLoaded();
+            case 4:
+              // Then apply the provided config
+              _classPrivateFieldSet(_diffConfig, this, DiffConfigManager_objectSpread(DiffConfigManager_objectSpread({}, _classPrivateFieldGet(_diffConfig, this)), config));
+              _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+            case 6:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, this);
+      }));
+      function initialize() {
+        return _initialize.apply(this, arguments);
+      }
+      return initialize;
+    }()
     /**
      * Get the current diffConfig
      * @returns {Object} The current diffConfig
      */
+    )
   }, {
     key: "getDiffConfig",
     value: function getDiffConfig() {
@@ -2182,12 +2287,12 @@ var _instance = {
 /* harmony default export */ const utils_DiffConfigManager = ((/* unused pure expression or super */ null && (DiffConfigManager)));
 ;// ./src/components/browser/FileBrowserManager.js
 function FileBrowserManager_typeof(o) { "@babel/helpers - typeof"; return FileBrowserManager_typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, FileBrowserManager_typeof(o); }
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == FileBrowserManager_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(FileBrowserManager_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
-function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
-function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function FileBrowserManager_regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ FileBrowserManager_regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == FileBrowserManager_typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(FileBrowserManager_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function FileBrowserManager_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function FileBrowserManager_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? FileBrowserManager_ownKeys(Object(t), !0).forEach(function (r) { FileBrowserManager_defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : FileBrowserManager_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function FileBrowserManager_defineProperty(e, r, t) { return (r = FileBrowserManager_toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function FileBrowserManager_asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function FileBrowserManager_asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { FileBrowserManager_asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { FileBrowserManager_asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function FileBrowserManager_classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function FileBrowserManager_defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, FileBrowserManager_toPropertyKey(o.key), o); } }
 function FileBrowserManager_createClass(e, r, t) { return r && FileBrowserManager_defineProperties(e.prototype, r), t && FileBrowserManager_defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -2229,24 +2334,65 @@ var FileBrowserManager = /*#__PURE__*/function () {
       newFileSelect: !!this.newFileSelect
     }, 2);
 
-    // Initialize the DiffConfigManager with the options
-    var configManager = DiffConfigManager.getInstance();
-    configManager.initialize(FileBrowserManager_objectSpread({
-      container: 'vdm-diff__viewer'
-    }, options));
-
     // Initialize loader manager
     this.loaderManager = LoaderManager.getInstance();
 
     // Initialize translation manager
     this.translationManager = TranslationManager.getInstance();
-    this.init();
+
+    // Initialize asynchronously to ensure server config is loaded
+    this.initAsync(options);
   }
 
   /**
-   * Initialize the file browser
+   * Async initialization to ensure server config is loaded first
+   * @param {Object} options - Configuration options
    */
   return FileBrowserManager_createClass(FileBrowserManager, [{
+    key: "initAsync",
+    value: (function () {
+      var _initAsync = FileBrowserManager_asyncToGenerator(/*#__PURE__*/FileBrowserManager_regeneratorRuntime().mark(function _callee() {
+        var options,
+          configManager,
+          _args = arguments;
+        return FileBrowserManager_regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              options = _args.length > 0 && _args[0] !== undefined ? _args[0] : {};
+              _context.prev = 1;
+              // Initialize the DiffConfigManager with the options
+              configManager = DiffConfigManager.getInstance();
+              _context.next = 5;
+              return configManager.initialize(FileBrowserManager_objectSpread({
+                container: 'vdm-diff__viewer'
+              }, options));
+            case 5:
+              // Now proceed with normal initialization
+              this.init();
+              _context.next = 12;
+              break;
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](1);
+              Debug.error('FileBrowserManager: Error during async initialization', _context.t0, 1);
+              // Proceed with normal initialization even if server config failed
+              this.init();
+            case 12:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, this, [[1, 8]]);
+      }));
+      function initAsync() {
+        return _initAsync.apply(this, arguments);
+      }
+      return initAsync;
+    }()
+    /**
+     * Initialize the file browser
+     */
+    )
+  }, {
     key: "init",
     value: function init() {
       var _this = this;
@@ -2291,10 +2437,10 @@ var FileBrowserManager = /*#__PURE__*/function () {
   }, {
     key: "handleComparison",
     value: (function () {
-      var _handleComparison = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(event) {
+      var _handleComparison = FileBrowserManager_asyncToGenerator(/*#__PURE__*/FileBrowserManager_regeneratorRuntime().mark(function _callee2(event) {
         var alertManager, containerWrapper, loaderId, fileData, contents, result, uiManagerSuccess, viewerElement;
-        return _regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
+        return FileBrowserManager_regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
             case 0:
               event.preventDefault();
               Debug.log('FileBrowserManager: Handling comparison', null, 2);
@@ -2314,81 +2460,81 @@ var FileBrowserManager = /*#__PURE__*/function () {
 
               // Show an early loader before starting the process
               loaderId = this.loaderManager.showEarlyLoader(this.translationManager.get('loadingContent', 'Processing content...'));
-              _context.prev = 8;
+              _context2.prev = 8;
               // Clean up previous instances first
               this.cleanupPreviousInstance();
 
               // 1. Gather selected file data
               fileData = this.getSelectedFilesData(); // 2. Fetch file contents
               this.loaderManager.updateLoaderMessage(loaderId, this.translationManager.get('loadingContent', 'Loading file contents...'));
-              _context.next = 14;
+              _context2.next = 14;
               return this.fetchFileContents(fileData);
             case 14:
-              contents = _context.sent;
+              contents = _context2.sent;
               if (!(contents.old === contents["new"])) {
-                _context.next = 20;
+                _context2.next = 20;
                 break;
               }
               Debug.log('FileBrowserManager: File contents are identical', null, 2);
               this.loaderManager.hideMainLoader(loaderId);
               this.handleIdenticalContent();
-              return _context.abrupt("return");
+              return _context2.abrupt("return");
             case 20:
               // 3. Configure diffConfig
               this.configureDiffData(fileData, contents);
 
               // 4. Process diff data
               this.loaderManager.updateLoaderMessage(loaderId, this.translationManager.get('processingChunks', 'Processing diff...'));
-              _context.next = 24;
+              _context2.next = 24;
               return this.processDiff();
             case 24:
-              result = _context.sent;
+              result = _context2.sent;
               if (!result.identical) {
-                _context.next = 30;
+                _context2.next = 30;
                 break;
               }
               Debug.log('FileBrowserManager: Files contain identical content according to backend', null, 2);
               this.loaderManager.hideMainLoader(loaderId);
               this.handleIdenticalContent();
-              return _context.abrupt("return");
+              return _context2.abrupt("return");
             case 30:
               // 5. Update diffConfig with result
               DiffConfigManager.getInstance().setDiffConfig(result);
 
               // 6. Initialize the UI manager
               this.loaderManager.updateLoaderMessage(loaderId, this.translationManager.get('loadingDiff', 'Initializing viewer...'));
-              _context.next = 34;
+              _context2.next = 34;
               return this.initializeUIManager();
             case 34:
-              uiManagerSuccess = _context.sent;
+              uiManagerSuccess = _context2.sent;
               if (uiManagerSuccess) {
-                _context.next = 39;
+                _context2.next = 39;
                 break;
               }
               Debug.error('FileBrowserManager: Failed to initialize UI manager', null, 1);
               this.loaderManager.hideMainLoader(loaderId);
-              return _context.abrupt("return");
+              return _context2.abrupt("return");
             case 39:
-              _context.next = 41;
+              _context2.next = 41;
               return this.initializeDiffViewer();
             case 41:
-              _context.next = 49;
+              _context2.next = 49;
               break;
             case 43:
-              _context.prev = 43;
-              _context.t0 = _context["catch"](8);
-              Debug.error('FileBrowserManager: Error during comparison', _context.t0, 1);
+              _context2.prev = 43;
+              _context2.t0 = _context2["catch"](8);
+              Debug.error('FileBrowserManager: Error during comparison', _context2.t0, 1);
               // Hide the loader if there's an error
               this.loaderManager.hideMainLoader(loaderId);
 
               // Get elements for error display
               viewerElement = document.getElementById('vdm-diff__viewer');
-              this.handleError(_context.t0, null, viewerElement);
+              this.handleError(_context2.t0, null, viewerElement);
             case 49:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
-        }, _callee, this, [[8, 43]]);
+        }, _callee2, this, [[8, 43]]);
       }));
       function handleComparison(_x) {
         return _handleComparison.apply(this, arguments);
@@ -2430,56 +2576,56 @@ var FileBrowserManager = /*#__PURE__*/function () {
   }, {
     key: "initializeUIManager",
     value: (function () {
-      var _initializeUIManager = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+      var _initializeUIManager = FileBrowserManager_asyncToGenerator(/*#__PURE__*/FileBrowserManager_regeneratorRuntime().mark(function _callee3() {
         var initResult;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
+        return FileBrowserManager_regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
               Debug.log('FileBrowserManager: Initializing UI manager', null, 2);
 
               // Import the BrowserUIManager if available
               if (!(typeof BrowserUIManager !== 'undefined')) {
-                _context2.next = 22;
+                _context3.next = 22;
                 break;
               }
-              _context2.prev = 2;
+              _context3.prev = 2;
               // Create new instance with the global window.diffConfig
               window.vdmBrowserUIManager = new BrowserUIManager(window.diffConfig);
 
               // Initialize with container
-              _context2.next = 6;
+              _context3.next = 6;
               return window.vdmBrowserUIManager.initialize(constants_Selectors.CONTAINER.WRAPPER);
             case 6:
-              initResult = _context2.sent;
+              initResult = _context3.sent;
               if (!initResult) {
-                _context2.next = 11;
+                _context3.next = 11;
                 break;
               }
-              return _context2.abrupt("return", true);
+              return _context3.abrupt("return", true);
             case 11:
               Debug.warn('FileBrowserManager: BrowserUIManager initialize returned false, falling back to manual UI creation', null, 1);
-              return _context2.abrupt("return", this.createBasicUIElements());
+              return _context3.abrupt("return", this.createBasicUIElements());
             case 13:
-              _context2.next = 20;
+              _context3.next = 20;
               break;
             case 15:
-              _context2.prev = 15;
-              _context2.t0 = _context2["catch"](2);
-              Debug.error('FileBrowserManager: BrowserUIManager initialize failed', _context2.t0, 1);
+              _context3.prev = 15;
+              _context3.t0 = _context3["catch"](2);
+              Debug.error('FileBrowserManager: BrowserUIManager initialize failed', _context3.t0, 1);
               Debug.warn('FileBrowserManager: Falling back to manual UI creation due to BrowserUIManager error', null, 1);
-              return _context2.abrupt("return", this.createBasicUIElements());
+              return _context3.abrupt("return", this.createBasicUIElements());
             case 20:
-              _context2.next = 24;
+              _context3.next = 24;
               break;
             case 22:
               Debug.warn('FileBrowserManager: BrowserUIManager not available, UI elements must be created manually', null, 1);
               // Fallback: Create basic UI elements manually
-              return _context2.abrupt("return", this.createBasicUIElements());
+              return _context3.abrupt("return", this.createBasicUIElements());
             case 24:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
-        }, _callee2, this, [[2, 15]]);
+        }, _callee3, this, [[2, 15]]);
       }));
       function initializeUIManager() {
         return _initializeUIManager.apply(this, arguments);
@@ -2494,16 +2640,16 @@ var FileBrowserManager = /*#__PURE__*/function () {
   }, {
     key: "initializeDiffViewer",
     value: (function () {
-      var _initializeDiffViewer = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        var _window$diffConfig$ne, _window$diffConfig$ne2, configManager, viewerContainer;
-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
+      var _initializeDiffViewer = FileBrowserManager_asyncToGenerator(/*#__PURE__*/FileBrowserManager_regeneratorRuntime().mark(function _callee4() {
+        var _window$diffConfig$ne, _window$diffConfig$ne2, configManager, viewerContainer, initResult, themeSwitcherId, themeSwitcherExists;
+        return FileBrowserManager_regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
             case 0:
               Debug.log('FileBrowserManager: Initializing diff viewer', null, 2);
 
               // Check if DiffViewer is available
               if (!(typeof DiffViewer !== 'undefined')) {
-                _context3.next = 17;
+                _context4.next = 23;
                 break;
               }
               configManager = DiffConfigManager.getInstance(); // Update container with correct selector ID
@@ -2536,7 +2682,7 @@ var FileBrowserManager = /*#__PURE__*/function () {
 
               // Validate the diff data before attempting to initialize
               if (!(!window.diffConfig.diffData || !Array.isArray(window.diffConfig.diffData.chunks) || window.diffConfig.diffData.chunks.length === 0)) {
-                _context3.next = 13;
+                _context4.next = 13;
                 break;
               }
               Debug.warn('FileBrowserManager: No valid diff data found for initialization', {
@@ -2551,29 +2697,60 @@ var FileBrowserManager = /*#__PURE__*/function () {
               }
 
               // Return early to prevent initialization errors
-              return _context3.abrupt("return", false);
+              return _context4.abrupt("return", false);
             case 13:
               // Create a new DiffViewer instance
               window.diffViewer = new DiffViewer(window.diffConfig);
 
               // Initialize the viewer
-              return _context3.abrupt("return", window.diffViewer.initialize());
-            case 17:
+              _context4.next = 16;
+              return window.diffViewer.initialize();
+            case 16:
+              initResult = _context4.sent;
+              Debug.log('FileBrowserManager: DiffViewer initialization result', initResult, 2);
+              Debug.log('FileBrowserManager: BrowserUIManager available', !!window.vdmBrowserUIManager, 2);
+
+              // Ensure theme elements are available and visible when diff UI is successfully displayed
+              if (initResult) {
+                // Always ensure the BrowserUIManager has generated theme elements and make them visible
+                if (window.vdmBrowserUIManager) {
+                  // First ensure theme switcher exists (regenerate if needed)
+                  themeSwitcherId = constants_Selectors.THEME.SWITCHER.name();
+                  themeSwitcherExists = !!document.getElementById(themeSwitcherId);
+                  Debug.log('FileBrowserManager: Theme switcher exists in DOM', themeSwitcherExists, 2);
+                  if (!themeSwitcherExists) {
+                    Debug.log('FileBrowserManager: Theme switcher not found, regenerating', null, 2);
+                    window.vdmBrowserUIManager.generateThemeSwitcher();
+                  }
+
+                  // Always call showThemeElements to ensure proper visibility
+                  if (typeof window.vdmBrowserUIManager.showThemeElements === 'function') {
+                    Debug.log('FileBrowserManager: Calling showThemeElements after DiffViewer initialization', null, 2);
+                    window.vdmBrowserUIManager.showThemeElements();
+                  }
+                } else {
+                  Debug.warn('FileBrowserManager: BrowserUIManager not available, cannot show theme elements', null, 1);
+                }
+              } else {
+                Debug.warn('FileBrowserManager: DiffViewer initialization failed, not showing theme elements', null, 1);
+              }
+              return _context4.abrupt("return", initResult);
+            case 23:
               if (!(typeof window.enableDiffViewer === 'function')) {
-                _context3.next = 22;
+                _context4.next = 28;
                 break;
               }
               // Fall back to the global enableDiffViewer function if available
               Debug.log('FileBrowserManager: DiffViewer not available, falling back to enableDiffViewer', null, 2);
-              return _context3.abrupt("return", window.enableDiffViewer());
-            case 22:
+              return _context4.abrupt("return", window.enableDiffViewer());
+            case 28:
               Debug.error('FileBrowserManager: DiffViewer not available', null, 1);
               throw new Error('DiffViewer not available');
-            case 24:
+            case 30:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
-        }, _callee3);
+        }, _callee4);
       }));
       function initializeDiffViewer() {
         return _initializeDiffViewer.apply(this, arguments);
@@ -2654,22 +2831,22 @@ var FileBrowserManager = /*#__PURE__*/function () {
   }, {
     key: "fetchFileContents",
     value: (function () {
-      var _fetchFileContents = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(fileData) {
+      var _fetchFileContents = FileBrowserManager_asyncToGenerator(/*#__PURE__*/FileBrowserManager_regeneratorRuntime().mark(function _callee6(fileData) {
         var fetchFile, oldContent, newContent;
-        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
+        return FileBrowserManager_regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
             case 0:
               Debug.log('FileBrowserManager: Fetching file contents', fileData, 3);
 
               // Use the API endpoint to safely retrieve file content
               fetchFile = /*#__PURE__*/function () {
-                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(filePath, refId) {
-                  var _window$diffConfig, baseApiUrl, apiUrl, response, data, _response;
-                  return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-                    while (1) switch (_context4.prev = _context4.next) {
+                var _ref = FileBrowserManager_asyncToGenerator(/*#__PURE__*/FileBrowserManager_regeneratorRuntime().mark(function _callee5(filePath, refId) {
+                  var _window$diffConfig, configManager, baseApiUrl, apiUrl, response, data, _response;
+                  return FileBrowserManager_regeneratorRuntime().wrap(function _callee5$(_context5) {
+                    while (1) switch (_context5.prev = _context5.next) {
                       case 0:
                         if (!refId) {
-                          _context4.next = 16;
+                          _context5.next = 17;
                           break;
                         }
                         Debug.log('FileBrowserManager: Using reference ID for file', {
@@ -2677,98 +2854,99 @@ var FileBrowserManager = /*#__PURE__*/function () {
                           refId: refId
                         }, 3);
 
-                        // Get API URL from configuration, fallback to relative path
-                        baseApiUrl = ((_window$diffConfig = window.diffConfig) === null || _window$diffConfig === void 0 ? void 0 : _window$diffConfig.apiBaseUrl) || '../api/';
+                        // Get API URL from DiffConfigManager (which has the latest server config)
+                        configManager = DiffConfigManager.getInstance();
+                        baseApiUrl = configManager.get('apiBaseUrl') || ((_window$diffConfig = window.diffConfig) === null || _window$diffConfig === void 0 ? void 0 : _window$diffConfig.apiBaseUrl) || '../api/';
                         apiUrl = "".concat(baseApiUrl, "get-file-content.php?refId=").concat(encodeURIComponent(refId));
                         Debug.log('FileBrowserManager: API URL', {
                           apiUrl: apiUrl,
                           baseApiUrl: baseApiUrl
                         }, 3);
-                        _context4.next = 7;
+                        _context5.next = 8;
                         return fetch(apiUrl);
-                      case 7:
-                        response = _context4.sent;
+                      case 8:
+                        response = _context5.sent;
                         if (response.ok) {
-                          _context4.next = 10;
+                          _context5.next = 11;
                           break;
                         }
                         throw new Error("Failed to load file: ".concat(filePath, " (Status: ").concat(response.status, ")"));
-                      case 10:
-                        _context4.next = 12;
+                      case 11:
+                        _context5.next = 13;
                         return response.json();
-                      case 12:
-                        data = _context4.sent;
-                        return _context4.abrupt("return", data.content);
-                      case 16:
+                      case 13:
+                        data = _context5.sent;
+                        return _context5.abrupt("return", data.content);
+                      case 17:
                         Debug.log('FileBrowserManager: Using direct path for file', {
                           filePath: filePath
                         }, 3);
 
                         // SECURITY: Ensure the path is not absolute or contains dangerous patterns
                         if (!filePath.match(/^(\/|\\|https?:|file:|[a-zA-Z]:\\)/i)) {
-                          _context4.next = 19;
+                          _context5.next = 20;
                           break;
                         }
                         throw new Error("Invalid file path format: ".concat(filePath));
-                      case 19:
-                        _context4.next = 21;
+                      case 20:
+                        _context5.next = 22;
                         return fetch(filePath);
-                      case 21:
-                        _response = _context4.sent;
+                      case 22:
+                        _response = _context5.sent;
                         if (_response.ok) {
-                          _context4.next = 24;
+                          _context5.next = 25;
                           break;
                         }
                         throw new Error("Failed to load file: ".concat(filePath, " (Status: ").concat(_response.status, ")"));
-                      case 24:
-                        _context4.next = 26;
+                      case 25:
+                        _context5.next = 27;
                         return _response.text();
-                      case 26:
-                        return _context4.abrupt("return", _context4.sent);
                       case 27:
+                        return _context5.abrupt("return", _context5.sent);
+                      case 28:
                       case "end":
-                        return _context4.stop();
+                        return _context5.stop();
                     }
-                  }, _callee4);
+                  }, _callee5);
                 }));
                 return function fetchFile(_x3, _x4) {
                   return _ref.apply(this, arguments);
                 };
               }();
-              _context5.prev = 2;
-              _context5.next = 5;
+              _context6.prev = 2;
+              _context6.next = 5;
               return fetchFile(fileData.old.path, fileData.old.refId);
             case 5:
-              oldContent = _context5.sent;
-              _context5.next = 8;
+              oldContent = _context6.sent;
+              _context6.next = 8;
               return fetchFile(fileData["new"].path, fileData["new"].refId);
             case 8:
-              newContent = _context5.sent;
+              newContent = _context6.sent;
               if (!(oldContent === newContent)) {
-                _context5.next = 12;
+                _context6.next = 12;
                 break;
               }
               Debug.log('FileBrowserManager: Files contain identical content', null, 2);
-              return _context5.abrupt("return", {
+              return _context6.abrupt("return", {
                 old: oldContent,
                 "new": newContent,
                 identical: true
               });
             case 12:
-              return _context5.abrupt("return", {
+              return _context6.abrupt("return", {
                 old: oldContent,
                 "new": newContent
               });
             case 15:
-              _context5.prev = 15;
-              _context5.t0 = _context5["catch"](2);
-              Debug.error('FileBrowserManager: Failed to load one or both files', _context5.t0, 1);
-              throw _context5.t0;
+              _context6.prev = 15;
+              _context6.t0 = _context6["catch"](2);
+              Debug.error('FileBrowserManager: Failed to load one or both files', _context6.t0, 1);
+              throw _context6.t0;
             case 19:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
-        }, _callee5, null, [[2, 15]]);
+        }, _callee6, null, [[2, 15]]);
       }));
       function fetchFileContents(_x2) {
         return _fetchFileContents.apply(this, arguments);
@@ -2852,42 +3030,44 @@ var FileBrowserManager = /*#__PURE__*/function () {
   }, {
     key: "processDiff",
     value: (function () {
-      var _processDiff = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-        var diffProcessorEndpoint, _window$diffConfig2, _window$diffConfig3, baseApiUrl, _window$diffConfig4, _window$diffConfig5, _baseApiUrl, response, result, translationManager, lang;
-        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-          while (1) switch (_context6.prev = _context6.next) {
+      var _processDiff = FileBrowserManager_asyncToGenerator(/*#__PURE__*/FileBrowserManager_regeneratorRuntime().mark(function _callee7() {
+        var diffProcessorEndpoint, _window$diffConfig2, _window$diffConfig3, configManager, baseApiUrl, _window$diffConfig4, _window$diffConfig5, _configManager, _baseApiUrl, response, result, translationManager, lang;
+        return FileBrowserManager_regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
             case 0:
               Debug.log('FileBrowserManager: Processing diff with API', null, 2);
               // Use endpoint discovery if available
-              _context6.prev = 1;
+              _context7.prev = 1;
               if (!window.vdmEndpointDiscovery) {
-                _context6.next = 9;
+                _context7.next = 9;
                 break;
               }
-              _context6.next = 5;
+              _context7.next = 5;
               return window.vdmEndpointDiscovery.getEndpoint('diffProcessor');
             case 5:
-              diffProcessorEndpoint = _context6.sent;
+              diffProcessorEndpoint = _context7.sent;
               Debug.log('FileBrowserManager: Endpoint discovery found endpoint', diffProcessorEndpoint, 2);
-              _context6.next = 12;
+              _context7.next = 13;
               break;
             case 9:
-              // Fall back to config or default
-              baseApiUrl = ((_window$diffConfig2 = window.diffConfig) === null || _window$diffConfig2 === void 0 ? void 0 : _window$diffConfig2.apiBaseUrl) || '../api/';
+              // Fall back to config or default - use DiffConfigManager for latest server config
+              configManager = DiffConfigManager.getInstance();
+              baseApiUrl = configManager.get('apiBaseUrl') || ((_window$diffConfig2 = window.diffConfig) === null || _window$diffConfig2 === void 0 ? void 0 : _window$diffConfig2.apiBaseUrl) || '../api/';
               diffProcessorEndpoint = ((_window$diffConfig3 = window.diffConfig) === null || _window$diffConfig3 === void 0 || (_window$diffConfig3 = _window$diffConfig3.apiEndpoints) === null || _window$diffConfig3 === void 0 ? void 0 : _window$diffConfig3.diffProcessor) || "".concat(baseApiUrl, "diff-processor.php");
               Debug.log('FileBrowserManager: Using fallback endpoint', diffProcessorEndpoint, 2);
-            case 12:
-              _context6.next = 19;
+            case 13:
+              _context7.next = 21;
               break;
-            case 14:
-              _context6.prev = 14;
-              _context6.t0 = _context6["catch"](1);
-              Debug.warn('FileBrowserManager: Error discovering endpoints', _context6.t0, 1);
-              // Fall back to config or default
-              _baseApiUrl = ((_window$diffConfig4 = window.diffConfig) === null || _window$diffConfig4 === void 0 ? void 0 : _window$diffConfig4.apiBaseUrl) || '../api/';
+            case 15:
+              _context7.prev = 15;
+              _context7.t0 = _context7["catch"](1);
+              Debug.warn('FileBrowserManager: Error discovering endpoints', _context7.t0, 1);
+              // Fall back to config or default - use DiffConfigManager for latest server config
+              _configManager = DiffConfigManager.getInstance();
+              _baseApiUrl = _configManager.get('apiBaseUrl') || ((_window$diffConfig4 = window.diffConfig) === null || _window$diffConfig4 === void 0 ? void 0 : _window$diffConfig4.apiBaseUrl) || '../api/';
               diffProcessorEndpoint = ((_window$diffConfig5 = window.diffConfig) === null || _window$diffConfig5 === void 0 || (_window$diffConfig5 = _window$diffConfig5.apiEndpoints) === null || _window$diffConfig5 === void 0 ? void 0 : _window$diffConfig5.diffProcessor) || "".concat(_baseApiUrl, "diff-processor.php");
-            case 19:
-              _context6.next = 21;
+            case 21:
+              _context7.next = 23;
               return fetch(diffProcessorEndpoint, {
                 method: 'POST',
                 headers: {
@@ -2895,10 +3075,10 @@ var FileBrowserManager = /*#__PURE__*/function () {
                 },
                 body: JSON.stringify(window.diffConfig)
               });
-            case 21:
-              response = _context6.sent;
+            case 23:
+              response = _context7.sent;
               if (response.ok) {
-                _context6.next = 25;
+                _context7.next = 27;
                 break;
               }
               Debug.error('FileBrowserManager: API request failed', {
@@ -2906,18 +3086,18 @@ var FileBrowserManager = /*#__PURE__*/function () {
                 statusText: response.statusText
               }, 1);
               throw new Error("API request failed: ".concat(response.status, " ").concat(response.statusText));
-            case 25:
-              _context6.next = 27;
-              return response.json();
             case 27:
-              result = _context6.sent;
+              _context7.next = 29;
+              return response.json();
+            case 29:
+              result = _context7.sent;
               if (!result.error) {
-                _context6.next = 31;
+                _context7.next = 33;
                 break;
               }
               Debug.error('FileBrowserManager: API returned error', result.error, 1);
               throw new Error(result.error);
-            case 31:
+            case 33:
               // Initialize TranslationManager with server-provided data
               translationManager = TranslationManager.getInstance();
               if (result.config && result.config.translations) {
@@ -2941,12 +3121,12 @@ var FileBrowserManager = /*#__PURE__*/function () {
                   }
                 });
               }
-              return _context6.abrupt("return", result);
-            case 35:
+              return _context7.abrupt("return", result);
+            case 37:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
-        }, _callee6, null, [[1, 14]]);
+        }, _callee7, null, [[1, 15]]);
       }));
       function processDiff() {
         return _processDiff.apply(this, arguments);
@@ -2961,7 +3141,7 @@ var FileBrowserManager = /*#__PURE__*/function () {
   }, {
     key: "updateDiffConfig",
     value: function updateDiffConfig(result) {
-      var _result$config;
+      var _result$config, _window$diffConfig6, _result$config3;
       Debug.log('FileBrowserManager: Updating diff config with API response', null, 3);
       // Make sure we have a valid result
       if (!result || FileBrowserManager_typeof(result) !== 'object') {
@@ -3073,8 +3253,23 @@ var FileBrowserManager = /*#__PURE__*/function () {
         }
       }
 
+      // Preserve existing apiBaseUrl before updating window.diffConfig
+      var existingApiBaseUrl = (_window$diffConfig6 = window.diffConfig) === null || _window$diffConfig6 === void 0 ? void 0 : _window$diffConfig6.apiBaseUrl;
+
       // Make diffConfig globally available
       window.diffConfig = FileBrowserManager_objectSpread({}, this.diffConfig);
+
+      // Restore apiBaseUrl if it was previously set (client-side preference)
+      // But give priority to server-provided apiBaseUrl
+      if ((_result$config3 = result.config) !== null && _result$config3 !== void 0 && _result$config3.apiBaseUrl) {
+        // Server provided apiBaseUrl takes priority
+        window.diffConfig.apiBaseUrl = result.config.apiBaseUrl;
+        this.diffConfig.apiBaseUrl = result.config.apiBaseUrl;
+      } else if (existingApiBaseUrl) {
+        // Fall back to existing client-side apiBaseUrl
+        window.diffConfig.apiBaseUrl = existingApiBaseUrl;
+        this.diffConfig.apiBaseUrl = existingApiBaseUrl;
+      }
     }
 
     /**
@@ -3156,23 +3351,47 @@ var FileBrowserManager = /*#__PURE__*/function () {
       // Get the container wrapper element
       var containerWrapper = document.getElementById(constants_Selectors.CONTAINER.WRAPPER.replace('#', ''));
       if (containerWrapper) {
-        // Save any .vdm-user-content elements before clearing
+        Debug.log('FileBrowserManager: Container wrapper found, current HTML length:', containerWrapper.innerHTML.length, 2);
+
+        // Log all current children before preservation
+        var currentChildren = Array.from(containerWrapper.children);
+        Debug.log('FileBrowserManager: Current children before preservation:', currentChildren.map(function (child) {
+          return "".concat(child.tagName, "#").concat(child.id || 'no-id', ".").concat(child.className || 'no-class');
+        }), 2);
+
+        // Save elements that should be preserved before clearing
+        var elementsToPreserve = [];
+
+        // Save .vdm-user-content elements
         var userContentElements = containerWrapper.querySelectorAll('.vdm-user-content');
-        var savedUserContent = [];
         userContentElements.forEach(function (element) {
-          savedUserContent.push(element.cloneNode(true));
+          elementsToPreserve.push(element);
+          element.remove(); // Remove from DOM temporarily
         });
 
+        // Note: We no longer preserve theme selectors during clearUI as they will be
+        // recreated appropriately based on whether diff UI is needed or not
+
         // Clear the container content while keeping its structure
+        Debug.log("FileBrowserManager: Clearing container innerHTML, current content: \"".concat(containerWrapper.innerHTML.substring(0, 100), "...\""), null, 2);
         containerWrapper.innerHTML = '';
 
-        // Restore saved .vdm-user-content elements
-        if (savedUserContent.length > 0) {
-          Debug.log("FileBrowserManager: Restoring ".concat(savedUserContent.length, " user content elements"), null, 2);
-          savedUserContent.forEach(function (element) {
+        // Restore only user content elements (theme selectors will be recreated as needed)
+        if (elementsToPreserve.length > 0) {
+          Debug.log("FileBrowserManager: Restoring ".concat(elementsToPreserve.length, " preserved elements (user content only)"), null, 2);
+          elementsToPreserve.forEach(function (element, index) {
+            Debug.log("FileBrowserManager: Restoring element ".concat(index + 1, ": ").concat(element.tagName, "#").concat(element.id || 'no-id', ".").concat(element.className || 'no-class'), null, 3);
             containerWrapper.appendChild(element);
           });
+        } else {
+          Debug.log('FileBrowserManager: No elements to restore', null, 2);
         }
+
+        // Log final state
+        var finalChildren = Array.from(containerWrapper.children);
+        Debug.log('FileBrowserManager: Final children after restoration:', finalChildren.map(function (child) {
+          return "".concat(child.tagName, "#").concat(child.id || 'no-id', ".").concat(child.className || 'no-class');
+        }), 2);
       }
 
       // Clear any result messages
@@ -3255,6 +3474,14 @@ var FileBrowserManager = /*#__PURE__*/function () {
       // Make sure the container wrapper is visible
       if (containerWrapper) {
         containerWrapper.classList.remove('vdm-d-none');
+      }
+
+      // Hide or remove theme selector when no diff UI is needed
+      this.hideThemeSelector();
+
+      // Also hide theme elements via BrowserUIManager if available
+      if (window.vdmBrowserUIManager && typeof window.vdmBrowserUIManager.hideThemeElements === 'function') {
+        window.vdmBrowserUIManager.hideThemeElements();
       }
 
       // Get translation manager and retrieve the message
@@ -3364,6 +3591,36 @@ var FileBrowserManager = /*#__PURE__*/function () {
       }
       Debug.log('FileBrowserManager: Basic UI elements created successfully', null, 2);
       return true;
+    }
+
+    /**
+     * Hide theme selector and switcher when no diff UI is needed (identical files)
+     */
+  }, {
+    key: "hideThemeSelector",
+    value: function hideThemeSelector() {
+      Debug.log('FileBrowserManager: Hiding theme selector for identical content', null, 2);
+
+      // Hide theme switcher container
+      var themeSwitcher = document.getElementById(constants_Selectors.THEME.SWITCHER.name());
+      if (themeSwitcher) {
+        themeSwitcher.style.display = 'none';
+        Debug.log('FileBrowserManager: Hidden theme switcher container', themeSwitcher.id, 2);
+      }
+
+      // Hide theme selector wrapper if it exists independently
+      var themeSelectorWrapper = document.querySelector(".".concat(constants_Selectors.THEME_SWITCHER.WRAPPER.name()));
+      if (themeSelectorWrapper) {
+        themeSelectorWrapper.style.display = 'none';
+        Debug.log('FileBrowserManager: Hidden theme selector wrapper', null, 2);
+      }
+
+      // Hide individual theme selector if it exists
+      var themeSelector = document.getElementById(constants_Selectors.THEME.SELECTOR.name());
+      if (themeSelector) {
+        themeSelector.style.display = 'none';
+        Debug.log('FileBrowserManager: Hidden theme selector', themeSelector.id, 2);
+      }
     }
   }]);
 }();
@@ -4181,6 +4438,7 @@ var BrowserUIManager_BrowserUIManager = /*#__PURE__*/function () {
       // Change the order of generation - create diff container first
       this.generateDiffContainer();
       this.generateThemeSwitcher();
+      this.generateThemeSelector();
       this.generateMergeControls();
       Debug.log('BrowserUIManager: UI components generated', null, 2);
       return true;
@@ -4199,8 +4457,37 @@ var BrowserUIManager_BrowserUIManager = /*#__PURE__*/function () {
       var themeLoadingId = constants_Selectors.THEME.LOADING_INDICATOR.name();
       var themeToggleId = constants_Selectors.THEME.TOGGLE.name();
 
-      // Create theme switcher element
-      var themeSwitcher = document.createElement('div');
+      // Check if theme switcher already exists and if it's still valid to reuse
+      var themeSwitcher = document.getElementById(themeSwitcherId);
+      if (themeSwitcher) {
+        // Verify that the theme switcher is in a proper context (not orphaned)
+        // and that the diff UI is being displayed (not in "identical files" mode)
+        var diffContainer = document.getElementById(constants_Selectors.DIFF.CONTAINER.name());
+        if (diffContainer || this.container.contains(themeSwitcher)) {
+          Debug.log('BrowserUIManager: Reusing existing theme switcher', themeSwitcherId, 2);
+          // Store reference to existing element
+          this.elements.themeSwitcher = themeSwitcher;
+
+          // Ensure it's properly positioned in the container
+          if (themeSwitcher.parentNode !== this.container) {
+            this.container.appendChild(themeSwitcher);
+          }
+
+          // Make sure it's visible and properly styled - but don't force display here
+          // as it will be controlled by showThemeElements()/hideThemeElements()
+          themeSwitcher.style.position = 'relative';
+          return;
+        } else {
+          // Theme switcher exists but context is invalid, remove it and create new one
+          Debug.log('BrowserUIManager: Removing orphaned theme switcher', themeSwitcherId, 2);
+          themeSwitcher.remove();
+          themeSwitcher = null;
+        }
+      }
+
+      // Create new theme switcher element
+      Debug.log('BrowserUIManager: Creating new theme switcher', themeSwitcherId, 2);
+      themeSwitcher = document.createElement('div');
       themeSwitcher.id = themeSwitcherId;
       themeSwitcher.className = "".concat(constants_Selectors.UTILITY.FLEX.name(), " ").concat(constants_Selectors.UTILITY.JUSTIFY_CONTENT_BETWEEN.name(), " ").concat(constants_Selectors.UTILITY.PADDING_2.name());
       themeSwitcher.style.cssText = 'display: none !important; position: relative;';
@@ -4263,6 +4550,81 @@ var BrowserUIManager_BrowserUIManager = /*#__PURE__*/function () {
         attributes: true,
         attributeFilter: ['class']
       });
+    }
+
+    /**
+     * Generate theme selector UI
+     * @returns {Object|null} The theme selector container and select element, or null if creation failed
+     */
+  }, {
+    key: "generateThemeSelector",
+    value: function generateThemeSelector() {
+      Debug.log('BrowserUIManager: Generating theme selector', null, 3);
+
+      // Get the ID without the # prefix for createElement
+      var themeSelectorId = constants_Selectors.THEME.SELECTOR.name();
+      var themeSwitcherId = constants_Selectors.THEME.SWITCHER.name();
+
+      // Check if theme selector already exists and if it's still valid to reuse
+      var existingSelector = document.getElementById(themeSelectorId);
+      var selectorContainer = null;
+      if (existingSelector) {
+        selectorContainer = existingSelector.parentNode;
+        // Verify that the theme selector is in a proper context (not orphaned)
+        var themeSwitcher = document.getElementById(themeSwitcherId);
+        if (themeSwitcher && themeSwitcher.contains(selectorContainer)) {
+          Debug.log('BrowserUIManager: Reusing existing theme selector', themeSelectorId, 2);
+          // Store reference to existing elements
+          this.elements.themeSelector = existingSelector;
+          this.elements.themeSelectorContainer = selectorContainer;
+          return {
+            container: selectorContainer,
+            selectElement: existingSelector
+          };
+        } else {
+          // Theme selector exists but context is invalid, remove it and create new one
+          Debug.log('BrowserUIManager: Removing orphaned theme selector', themeSelectorId, 2);
+          if (selectorContainer && selectorContainer.parentNode) {
+            selectorContainer.parentNode.removeChild(selectorContainer);
+          }
+          existingSelector = null;
+          selectorContainer = null;
+        }
+      }
+
+      // Get theme switcher container - theme selector must be inside it
+      var themeSwitcherContainer = document.getElementById(themeSwitcherId);
+      if (!themeSwitcherContainer) {
+        Debug.warn('BrowserUIManager: No theme switcher container found for theme selector', null, 2);
+        return null;
+      }
+
+      // Create new theme selector container and element
+      Debug.log('BrowserUIManager: Creating new theme selector', themeSelectorId, 2);
+
+      // Create the container using utility classes
+      selectorContainer = document.createElement('div');
+      selectorContainer.className = "".concat(constants_Selectors.THEME_SELECTOR.WRAPPER.name(), " ").concat(constants_Selectors.UTILITY.MARGIN_END_3.name());
+
+      // Create select element
+      var selectElement = document.createElement('select');
+      selectElement.id = themeSelectorId;
+      selectElement.className = "".concat(constants_Selectors.UTILITY.FORM_SELECT.name(), " ").concat(constants_Selectors.UTILITY.FORM_SELECT.name());
+
+      // Append select to container
+      selectorContainer.appendChild(selectElement);
+
+      // Insert the selector container at the beginning of the theme switcher
+      themeSwitcherContainer.insertBefore(selectorContainer, themeSwitcherContainer.firstChild);
+
+      // Store references
+      this.elements.themeSelector = selectElement;
+      this.elements.themeSelectorContainer = selectorContainer;
+      Debug.log('BrowserUIManager: Theme selector created and added to DOM', null, 2);
+      return {
+        container: selectorContainer,
+        selectElement: selectElement
+      };
     }
 
     /**
@@ -4472,10 +4834,12 @@ var BrowserUIManager_BrowserUIManager = /*#__PURE__*/function () {
       // Hide any active theme loader
       this.hideThemeLoading();
 
-      // Remove generated elements
-      if (this.elements.themeSwitcher && this.elements.themeSwitcher.parentNode) {
-        this.elements.themeSwitcher.parentNode.removeChild(this.elements.themeSwitcher);
-      }
+      // Remove generated elements (except theme switcher which should be preserved across instances)
+      // Note: Theme switcher is preserved by FileBrowserManager.clearUI() to maintain user experience
+      // if (this.elements.themeSwitcher && this.elements.themeSwitcher.parentNode) {
+      //     this.elements.themeSwitcher.parentNode.removeChild(this.elements.themeSwitcher);
+      // }
+
       if (this.elements.diffContainer && this.elements.diffContainer.parentNode) {
         this.elements.diffContainer.parentNode.removeChild(this.elements.diffContainer);
       }
@@ -4483,9 +4847,17 @@ var BrowserUIManager_BrowserUIManager = /*#__PURE__*/function () {
         this.elements.mergeControls.parentNode.removeChild(this.elements.mergeControls);
       }
 
-      // Reset references
+      // Reset references but keep theme switcher and theme selector references if they still exist in DOM
+      var existingThemeSwitcher = document.getElementById(constants_Selectors.THEME.SWITCHER.name());
+      var existingThemeSelector = document.getElementById(constants_Selectors.THEME.SELECTOR.name());
+      var existingThemeSelectorContainer = existingThemeSelector ? existingThemeSelector.parentNode : null;
       this.elements = {
-        themeSwitcher: null,
+        themeSwitcher: existingThemeSwitcher || null,
+        // Keep reference if still in DOM
+        themeSelector: existingThemeSelector || null,
+        // Keep theme selector reference too
+        themeSelectorContainer: existingThemeSelectorContainer || null,
+        // Keep container reference
         diffContainer: null,
         mergeControls: null
       };
@@ -4493,6 +4865,48 @@ var BrowserUIManager_BrowserUIManager = /*#__PURE__*/function () {
       // Clear DiffViewer reference
       this.diffViewer = null;
       Debug.log('BrowserUIManager: UI components destroyed', null, 2);
+    }
+
+    /**
+     * Hide theme UI elements when no diff is being displayed (identical files)
+     */
+  }, {
+    key: "hideThemeElements",
+    value: function hideThemeElements() {
+      Debug.log('BrowserUIManager: Hiding theme elements for identical content', null, 2);
+      if (this.elements.themeSwitcher) {
+        // Use important to ensure hiding works
+        this.elements.themeSwitcher.style.cssText = 'display: none !important; position: relative;';
+        Debug.log('BrowserUIManager: Hidden theme switcher', this.elements.themeSwitcher.id, 2);
+      }
+
+      // Also hide any standalone theme selector
+      var themeSelector = document.getElementById(constants_Selectors.THEME.SELECTOR.name());
+      if (themeSelector) {
+        themeSelector.style.display = 'none';
+        Debug.log('BrowserUIManager: Hidden standalone theme selector', themeSelector.id, 2);
+      }
+    }
+
+    /**
+     * Show theme UI elements when diff is being displayed
+     */
+  }, {
+    key: "showThemeElements",
+    value: function showThemeElements() {
+      Debug.log('BrowserUIManager: Showing theme elements for diff content', null, 2);
+      if (this.elements.themeSwitcher) {
+        // Use important to override the initial !important hiding
+        this.elements.themeSwitcher.style.cssText = 'display: flex !important; position: relative;';
+        Debug.log('BrowserUIManager: Shown theme switcher', this.elements.themeSwitcher.id, 2);
+      }
+
+      // Also show any standalone theme selector
+      var themeSelector = document.getElementById(constants_Selectors.THEME.SELECTOR.name());
+      if (themeSelector) {
+        themeSelector.style.display = 'block';
+        Debug.log('BrowserUIManager: Shown standalone theme selector', themeSelector.id, 2);
+      }
     }
   }]);
 }();

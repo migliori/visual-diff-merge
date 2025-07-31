@@ -118,6 +118,7 @@ return [
         'lang' => 'fr',  // Set French as default language
         'debug' => true,
         'logLevel' => 3,
+        'apiBaseUrl' => '/custom/path/to/api/',  // Custom API base URL for routing
         'theme' => [
             'defaultFamily' => 'github',  // Use GitHub theme family
             'defaultMode' => 'light',     // Default to light mode
@@ -192,6 +193,26 @@ return [
                     <li><code>javascript.saveOptions.saveToOldWithSuffix</code> - Save to old file with suffix</li>
                     <li><code>javascript.saveOptions.saveToBoth</code> - Save to both files (overwrite both)</li>
                     <li><code>javascript.saveOptions.saveToBothWithSuffix</code> - Save to both files with suffix</li>
+                </ul>
+
+                <h4>API Configuration</h4>
+                <p>
+                    Configure how the client-side JavaScript communicates with the server:
+                </p>
+                <ul>
+                    <li>
+                        <code>javascript.apiBaseUrl</code> - Custom base URL for API calls.
+                        <br><strong>Use case:</strong> When Visual Diff Merge is integrated into another application
+                        and the API endpoints are not at the default relative path.
+                        <div class="code-block">
+                            <pre><code>// Examples:
+'apiBaseUrl' => '/myapp/lib/visual-diff-merge/api/',  // Custom integration path
+'apiBaseUrl' => '/admin/tools/diff/api/',             // Admin panel integration
+'apiBaseUrl' => null,                                 // Auto-detect (default)</code></pre>
+                        </div>
+                        <strong>Note:</strong> If set to <code>null</code>, the system will automatically detect
+                        the API path based on the location of the JavaScript bundles.
+                    </li>
                 </ul>
             </section>
 

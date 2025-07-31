@@ -117,6 +117,7 @@ export class BrowserUIManager {
         // Change the order of generation - create diff container first
         this.generateDiffContainer();
         this.generateThemeSwitcher();
+        this.generateThemeSelector();
         this.generateMergeControls();
 
         Debug.log('BrowserUIManager: UI components generated', null, 2);
@@ -134,8 +135,39 @@ export class BrowserUIManager {
         const themeLoadingId = Selectors.THEME.LOADING_INDICATOR.name();
         const themeToggleId = Selectors.THEME.TOGGLE.name();
 
-        // Create theme switcher element
-        const themeSwitcher = document.createElement('div');
+        // Check if theme switcher already exists and if it's still valid to reuse
+        let themeSwitcher = document.getElementById(themeSwitcherId);
+
+        if (themeSwitcher) {
+            // Verify that the theme switcher is in a proper context (not orphaned)
+            // and that the diff UI is being displayed (not in "identical files" mode)
+            const diffContainer = document.getElementById(Selectors.DIFF.CONTAINER.name());
+
+            if (diffContainer || this.container.contains(themeSwitcher)) {
+                Debug.log('BrowserUIManager: Reusing existing theme switcher', themeSwitcherId, 2);
+                // Store reference to existing element
+                this.elements.themeSwitcher = themeSwitcher;
+
+                // Ensure it's properly positioned in the container
+                if (themeSwitcher.parentNode !== this.container) {
+                    this.container.appendChild(themeSwitcher);
+                }
+
+                // Make sure it's visible and properly styled - but don't force display here
+                // as it will be controlled by showThemeElements()/hideThemeElements()
+                themeSwitcher.style.position = 'relative';
+                return;
+            } else {
+                // Theme switcher exists but context is invalid, remove it and create new one
+                Debug.log('BrowserUIManager: Removing orphaned theme switcher', themeSwitcherId, 2);
+                themeSwitcher.remove();
+                themeSwitcher = null;
+            }
+        }
+
+        // Create new theme switcher element
+        Debug.log('BrowserUIManager: Creating new theme switcher', themeSwitcherId, 2);
+        themeSwitcher = document.createElement('div');
         themeSwitcher.id = themeSwitcherId;
         themeSwitcher.className = `${Selectors.UTILITY.FLEX.name()} ${Selectors.UTILITY.JUSTIFY_CONTENT_BETWEEN.name()} ${Selectors.UTILITY.PADDING_2.name()}`;
         themeSwitcher.style.cssText = 'display: none !important; position: relative;';
@@ -201,6 +233,76 @@ export class BrowserUIManager {
             attributes: true,
             attributeFilter: ['class']
         });
+    }
+
+    /**
+     * Generate theme selector UI
+     * @returns {Object|null} The theme selector container and select element, or null if creation failed
+     */
+    generateThemeSelector() {
+        Debug.log('BrowserUIManager: Generating theme selector', null, 3);
+
+        // Get the ID without the # prefix for createElement
+        const themeSelectorId = Selectors.THEME.SELECTOR.name();
+        const themeSwitcherId = Selectors.THEME.SWITCHER.name();
+
+        // Check if theme selector already exists and if it's still valid to reuse
+        let existingSelector = document.getElementById(themeSelectorId);
+        let selectorContainer = null;
+
+        if (existingSelector) {
+            selectorContainer = existingSelector.parentNode;
+            // Verify that the theme selector is in a proper context (not orphaned)
+            const themeSwitcher = document.getElementById(themeSwitcherId);
+
+            if (themeSwitcher && themeSwitcher.contains(selectorContainer)) {
+                Debug.log('BrowserUIManager: Reusing existing theme selector', themeSelectorId, 2);
+                // Store reference to existing elements
+                this.elements.themeSelector = existingSelector;
+                this.elements.themeSelectorContainer = selectorContainer;
+                return { container: selectorContainer, selectElement: existingSelector };
+            } else {
+                // Theme selector exists but context is invalid, remove it and create new one
+                Debug.log('BrowserUIManager: Removing orphaned theme selector', themeSelectorId, 2);
+                if (selectorContainer && selectorContainer.parentNode) {
+                    selectorContainer.parentNode.removeChild(selectorContainer);
+                }
+                existingSelector = null;
+                selectorContainer = null;
+            }
+        }
+
+        // Get theme switcher container - theme selector must be inside it
+        const themeSwitcherContainer = document.getElementById(themeSwitcherId);
+        if (!themeSwitcherContainer) {
+            Debug.warn('BrowserUIManager: No theme switcher container found for theme selector', null, 2);
+            return null;
+        }
+
+        // Create new theme selector container and element
+        Debug.log('BrowserUIManager: Creating new theme selector', themeSelectorId, 2);
+
+        // Create the container using utility classes
+        selectorContainer = document.createElement('div');
+        selectorContainer.className = `${Selectors.THEME_SELECTOR.WRAPPER.name()} ${Selectors.UTILITY.MARGIN_END_3.name()}`;
+
+        // Create select element
+        const selectElement = document.createElement('select');
+        selectElement.id = themeSelectorId;
+        selectElement.className = `${Selectors.UTILITY.FORM_SELECT.name()} ${Selectors.UTILITY.FORM_SELECT.name()}`;
+
+        // Append select to container
+        selectorContainer.appendChild(selectElement);
+
+        // Insert the selector container at the beginning of the theme switcher
+        themeSwitcherContainer.insertBefore(selectorContainer, themeSwitcherContainer.firstChild);
+
+        // Store references
+        this.elements.themeSelector = selectElement;
+        this.elements.themeSelectorContainer = selectorContainer;
+
+        Debug.log('BrowserUIManager: Theme selector created and added to DOM', null, 2);
+        return { container: selectorContainer, selectElement: selectElement };
     }
 
     /**
@@ -402,10 +504,11 @@ export class BrowserUIManager {
         // Hide any active theme loader
         this.hideThemeLoading();
 
-        // Remove generated elements
-        if (this.elements.themeSwitcher && this.elements.themeSwitcher.parentNode) {
-            this.elements.themeSwitcher.parentNode.removeChild(this.elements.themeSwitcher);
-        }
+        // Remove generated elements (except theme switcher which should be preserved across instances)
+        // Note: Theme switcher is preserved by FileBrowserManager.clearUI() to maintain user experience
+        // if (this.elements.themeSwitcher && this.elements.themeSwitcher.parentNode) {
+        //     this.elements.themeSwitcher.parentNode.removeChild(this.elements.themeSwitcher);
+        // }
 
         if (this.elements.diffContainer && this.elements.diffContainer.parentNode) {
             this.elements.diffContainer.parentNode.removeChild(this.elements.diffContainer);
@@ -415,9 +518,15 @@ export class BrowserUIManager {
             this.elements.mergeControls.parentNode.removeChild(this.elements.mergeControls);
         }
 
-        // Reset references
+        // Reset references but keep theme switcher and theme selector references if they still exist in DOM
+        const existingThemeSwitcher = document.getElementById(Selectors.THEME.SWITCHER.name());
+        const existingThemeSelector = document.getElementById(Selectors.THEME.SELECTOR.name());
+        const existingThemeSelectorContainer = existingThemeSelector ? existingThemeSelector.parentNode : null;
+
         this.elements = {
-            themeSwitcher: null,
+            themeSwitcher: existingThemeSwitcher || null,  // Keep reference if still in DOM
+            themeSelector: existingThemeSelector || null,  // Keep theme selector reference too
+            themeSelectorContainer: existingThemeSelectorContainer || null,  // Keep container reference
             diffContainer: null,
             mergeControls: null
         };
@@ -426,5 +535,45 @@ export class BrowserUIManager {
         this.diffViewer = null;
 
         Debug.log('BrowserUIManager: UI components destroyed', null, 2);
+    }
+
+    /**
+     * Hide theme UI elements when no diff is being displayed (identical files)
+     */
+    hideThemeElements() {
+        Debug.log('BrowserUIManager: Hiding theme elements for identical content', null, 2);
+
+        if (this.elements.themeSwitcher) {
+            // Use important to ensure hiding works
+            this.elements.themeSwitcher.style.cssText = 'display: none !important; position: relative;';
+            Debug.log('BrowserUIManager: Hidden theme switcher', this.elements.themeSwitcher.id, 2);
+        }
+
+        // Also hide any standalone theme selector
+        const themeSelector = document.getElementById(Selectors.THEME.SELECTOR.name());
+        if (themeSelector) {
+            themeSelector.style.display = 'none';
+            Debug.log('BrowserUIManager: Hidden standalone theme selector', themeSelector.id, 2);
+        }
+    }
+
+    /**
+     * Show theme UI elements when diff is being displayed
+     */
+    showThemeElements() {
+        Debug.log('BrowserUIManager: Showing theme elements for diff content', null, 2);
+
+        if (this.elements.themeSwitcher) {
+            // Use important to override the initial !important hiding
+            this.elements.themeSwitcher.style.cssText = 'display: flex !important; position: relative;';
+            Debug.log('BrowserUIManager: Shown theme switcher', this.elements.themeSwitcher.id, 2);
+        }
+
+        // Also show any standalone theme selector
+        const themeSelector = document.getElementById(Selectors.THEME.SELECTOR.name());
+        if (themeSelector) {
+            themeSelector.style.display = 'block';
+            Debug.log('BrowserUIManager: Shown standalone theme selector', themeSelector.id, 2);
+        }
     }
 }

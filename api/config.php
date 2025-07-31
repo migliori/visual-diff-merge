@@ -152,10 +152,11 @@ return [
         ],
 
         /**
-         * API Endpoint
-         * Base URL for API calls - if null, will be auto-discovered
+         * API Configuration
+         * Base URL and endpoint settings for API calls
          */
-        'apiEndpoint' => null,
+        'apiEndpoint' => null, // Legacy - if null, will be auto-discovered
+        'apiBaseUrl' => null,  // Base URL for API calls - if null, will be auto-discovered
 
         /**
          * Translations
