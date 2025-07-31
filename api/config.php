@@ -86,7 +86,7 @@ return [
         /**
          * Language Settings
          */
-        'lang' => 'fr', // Default language code (e.g., 'en', 'fr', etc.)
+        'lang' => 'en', // Default language code (e.g., 'en', 'fr', etc.)
 
         /**
          * Debug Settings

@@ -1723,20 +1723,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _Debug__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Debug */ "./src/utils/Debug.js");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _classPrivateMethodInitSpec(e, a) { _checkPrivateRedeclaration(e, a), a.add(e); }
-function _classPrivateFieldInitSpec(e, t, a) { _checkPrivateRedeclaration(e, t), t.set(e, a); }
 function _checkPrivateRedeclaration(e, t) { if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object"); }
-function _classPrivateFieldGet(s, a) { return s.get(_assertClassBrand(s, a)); }
-function _classPrivateFieldSet(s, a, r) { return s.set(_assertClassBrand(s, a), r), r; }
 function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n; throw new TypeError("Private element is not present on this object"); }
 /**
  * DiffConfigManager.js
@@ -1750,7 +1750,6 @@ function _assertClassBrand(e, t, n) { if ("function" == typeof e ? e === t : e.h
 /**
  * Manages the diffConfig configuration settings as a singleton
  */
-var _diffConfig = /*#__PURE__*/new WeakMap();
 var _DiffConfigManager_brand = /*#__PURE__*/new WeakSet();
 var DiffConfigManager = /*#__PURE__*/function () {
   /**
@@ -1760,59 +1759,202 @@ var DiffConfigManager = /*#__PURE__*/function () {
   function DiffConfigManager() {
     _classCallCheck(this, DiffConfigManager);
     /**
-     * Update the global window.diffConfig object
+     * Deep merge two objects recursively
+     * @param {Object} target - Target object
+     * @param {Object} source - Source object to merge
+     * @returns {Object} The merged object
      * @private
      */
     _classPrivateMethodInitSpec(this, _DiffConfigManager_brand);
-    /**
-     * Centralized diffConfig object
-     * @type {Object}
-     * @private
-     */
-    _classPrivateFieldInitSpec(this, _diffConfig, {});
-    // Initialize the diffConfig with any existing window.diffConfig
-    if (typeof window !== 'undefined' && window.diffConfig) {
-      _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Initializing with existing window.diffConfig', window.diffConfig, 2);
-      _classPrivateFieldSet(_diffConfig, this, _objectSpread({}, window.diffConfig));
-    } else {
-      _classPrivateFieldSet(_diffConfig, this, {
+    // Track if server config has been loaded to avoid multiple loads
+    this._serverConfigLoaded = false;
+
+    // Initialize window.diffConfig if it doesn't exist
+    if (typeof window !== 'undefined' && !window.diffConfig) {
+      _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Initializing empty window.diffConfig', null, 2);
+      window.diffConfig = {
         debug: false,
         logLevel: 1,
         old: {},
         "new": {}
-      });
+      };
+    } else if (typeof window !== 'undefined' && window.diffConfig) {
+      _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Using existing window.diffConfig', window.diffConfig, 2);
     }
-
-    // Make the diffConfig available globally through window.diffConfig
-    _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
   }
 
   /**
-   * Get the singleton instance
-   * @returns {DiffConfigManager} The singleton instance
+   * Load configuration from server if needed
+   * @returns {Promise<void>}
    */
   return _createClass(DiffConfigManager, [{
+    key: "ensureServerConfigLoaded",
+    value: (function () {
+      var _ensureServerConfigLoaded = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var _window$diffConfig;
+        var apiBaseUrl, scripts, scriptSrc, match, configResponse, serverConfig, _window$diffConfig2, existingServerSaveEnabled;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              if (!this._serverConfigLoaded) {
+                _context.next = 3;
+                break;
+              }
+              _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Server config already loaded, skipping', null, 2);
+              return _context.abrupt("return");
+            case 3:
+              if (!(typeof window !== 'undefined' && (_window$diffConfig = window.diffConfig) !== null && _window$diffConfig !== void 0 && _window$diffConfig.apiBaseUrl)) {
+                _context.next = 7;
+                break;
+              }
+              _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Server config already loaded with apiBaseUrl', window.diffConfig.apiBaseUrl, 2);
+              this._serverConfigLoaded = true;
+              return _context.abrupt("return");
+            case 7:
+              _context.prev = 7;
+              _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Loading server configuration...', null, 2);
+
+              // Try to determine the API base URL from script location
+              apiBaseUrl = '';
+              scripts = document.querySelectorAll('script[src*="visual-diff-merge"]');
+              if (scripts.length > 0) {
+                scriptSrc = scripts[0].src;
+                match = scriptSrc.match(/^(.+\/visual-diff-merge[^\/]*)\//);
+                if (match) {
+                  apiBaseUrl = match[1] + '/api/';
+                }
+              }
+              if (apiBaseUrl) {
+                _context.next = 15;
+                break;
+              }
+              _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Could not determine API base URL from script location', null, 2);
+              return _context.abrupt("return");
+            case 15:
+              _context.next = 17;
+              return fetch(apiBaseUrl + 'endpoint-config.php');
+            case 17:
+              configResponse = _context.sent;
+              if (!configResponse.ok) {
+                _context.next = 25;
+                break;
+              }
+              _context.next = 21;
+              return configResponse.json();
+            case 21:
+              serverConfig = _context.sent;
+              // The endpoint returns the config directly, not nested in a 'javascript' property
+              if (serverConfig && _typeof(serverConfig) === 'object') {
+                _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Loaded server configuration', serverConfig, 2);
+                if (typeof window !== 'undefined') {
+                  // Preserve existing serverSaveEnabled if it's already set
+                  existingServerSaveEnabled = (_window$diffConfig2 = window.diffConfig) === null || _window$diffConfig2 === void 0 ? void 0 : _window$diffConfig2.serverSaveEnabled;
+                  window.diffConfig = _objectSpread(_objectSpread({}, window.diffConfig || {}), serverConfig);
+
+                  // Don't override serverSaveEnabled if it was already explicitly set
+                  if (existingServerSaveEnabled !== undefined && !serverConfig.hasOwnProperty('serverSaveEnabled')) {
+                    window.diffConfig.serverSaveEnabled = existingServerSaveEnabled;
+                    _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Preserved existing serverSaveEnabled', existingServerSaveEnabled, 2);
+                  }
+
+                  // Mark as loaded to prevent future loads
+                  this._serverConfigLoaded = true;
+                }
+              }
+              _context.next = 26;
+              break;
+            case 25:
+              _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.warn('DiffConfigManager: Failed to load server configuration', configResponse.status, 1);
+            case 26:
+              _context.next = 31;
+              break;
+            case 28:
+              _context.prev = 28;
+              _context.t0 = _context["catch"](7);
+              _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.warn('DiffConfigManager: Error loading server configuration', _context.t0, 1);
+            case 31:
+              _context.prev = 31;
+              // Mark as loaded even if there was an error to prevent retries
+              this._serverConfigLoaded = true;
+              return _context.finish(31);
+            case 34:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, this, [[7, 28, 31, 34]]);
+      }));
+      function ensureServerConfigLoaded() {
+        return _ensureServerConfigLoaded.apply(this, arguments);
+      }
+      return ensureServerConfigLoaded;
+    }()
+    /**
+     * Get the singleton instance
+     * @returns {DiffConfigManager} The singleton instance
+     */
+    )
+  }, {
     key: "initialize",
-    value:
+    value: (
     /**
      * Initialize with configuration
      * @param {Object} config - The initial configuration
      */
-    function initialize() {
-      var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Initializing with config', config, 2);
-      _classPrivateFieldSet(_diffConfig, this, _objectSpread(_objectSpread({}, _classPrivateFieldGet(_diffConfig, this)), config));
-      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
-    }
+    function () {
+      var _initialize = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var config,
+          hasRuntimeServerSaveEnabled,
+          _args2 = arguments;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              config = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : {};
+              _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Initializing with config', config, 2);
 
+              // Check if serverSaveEnabled is already set in window.diffConfig
+              hasRuntimeServerSaveEnabled = typeof window !== 'undefined' && window.diffConfig && window.diffConfig.hasOwnProperty('serverSaveEnabled'); // Only load server config if we don't have runtime values already set
+              if (hasRuntimeServerSaveEnabled) {
+                _context2.next = 8;
+                break;
+              }
+              _context2.next = 6;
+              return this.ensureServerConfigLoaded();
+            case 6:
+              _context2.next = 9;
+              break;
+            case 8:
+              _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Skipping server config load - serverSaveEnabled already set', window.diffConfig.serverSaveEnabled, 2);
+            case 9:
+              // Then apply the provided config
+              if (typeof window !== 'undefined') {
+                window.diffConfig = _objectSpread(_objectSpread({}, window.diffConfig || {}), config);
+              } else {
+                _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.error('DiffConfigManager: Cannot initialize, window is not available', null, 1);
+              }
+            case 10:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, this);
+      }));
+      function initialize() {
+        return _initialize.apply(this, arguments);
+      }
+      return initialize;
+    }()
     /**
-     * Get the current diffConfig
+     * Get the current diffConfig (reference to window.diffConfig)
      * @returns {Object} The current diffConfig
      */
+    )
   }, {
     key: "getDiffConfig",
     value: function getDiffConfig() {
-      return _classPrivateFieldGet(_diffConfig, this);
+      if (typeof window === 'undefined' || !window.diffConfig) {
+        _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.warn('DiffConfigManager: window.diffConfig is not available', null, 1);
+        return {};
+      }
+      return window.diffConfig;
     }
 
     /**
@@ -1824,8 +1966,11 @@ var DiffConfigManager = /*#__PURE__*/function () {
     value: function setDiffConfig() {
       var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Setting new diffConfig', config, 2);
-      _classPrivateFieldSet(_diffConfig, this, _objectSpread({}, config));
-      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+      if (typeof window !== 'undefined') {
+        window.diffConfig = _objectSpread({}, config);
+      } else {
+        _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.error('DiffConfigManager: Cannot set config, window is not available', null, 1);
+      }
     }
 
     /**
@@ -1837,13 +1982,16 @@ var DiffConfigManager = /*#__PURE__*/function () {
     value: function reset() {
       var overrides = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Resetting diffConfig with overrides', overrides, 2);
-      _classPrivateFieldSet(_diffConfig, this, _objectSpread({
-        debug: false,
-        logLevel: 1,
-        old: {},
-        "new": {}
-      }, overrides));
-      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+      if (typeof window !== 'undefined') {
+        window.diffConfig = _objectSpread({
+          debug: false,
+          logLevel: 1,
+          old: {},
+          "new": {}
+        }, overrides);
+      } else {
+        _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.error('DiffConfigManager: Cannot reset config, window is not available', null, 1);
+      }
     }
 
     /**
@@ -1855,17 +2003,20 @@ var DiffConfigManager = /*#__PURE__*/function () {
     value: function update() {
       var partialConfig = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Updating diffConfig with', partialConfig, 3);
+      if (typeof window === 'undefined' || !window.diffConfig) {
+        _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.warn('DiffConfigManager: window.diffConfig not available for update', null, 1);
+        return;
+      }
 
       // Check if the partialConfig has a nested 'config' property
       if (partialConfig && partialConfig.config && _typeof(partialConfig.config) === 'object') {
         _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log('DiffConfigManager: Extracting nested config property', partialConfig.config, 3);
         // Use the nested config object instead of the wrapper
-        _classPrivateFieldSet(_diffConfig, this, _assertClassBrand(_DiffConfigManager_brand, this, _mergeDeep).call(this, _classPrivateFieldGet(_diffConfig, this), partialConfig.config));
+        window.diffConfig = _assertClassBrand(_DiffConfigManager_brand, this, _mergeDeep).call(this, window.diffConfig, partialConfig.config);
       } else {
         // Use the original object if no nested config property
-        _classPrivateFieldSet(_diffConfig, this, _assertClassBrand(_DiffConfigManager_brand, this, _mergeDeep).call(this, _classPrivateFieldGet(_diffConfig, this), partialConfig));
+        window.diffConfig = _assertClassBrand(_DiffConfigManager_brand, this, _mergeDeep).call(this, window.diffConfig, partialConfig);
       }
-      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
     }
 
     /**
@@ -1877,8 +2028,11 @@ var DiffConfigManager = /*#__PURE__*/function () {
     key: "set",
     value: function set(key, value) {
       _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log("DiffConfigManager: Setting ".concat(key), value, 3);
-      _classPrivateFieldGet(_diffConfig, this)[key] = value;
-      _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+      if (typeof window !== 'undefined' && window.diffConfig) {
+        window.diffConfig[key] = value;
+      } else {
+        _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.error("DiffConfigManager: Cannot set ".concat(key, ", window.diffConfig not available"), null, 1);
+      }
     }
 
     /**
@@ -1891,7 +2045,26 @@ var DiffConfigManager = /*#__PURE__*/function () {
     key: "get",
     value: function get(key) {
       var defaultValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      return key in _classPrivateFieldGet(_diffConfig, this) ? _classPrivateFieldGet(_diffConfig, this)[key] : defaultValue;
+      if (typeof window === 'undefined' || !window.diffConfig) {
+        _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.warn("DiffConfigManager: Cannot get ".concat(key, ", window.diffConfig not available"), null, 1);
+        return defaultValue;
+      }
+      return key in window.diffConfig ? window.diffConfig[key] : defaultValue;
+    }
+
+    /**
+     * Check if a configuration key exists
+     * @param {string} key - The configuration key to check
+     * @returns {boolean} True if the key exists
+     */
+  }, {
+    key: "has",
+    value: function has(key) {
+      if (typeof window === 'undefined' || !window.diffConfig) {
+        _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.warn("DiffConfigManager: Cannot check ".concat(key, ", window.diffConfig not available"), null, 1);
+        return false;
+      }
+      return key in window.diffConfig;
     }
 
     /**
@@ -1901,10 +2074,11 @@ var DiffConfigManager = /*#__PURE__*/function () {
   }, {
     key: "remove",
     value: function remove(key) {
-      if (key in _classPrivateFieldGet(_diffConfig, this)) {
+      if (typeof window !== 'undefined' && window.diffConfig && key in window.diffConfig) {
         _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.log("DiffConfigManager: Removing ".concat(key), null, 3);
-        delete _classPrivateFieldGet(_diffConfig, this)[key];
-        _assertClassBrand(_DiffConfigManager_brand, this, _updateGlobalDiffConfig).call(this);
+        delete window.diffConfig[key];
+      } else {
+        _Debug__WEBPACK_IMPORTED_MODULE_0__.Debug.warn("DiffConfigManager: Cannot remove ".concat(key, ", not found or window.diffConfig not available"), null, 1);
       }
     }
   }], [{
@@ -1917,18 +2091,6 @@ var DiffConfigManager = /*#__PURE__*/function () {
     }
   }]);
 }();
-function _updateGlobalDiffConfig() {
-  if (typeof window !== 'undefined') {
-    window.diffConfig = _objectSpread({}, _classPrivateFieldGet(_diffConfig, this));
-  }
-}
-/**
- * Deep merge two objects recursively
- * @param {Object} target - Target object
- * @param {Object} source - Source object to merge
- * @returns {Object} The merged object
- * @private
- */
 function _mergeDeep(target, source) {
   var _this = this;
   var output = _objectSpread({}, target);

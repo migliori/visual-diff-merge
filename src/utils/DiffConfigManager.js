@@ -19,32 +19,25 @@ export class DiffConfigManager {
     static #instance = null;
 
     /**
-     * Centralized diffConfig object
-     * @type {Object}
-     * @private
-     */
-    #diffConfig = {};
-
-    /**
      * Private constructor - use getInstance() instead
      * @private
      */
     constructor() {
-        // Initialize the diffConfig with any existing window.diffConfig
-        if (typeof window !== 'undefined' && window.diffConfig) {
-            Debug.log('DiffConfigManager: Initializing with existing window.diffConfig', window.diffConfig, 2);
-            this.#diffConfig = { ...window.diffConfig };
-        } else {
-            this.#diffConfig = {
+        // Track if server config has been loaded to avoid multiple loads
+        this._serverConfigLoaded = false;
+
+        // Initialize window.diffConfig if it doesn't exist
+        if (typeof window !== 'undefined' && !window.diffConfig) {
+            Debug.log('DiffConfigManager: Initializing empty window.diffConfig', null, 2);
+            window.diffConfig = {
                 debug: false,
                 logLevel: 1,
                 old: {},
                 new: {}
             };
+        } else if (typeof window !== 'undefined' && window.diffConfig) {
+            Debug.log('DiffConfigManager: Using existing window.diffConfig', window.diffConfig, 2);
         }
-
-        // Make the diffConfig available globally through window.diffConfig
-        this.#updateGlobalDiffConfig();
     }
 
     /**
@@ -52,9 +45,16 @@ export class DiffConfigManager {
      * @returns {Promise<void>}
      */
     async ensureServerConfigLoaded() {
+        // Only load server config once to avoid overriding runtime values
+        if (this._serverConfigLoaded) {
+            Debug.log('DiffConfigManager: Server config already loaded, skipping', null, 2);
+            return;
+        }
+
         // Check if we already have a server-provided apiBaseUrl
-        if (this.#diffConfig.apiBaseUrl) {
-            Debug.log('DiffConfigManager: Server config already loaded with apiBaseUrl', this.#diffConfig.apiBaseUrl, 2);
+        if (typeof window !== 'undefined' && window.diffConfig?.apiBaseUrl) {
+            Debug.log('DiffConfigManager: Server config already loaded with apiBaseUrl', window.diffConfig.apiBaseUrl, 2);
+            this._serverConfigLoaded = true;
             return;
         }
 
@@ -85,14 +85,29 @@ export class DiffConfigManager {
                 // The endpoint returns the config directly, not nested in a 'javascript' property
                 if (serverConfig && typeof serverConfig === 'object') {
                     Debug.log('DiffConfigManager: Loaded server configuration', serverConfig, 2);
-                    this.#diffConfig = { ...this.#diffConfig, ...serverConfig };
-                    this.#updateGlobalDiffConfig();
+                    if (typeof window !== 'undefined') {
+                        // Preserve existing serverSaveEnabled if it's already set
+                        const existingServerSaveEnabled = window.diffConfig?.serverSaveEnabled;
+                        window.diffConfig = { ...(window.diffConfig || {}), ...serverConfig };
+
+                        // Don't override serverSaveEnabled if it was already explicitly set
+                        if (existingServerSaveEnabled !== undefined && !serverConfig.hasOwnProperty('serverSaveEnabled')) {
+                            window.diffConfig.serverSaveEnabled = existingServerSaveEnabled;
+                            Debug.log('DiffConfigManager: Preserved existing serverSaveEnabled', existingServerSaveEnabled, 2);
+                        }
+
+                        // Mark as loaded to prevent future loads
+                        this._serverConfigLoaded = true;
+                    }
                 }
             } else {
                 Debug.warn('DiffConfigManager: Failed to load server configuration', configResponse.status, 1);
             }
         } catch (error) {
             Debug.warn('DiffConfigManager: Error loading server configuration', error, 1);
+        } finally {
+            // Mark as loaded even if there was an error to prevent retries
+            this._serverConfigLoaded = true;
         }
     }
 
@@ -114,20 +129,37 @@ export class DiffConfigManager {
     async initialize(config = {}) {
         Debug.log('DiffConfigManager: Initializing with config', config, 2);
 
-        // First, ensure server config is loaded if needed
-        await this.ensureServerConfigLoaded();
+        // Check if serverSaveEnabled is already set in window.diffConfig
+        const hasRuntimeServerSaveEnabled = typeof window !== 'undefined' &&
+            window.diffConfig &&
+            window.diffConfig.hasOwnProperty('serverSaveEnabled');
+
+        // Only load server config if we don't have runtime values already set
+        if (!hasRuntimeServerSaveEnabled) {
+            await this.ensureServerConfigLoaded();
+        } else {
+            Debug.log('DiffConfigManager: Skipping server config load - serverSaveEnabled already set',
+                window.diffConfig.serverSaveEnabled, 2);
+        }
 
         // Then apply the provided config
-        this.#diffConfig = { ...this.#diffConfig, ...config };
-        this.#updateGlobalDiffConfig();
+        if (typeof window !== 'undefined') {
+            window.diffConfig = { ...(window.diffConfig || {}), ...config };
+        } else {
+            Debug.error('DiffConfigManager: Cannot initialize, window is not available', null, 1);
+        }
     }
 
     /**
-     * Get the current diffConfig
+     * Get the current diffConfig (reference to window.diffConfig)
      * @returns {Object} The current diffConfig
      */
     getDiffConfig() {
-        return this.#diffConfig;
+        if (typeof window === 'undefined' || !window.diffConfig) {
+            Debug.warn('DiffConfigManager: window.diffConfig is not available', null, 1);
+            return {};
+        }
+        return window.diffConfig;
     }
 
     /**
@@ -136,8 +168,11 @@ export class DiffConfigManager {
      */
     setDiffConfig(config = {}) {
         Debug.log('DiffConfigManager: Setting new diffConfig', config, 2);
-        this.#diffConfig = { ...config };
-        this.#updateGlobalDiffConfig();
+        if (typeof window !== 'undefined') {
+            window.diffConfig = { ...config };
+        } else {
+            Debug.error('DiffConfigManager: Cannot set config, window is not available', null, 1);
+        }
     }
 
     /**
@@ -146,14 +181,17 @@ export class DiffConfigManager {
      */
     reset(overrides = {}) {
         Debug.log('DiffConfigManager: Resetting diffConfig with overrides', overrides, 2);
-        this.#diffConfig = {
-            debug: false,
-            logLevel: 1,
-            old: {},
-            new: {},
-            ...overrides
-        };
-        this.#updateGlobalDiffConfig();
+        if (typeof window !== 'undefined') {
+            window.diffConfig = {
+                debug: false,
+                logLevel: 1,
+                old: {},
+                new: {},
+                ...overrides
+            };
+        } else {
+            Debug.error('DiffConfigManager: Cannot reset config, window is not available', null, 1);
+        }
     }
 
     /**
@@ -163,17 +201,20 @@ export class DiffConfigManager {
     update(partialConfig = {}) {
         Debug.log('DiffConfigManager: Updating diffConfig with', partialConfig, 3);
 
+        if (typeof window === 'undefined' || !window.diffConfig) {
+            Debug.warn('DiffConfigManager: window.diffConfig not available for update', null, 1);
+            return;
+        }
+
         // Check if the partialConfig has a nested 'config' property
         if (partialConfig && partialConfig.config && typeof partialConfig.config === 'object') {
             Debug.log('DiffConfigManager: Extracting nested config property', partialConfig.config, 3);
             // Use the nested config object instead of the wrapper
-            this.#diffConfig = this.#mergeDeep(this.#diffConfig, partialConfig.config);
+            window.diffConfig = this.#mergeDeep(window.diffConfig, partialConfig.config);
         } else {
             // Use the original object if no nested config property
-            this.#diffConfig = this.#mergeDeep(this.#diffConfig, partialConfig);
+            window.diffConfig = this.#mergeDeep(window.diffConfig, partialConfig);
         }
-
-        this.#updateGlobalDiffConfig();
     }
 
     /**
@@ -183,8 +224,11 @@ export class DiffConfigManager {
      */
     set(key, value) {
         Debug.log(`DiffConfigManager: Setting ${key}`, value, 3);
-        this.#diffConfig[key] = value;
-        this.#updateGlobalDiffConfig();
+        if (typeof window !== 'undefined' && window.diffConfig) {
+            window.diffConfig[key] = value;
+        } else {
+            Debug.error(`DiffConfigManager: Cannot set ${key}, window.diffConfig not available`, null, 1);
+        }
     }
 
     /**
@@ -194,7 +238,24 @@ export class DiffConfigManager {
      * @returns {*} The configuration value
      */
     get(key, defaultValue = null) {
-        return key in this.#diffConfig ? this.#diffConfig[key] : defaultValue;
+        if (typeof window === 'undefined' || !window.diffConfig) {
+            Debug.warn(`DiffConfigManager: Cannot get ${key}, window.diffConfig not available`, null, 1);
+            return defaultValue;
+        }
+        return key in window.diffConfig ? window.diffConfig[key] : defaultValue;
+    }
+
+    /**
+     * Check if a configuration key exists
+     * @param {string} key - The configuration key to check
+     * @returns {boolean} True if the key exists
+     */
+    has(key) {
+        if (typeof window === 'undefined' || !window.diffConfig) {
+            Debug.warn(`DiffConfigManager: Cannot check ${key}, window.diffConfig not available`, null, 1);
+            return false;
+        }
+        return key in window.diffConfig;
     }
 
     /**
@@ -202,20 +263,11 @@ export class DiffConfigManager {
      * @param {string} key - The configuration key to remove
      */
     remove(key) {
-        if (key in this.#diffConfig) {
+        if (typeof window !== 'undefined' && window.diffConfig && key in window.diffConfig) {
             Debug.log(`DiffConfigManager: Removing ${key}`, null, 3);
-            delete this.#diffConfig[key];
-            this.#updateGlobalDiffConfig();
-        }
-    }
-
-    /**
-     * Update the global window.diffConfig object
-     * @private
-     */
-    #updateGlobalDiffConfig() {
-        if (typeof window !== 'undefined') {
-            window.diffConfig = { ...this.#diffConfig };
+            delete window.diffConfig[key];
+        } else {
+            Debug.warn(`DiffConfigManager: Cannot remove ${key}, not found or window.diffConfig not available`, null, 1);
         }
     }
 

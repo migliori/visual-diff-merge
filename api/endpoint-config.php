@@ -49,6 +49,16 @@ if (!empty($clientConfig)) {
         $response['theme'] = $clientConfig['theme'];
     }
 
+    // UI configuration
+    if (isset($clientConfig['ui'])) {
+        $response['ui'] = $clientConfig['ui'];
+    }
+
+    // Save options
+    if (isset($clientConfig['saveOptions'])) {
+        $response['saveOptions'] = $clientConfig['saveOptions'];
+    }
+
     // API endpoint (if specified in config)
     if (isset($clientConfig['apiEndpoint'])) {
         $response['apiEndpoint'] = $clientConfig['apiEndpoint'];

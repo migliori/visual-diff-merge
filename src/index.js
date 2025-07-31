@@ -126,17 +126,7 @@ window.enableDiffViewer = async function () {
 
         // Make sure serverSaveEnabled is explicitly set in the diffConfig
         // This ensures the BrowserUIManager can access it before creating UI controls
-        if (window.diffConfig) {
-            // If serverSaveEnabled is undefined, explicitly set it to false
-            if (typeof window.diffConfig.serverSaveEnabled === 'undefined') {
-                window.diffConfig.serverSaveEnabled = false;
-                Debug.log('Setting default serverSaveEnabled=false in diffConfig', null, 2);
-            } else {
-                // Ensure it's a boolean value, not a string
-                window.diffConfig.serverSaveEnabled = !!window.diffConfig.serverSaveEnabled;
-                Debug.log(`Found serverSaveEnabled=${window.diffConfig.serverSaveEnabled} in diffConfig`, null, 2);
-            }
-        }
+        // Note: We delay this check until after UI preparation to allow FileBrowserManager to configure it first
 
         // Discover API endpoint early in the initialization process
         try {
@@ -287,18 +277,26 @@ window.enableDiffViewer = async function () {
             Debug.log('Container element shown', null, 2);
         }
 
+        // Make sure serverSaveEnabled is properly set NOW (after UI preparation)
+        // This allows FileBrowserManager to configure it first via DiffConfigManager
+        const diffConfigManager = DiffConfigManager.getInstance();
+
+        // Read serverSaveEnabled from window.diffConfig (via DiffConfigManager interface)
+        const serverSaveEnabled = diffConfigManager.get('serverSaveEnabled', false);
+        Debug.log(`Using serverSaveEnabled=${serverSaveEnabled} from DiffConfigManager`, null, 2);
+
         // 3. Create DiffViewer with runtime properties and pass the mainLoaderId
         const diffViewer = new DiffViewer({
-            // Runtime properties
-            diffData: window.diffConfig.diffData,
-            serverSaveEnabled: window.diffConfig.serverSaveEnabled || false,
+            // Runtime properties - read directly from DiffConfigManager (which uses window.diffConfig)
+            diffData: diffConfigManager.get('diffData'),
+            serverSaveEnabled: serverSaveEnabled,
             // SECURITY: Use only fileRefId and filenames, not server paths
-            fileRefId: window.diffConfig.fileRefId || '',
-            oldFileRefId: window.diffConfig.oldFileRefId || '',
-            newFileName: window.diffConfig.newFileName || '',
-            oldFileName: window.diffConfig.oldFileName || '',
-            isIdentical: window.diffConfig.isIdentical || false,
-            filepath: window.diffConfig.filepath,
+            fileRefId: diffConfigManager.get('fileRefId', ''),
+            oldFileRefId: diffConfigManager.get('oldFileRefId', ''),
+            newFileName: diffConfigManager.get('newFileName', ''),
+            oldFileName: diffConfigManager.get('oldFileName', ''),
+            isIdentical: diffConfigManager.get('isIdentical', false),
+            filepath: diffConfigManager.get('filepath'),
 
             // Dependencies (not config values)
             resourceLoader: resourceLoader,

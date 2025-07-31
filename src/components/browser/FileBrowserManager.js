@@ -161,8 +161,19 @@ export class FileBrowserManager {
                 return;
             }
 
-            // 5. Update diffConfig with result
-            DiffConfigManager.getInstance().setDiffConfig(result);
+            // 5. Update diffConfig with result - but preserve runtime values
+            const configManager = DiffConfigManager.getInstance();
+
+            // Preserve existing serverSaveEnabled value that was set by FileBrowserManager
+            const existingServerSaveEnabled = configManager.get('serverSaveEnabled');
+
+            configManager.setDiffConfig(result);
+
+            // Restore the preserved serverSaveEnabled if it was defined
+            if (existingServerSaveEnabled !== null && existingServerSaveEnabled !== undefined) {
+                configManager.set('serverSaveEnabled', existingServerSaveEnabled);
+                Debug.log('FileBrowserManager: Restored serverSaveEnabled after setDiffConfig', existingServerSaveEnabled, 2);
+            }
 
             // 6. Initialize the UI manager
             this.loaderManager.updateLoaderMessage(loaderId, this.translationManager.get('loadingDiff', 'Initializing viewer...'));
@@ -266,17 +277,25 @@ export class FileBrowserManager {
             // Ensure the runtime properties are set at the top level where DiffViewer expects them
             if (!window.diffConfig.fileRefId && window.diffConfig.new?.ref_id) {
                 configManager.set('fileRefId', window.diffConfig.new.ref_id);
-                Debug.log('FileBrowserManager: Setting top-level fileRefId from new.ref_id', window.diffConfig.fileRefId, 1);
+                Debug.log('FileBrowserManager: Setting top-level fileRefId from new.ref_id', window.diffConfig.new.ref_id, 1);
             }
 
             // SECURITY: Use safe filenames and fileRefIds, not server paths
             if (!window.diffConfig.newFileName && window.diffConfig.new?.filename) {
                 configManager.set('newFileName', window.diffConfig.new.filename);
-                Debug.log('FileBrowserManager: Setting top-level newFileName from new.filename', window.diffConfig.newFileName, 1);
+                Debug.log('FileBrowserManager: Setting top-level newFileName from new.filename', window.diffConfig.new.filename, 1);
             }
 
             // Always explicitly set serverSaveEnabled if we have file references
-            configManager.set('serverSaveEnabled', !!window.diffConfig.fileRefId);
+            // Use the value that was just set or the current value
+            const currentFileRefId = window.diffConfig.fileRefId || window.diffConfig.new?.ref_id || '';
+            const hasFileRefs = !!(currentFileRefId || window.diffConfig.oldFileRefId || window.diffConfig.old?.ref_id);
+            configManager.set('serverSaveEnabled', hasFileRefs);
+            Debug.log('FileBrowserManager: Setting serverSaveEnabled', {
+                hasFileRefs,
+                currentFileRefId,
+                oldFileRefId: window.diffConfig.oldFileRefId || window.diffConfig.old?.ref_id
+            }, 1);
 
             // DEBUG log the final diffConfig properties before initialization
             Debug.log('FileBrowserManager: Final diffConfig settings before initialization', {
@@ -638,6 +657,13 @@ export class FileBrowserManager {
             Object.keys(result.config).forEach(key => {
                 // Only copy if the property doesn't already exist at root level
                 // or if it does exist but is empty/undefined
+                // EXCEPTION: Never overwrite serverSaveEnabled as it's determined by FileBrowserManager
+                if (key === 'serverSaveEnabled') {
+                    Debug.log('FileBrowserManager: Preserving existing serverSaveEnabled, not overwriting from server',
+                        { existing: result.serverSaveEnabled, fromServer: result.config[key] }, 2);
+                    return; // Skip this key
+                }
+
                 if (result[key] === undefined ||
                     (key === 'diffData' && (!result[key]?.chunks || result[key].chunks.length === 0))) {
                     Debug.log(`FileBrowserManager: Moving ${key} from config to root level`, result.config[key], 3);
