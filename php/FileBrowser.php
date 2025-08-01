@@ -255,6 +255,26 @@ class FileBrowser
             }
         }
 
+        // Sort files alphabetically within each subdirectory
+        foreach ($commonFiles as $subdirectory => &$files) {
+            usort($files, function ($a, $b) {
+                return strcasecmp($a['name'], $b['name']);
+            });
+        }
+        unset($files); // Break the reference
+
+        // Sort subdirectories alphabetically, keeping root files ('') first
+        uksort($commonFiles, function ($a, $b) {
+            // Keep root files first
+            if ($a === '') {
+                return -1;
+            }
+            if ($b === '') {
+                return 1;
+            }
+            return strcasecmp($a, $b);
+        });
+
         return $commonFiles;
     }
 
@@ -329,7 +349,7 @@ class FileBrowser
      * Get subdirectory name for grouping (empty string for root files)
      *
      * @param string $relativePath Relative path of the file
-     * @return string Subdirectory name or empty string for root files
+     * @return string Full subdirectory path or empty string for root files
      */
     private function getSubdirectoryName($relativePath)
     {
@@ -340,7 +360,8 @@ class FileBrowser
             return '';
         }
 
-        // Return the immediate subdirectory name
-        return $pathParts[0];
+        // Remove the filename (last element) and return the full directory path
+        array_pop($pathParts);
+        return implode('/', $pathParts);
     }
 }
