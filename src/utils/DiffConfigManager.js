@@ -176,6 +176,53 @@ export class DiffConfigManager {
     }
 
     /**
+     * Safely set a new diffConfig while preserving critical runtime values
+     * This method preserves fileRefId, oldFileRefId, and other runtime properties
+     * that should not be overwritten by server responses
+     * @param {Object} config - The new configuration to use
+     */
+    setDiffConfigSafe(config = {}) {
+        Debug.log('DiffConfigManager: Setting new diffConfig safely (preserving runtime values)', config, 2);
+
+        if (typeof window === 'undefined') {
+            Debug.error('DiffConfigManager: Cannot set config, window is not available', null, 1);
+            return;
+        }
+
+        // Define critical runtime properties that should be preserved
+        const criticalRuntimeProps = [
+            'fileRefId',
+            'oldFileRefId',
+            'newFileName',
+            'oldFileName',
+            'serverSaveEnabled'
+        ];
+
+        // Preserve existing critical values
+        const preservedValues = {};
+        criticalRuntimeProps.forEach(prop => {
+            if (window.diffConfig && window.diffConfig[prop] !== undefined && window.diffConfig[prop] !== null && window.diffConfig[prop] !== '') {
+                preservedValues[prop] = window.diffConfig[prop];
+                Debug.log(`DiffConfigManager: Preserving existing ${prop}`, window.diffConfig[prop], 3);
+            }
+        });
+
+        // Set the new config
+        window.diffConfig = { ...config };
+
+        // Restore preserved values (they take precedence over server values)
+        Object.entries(preservedValues).forEach(([key, value]) => {
+            window.diffConfig[key] = value;
+            Debug.log(`DiffConfigManager: Restored critical runtime property ${key}`, value, 3);
+        });
+
+        Debug.log('DiffConfigManager: Safe setDiffConfig completed', {
+            preservedCount: Object.keys(preservedValues).length,
+            preserved: Object.keys(preservedValues)
+        }, 2);
+    }
+
+    /**
      * Reset the diffConfig to default values, possibly with new overrides
      * @param {Object} overrides - Optional configuration overrides to apply after reset
      */

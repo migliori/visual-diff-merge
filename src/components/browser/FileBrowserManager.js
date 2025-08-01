@@ -161,19 +161,17 @@ export class FileBrowserManager {
                 return;
             }
 
-            // 5. Update diffConfig with result - but preserve runtime values
+            // 5. Update diffConfig with result - preserving runtime values
             const configManager = DiffConfigManager.getInstance();
 
-            // Preserve existing serverSaveEnabled value that was set by FileBrowserManager
-            const existingServerSaveEnabled = configManager.get('serverSaveEnabled');
+            // Use the safe setDiffConfig method to preserve critical runtime values like fileRefId
+            configManager.setDiffConfigSafe(result);
 
-            configManager.setDiffConfig(result);
-
-            // Restore the preserved serverSaveEnabled if it was defined
-            if (existingServerSaveEnabled !== null && existingServerSaveEnabled !== undefined) {
-                configManager.set('serverSaveEnabled', existingServerSaveEnabled);
-                Debug.log('FileBrowserManager: Restored serverSaveEnabled after setDiffConfig', existingServerSaveEnabled, 2);
-            }
+            Debug.log('FileBrowserManager: DiffConfig updated safely with preserved runtime values', {
+                fileRefId: window.diffConfig.fileRefId,
+                oldFileRefId: window.diffConfig.oldFileRefId,
+                serverSaveEnabled: window.diffConfig.serverSaveEnabled
+            }, 1);
 
             // 6. Initialize the UI manager
             this.loaderManager.updateLoaderMessage(loaderId, this.translationManager.get('loadingDiff', 'Initializing viewer...'));

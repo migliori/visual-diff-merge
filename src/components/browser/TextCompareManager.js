@@ -203,7 +203,7 @@ export class TextCompareManager {
             }
 
             // Update diffConfig with API response using the centralized manager
-            DiffConfigManager.getInstance().setDiffConfig(result);
+            DiffConfigManager.getInstance().setDiffConfigSafe(result);
 
             // Update loader message before initializing diff viewer
             loaderManager.updateLoaderMessage(loaderId, translationManager.get('renderingDiff', 'Initializing diff viewer...'));

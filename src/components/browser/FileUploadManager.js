@@ -111,7 +111,7 @@ export class FileUploadManager {
             }
 
             // Update diffConfig with API response using the central manager
-            DiffConfigManager.getInstance().setDiffConfig(result);
+            DiffConfigManager.getInstance().setDiffConfigSafe(result);
 
             // Initialize diff viewer
             loaderManager.updateLoaderMessage(loaderId, translationManager.get('renderingDiff', 'Initializing diff viewer...'));

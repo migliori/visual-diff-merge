@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', addCopyrightLink);
 window.addEventListener('load', addCopyrightLink);
 window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
   var _window$diffConfig, _window$diffConfig2, _window$diffConfig3;
-  var debug, logLevel, loaderManager, translationManager, configLang, initialMessage, mainLoaderId, _window$diffConfig4, _window$diffConfig5, message, apiEndpoint, _message, validationResult, themePrefs, resourceLoader, themeManager, containerWrapper, diffContainer, isFileBrowser, tempUIManager, container, attempts, maxAttempts, loadingElement, diffConfigManager, serverSaveEnabled, diffViewer, diffContainerElement, viewerElement, alertManager, errorTitle, errorMessage, alertElement;
+  var debug, logLevel, loaderManager, translationManager, configLang, initialMessage, mainLoaderId, _window$diffConfig4, _window$diffConfig5, message, apiEndpoint, _message, validationResult, themePrefs, resourceLoader, themeManager, containerWrapper, diffContainer, isFileBrowser, tempUIManager, container, attempts, maxAttempts, loadingElement, diffViewer, diffContainerElement, viewerElement, alertManager, errorTitle, errorMessage, alertElement;
   return _regeneratorRuntime().wrap(function _callee$(_context) {
     while (1) switch (_context.prev = _context.next) {
       case 0:
@@ -153,11 +153,26 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
         loaderManager.hideMainLoader(mainLoaderId);
         return _context.abrupt("return");
       case 19:
-        _context.prev = 19;
+        // Make sure serverSaveEnabled is explicitly set in the diffConfig
+        // This ensures the BrowserUIManager can access it before creating UI controls
+        if (window.diffConfig) {
+          // If serverSaveEnabled is undefined, explicitly set it to false
+          if (typeof window.diffConfig.serverSaveEnabled === 'undefined') {
+            window.diffConfig.serverSaveEnabled = false;
+            _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log('Setting default serverSaveEnabled=false in diffConfig', null, 2);
+          } else {
+            // Ensure it's a boolean value, not a string
+            window.diffConfig.serverSaveEnabled = !!window.diffConfig.serverSaveEnabled;
+            _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log("Found serverSaveEnabled=".concat(window.diffConfig.serverSaveEnabled, " in diffConfig"), null, 2);
+          }
+        }
+
+        // Discover API endpoint early in the initialization process
+        _context.prev = 20;
         loaderManager.updateLoaderMessage(mainLoaderId, translationManager.get('discoveringEndpoints', 'Discovering API endpoints...'));
-        _context.next = 23;
+        _context.next = 24;
         return endpointDiscovery.getEndpoint();
-      case 23:
+      case 24:
         apiEndpoint = _context.sent;
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log('API endpoint discovered', apiEndpoint, 2);
 
@@ -165,15 +180,15 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
         if (window.diffConfig && !window.diffConfig.apiEndpoint) {
           window.diffConfig.apiEndpoint = apiEndpoint;
         }
-        _context.next = 31;
+        _context.next = 32;
         break;
-      case 28:
-        _context.prev = 28;
-        _context.t0 = _context["catch"](19);
+      case 29:
+        _context.prev = 29;
+        _context.t0 = _context["catch"](20);
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.warn('API endpoint discovery failed, using fallbacks', _context.t0, 1);
-      case 31:
+      case 32:
         if (!((_window$diffConfig5 = window.diffConfig) !== null && _window$diffConfig5 !== void 0 && _window$diffConfig5.isIdentical)) {
-          _context.next = 36;
+          _context.next = 37;
           break;
         }
         // Get message from translations
@@ -183,22 +198,22 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
         // Hide the loader since we're done
         loaderManager.hideMainLoader(mainLoaderId);
         return _context.abrupt("return");
-      case 36:
+      case 37:
         if (!window.diffViewer) {
-          _context.next = 43;
+          _context.next = 44;
           break;
         }
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log('Cleaning up previous instance', null, 1);
         loaderManager.updateLoaderMessage(mainLoaderId, translationManager.get('cleaningUpPrevious', 'Cleaning up previous instance...'));
         if (!(typeof window.diffViewer.destroy === 'function')) {
-          _context.next = 42;
+          _context.next = 43;
           break;
         }
-        _context.next = 42;
+        _context.next = 43;
         return window.diffViewer.destroy();
-      case 42:
-        window.diffViewer = null;
       case 43:
+        window.diffViewer = null;
+      case 44:
         // Clean up UI manager if it exists
         if (window.vdmBrowserUIManager) {
           _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log('Cleaning up browser UI manager', null, 1);
@@ -215,13 +230,13 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
         loaderManager.updateLoaderMessage(mainLoaderId, translationManager.get('validatingConfig', 'Validating configuration...'));
         validationResult = _utils_ConfigUtils__WEBPACK_IMPORTED_MODULE_5__.ConfigUtils.validateConfig(window.diffConfig);
         if (validationResult.isValid) {
-          _context.next = 51;
+          _context.next = 52;
           break;
         }
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.error(validationResult.error);
         loaderManager.hideMainLoader(mainLoaderId);
         return _context.abrupt("return");
-      case 51:
+      case 52:
         // High-level summary of what we're loading
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log('CONFIGURATION SUMMARY', _utils_ConfigUtils__WEBPACK_IMPORTED_MODULE_5__.ConfigUtils.getConfigSummary(window.diffConfig), 1);
 
@@ -254,7 +269,7 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
         diffContainer = document.getElementById(_constants_Selectors__WEBPACK_IMPORTED_MODULE_7__["default"].DIFF.CONTAINER.name());
         isFileBrowser = containerWrapper && !diffContainer; // If in file browser mode, create UI elements BEFORE initializing DiffViewer
         if (!isFileBrowser) {
-          _context.next = 72;
+          _context.next = 73;
           break;
         }
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log('Creating browser UI elements before DiffViewer initialization', null, 1);
@@ -270,11 +285,11 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
         window.vdmBrowserUIManager = tempUIManager;
 
         // Wait a short time to ensure DOM elements are fully created (important!)
-        _context.next = 72;
+        _context.next = 73;
         return new Promise(function (resolve) {
           return setTimeout(resolve, 50);
         });
-      case 72:
+      case 73:
         // PHASE 3: COMPONENT INITIALIZATION - level 1 log
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log('INITIALIZATION - PHASE 3: COMPONENTS', null, 1);
         loaderManager.updateLoaderMessage(mainLoaderId, translationManager.get('initializingComponents', 'Initializing components...'));
@@ -284,34 +299,34 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
         attempts = 0;
         maxAttempts = 5; // If we're in file browser mode and container isn't found immediately, try a few times
         if (!isFileBrowser) {
-          _context.next = 86;
+          _context.next = 87;
           break;
         }
-      case 78:
+      case 79:
         if (!(!container && attempts < maxAttempts)) {
-          _context.next = 86;
+          _context.next = 87;
           break;
         }
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log("Container element ".concat(_constants_Selectors__WEBPACK_IMPORTED_MODULE_7__["default"].DIFF.VIEWER, " not found, attempt ").concat(attempts + 1, "/").concat(maxAttempts), null, 2);
-        _context.next = 82;
+        _context.next = 83;
         return new Promise(function (resolve) {
           return setTimeout(resolve, 100);
         });
-      case 82:
+      case 83:
         // Wait 100ms between attempts
         container = document.querySelector(_constants_Selectors__WEBPACK_IMPORTED_MODULE_7__["default"].DIFF.VIEWER);
         attempts++;
-        _context.next = 78;
+        _context.next = 79;
         break;
-      case 86:
+      case 87:
         if (container) {
-          _context.next = 90;
+          _context.next = 91;
           break;
         }
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.error("Container element ".concat(_constants_Selectors__WEBPACK_IMPORTED_MODULE_7__["default"].DIFF.VIEWER, " not found after ").concat(attempts, " attempts"));
         loaderManager.hideMainLoader(mainLoaderId);
         return _context.abrupt("return");
-      case 90:
+      case 91:
         // Show the container (hide loading indicator if it exists)
         loadingElement = document.querySelector(_constants_Selectors__WEBPACK_IMPORTED_MODULE_7__["default"].LOADER.MAIN);
         if (loadingElement) {
@@ -323,24 +338,18 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
           _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log('Container element shown', null, 2);
         }
 
-        // Make sure serverSaveEnabled is properly set NOW (after UI preparation)
-        // This allows FileBrowserManager to configure it first via DiffConfigManager
-        diffConfigManager = _utils_DiffConfigManager__WEBPACK_IMPORTED_MODULE_13__.DiffConfigManager.getInstance(); // Read serverSaveEnabled from window.diffConfig (via DiffConfigManager interface)
-        serverSaveEnabled = diffConfigManager.get('serverSaveEnabled', false);
-        _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log("Using serverSaveEnabled=".concat(serverSaveEnabled, " from DiffConfigManager"), null, 2);
-
         // 3. Create DiffViewer with runtime properties and pass the mainLoaderId
         diffViewer = new _components_DiffViewer__WEBPACK_IMPORTED_MODULE_0__.DiffViewer({
-          // Runtime properties - read directly from DiffConfigManager (which uses window.diffConfig)
-          diffData: diffConfigManager.get('diffData'),
-          serverSaveEnabled: serverSaveEnabled,
+          // Runtime properties
+          diffData: window.diffConfig.diffData,
+          serverSaveEnabled: window.diffConfig.serverSaveEnabled || false,
           // SECURITY: Use only fileRefId and filenames, not server paths
-          fileRefId: diffConfigManager.get('fileRefId', ''),
-          oldFileRefId: diffConfigManager.get('oldFileRefId', ''),
-          newFileName: diffConfigManager.get('newFileName', ''),
-          oldFileName: diffConfigManager.get('oldFileName', ''),
-          isIdentical: diffConfigManager.get('isIdentical', false),
-          filepath: diffConfigManager.get('filepath'),
+          fileRefId: window.diffConfig.fileRefId || '',
+          oldFileRefId: window.diffConfig.oldFileRefId || '',
+          newFileName: window.diffConfig.newFileName || '',
+          oldFileName: window.diffConfig.oldFileName || '',
+          isIdentical: window.diffConfig.isIdentical || false,
+          filepath: window.diffConfig.filepath,
           // Dependencies (not config values)
           resourceLoader: resourceLoader,
           themeManager: themeManager,
@@ -362,22 +371,22 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
         loaderManager.updateLoaderMessage(mainLoaderId, translationManager.get('loadingResources', 'Loading resources...'));
 
         // 4. Load core dependencies - syntax highlighter ONLY, no theme
-        _context.next = 103;
+        _context.next = 101;
         return resourceLoader.loadSyntaxHighlighterCore();
-      case 103:
+      case 101:
         // 5. Load theme ONCE through ThemeManager
         loaderManager.updateLoaderMessage(mainLoaderId, translationManager.get('loadingTheme', 'Loading theme...'));
-        _context.next = 106;
+        _context.next = 104;
         return themeManager.loadInitialTheme();
-      case 106:
+      case 104:
         // PHASE 5: UI INITIALIZATION - level 1 log
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.log('INITIALIZATION - PHASE 5: UI', null, 1);
         loaderManager.updateLoaderMessage(mainLoaderId, translationManager.get('initializingUI', 'Initializing UI...'));
 
         // 7. Initialize UI after all resources are loaded
-        _context.next = 110;
+        _context.next = 108;
         return diffViewer.initialize();
-      case 110:
+      case 108:
         // Mark as loaded using DOMUtils
         diffContainerElement = document.querySelector(_constants_Selectors__WEBPACK_IMPORTED_MODULE_7__["default"].DIFF.CONTAINER);
         if (diffContainerElement) {
@@ -390,8 +399,8 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
         // Hide the loader now that initialization is complete
         loaderManager.hideMainLoader(mainLoaderId);
         return _context.abrupt("return", diffViewer);
-      case 117:
-        _context.prev = 117;
+      case 115:
+        _context.prev = 115;
         _context.t1 = _context["catch"](11);
         _utils_Debug__WEBPACK_IMPORTED_MODULE_4__.Debug.error('Error initializing diff viewer:', _context.t1);
         viewerElement = document.querySelector(_constants_Selectors__WEBPACK_IMPORTED_MODULE_7__["default"].DIFF.VIEWER);
@@ -415,11 +424,11 @@ window.enableDiffViewer = /*#__PURE__*/_asyncToGenerator(/*#__PURE__*/_regenerat
 
         // Always hide the loader on error
         loaderManager.hideMainLoader(mainLoaderId);
-      case 123:
+      case 121:
       case "end":
         return _context.stop();
     }
-  }, _callee, null, [[11, 117], [19, 28]]);
+  }, _callee, null, [[11, 115], [20, 29]]);
 }));
 
 // Explicitly export the BrowserUIManager to the global window object

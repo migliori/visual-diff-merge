@@ -91,7 +91,7 @@ return [
         /**
          * Debug Settings
          */
-        'debug' => false,  // Enable or disable client-side debugging
+        'debug' => true,  // Enable or disable client-side debugging
         'logLevel' => 3,   // Client-side log level: 1=minimal, 2=normal, 3=verbose
 
         /**
