@@ -1,6 +1,6 @@
 {
   "name": "diff-files",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Visual Diff Merge Tool",
   "main": "index.js",
   "scripts": {

@@ -100,7 +100,13 @@ export class MergeUIController {
      * Populate merge destination dropdown
      */
     populateMergeDestinations() {
-        // Get runtime properties
+        // Re-resolve the live dropdown node: the merge controls may have been
+        // (re)built by BrowserUIManager after initialize() captured this reference,
+        // leaving a detached node here. Always work on the current DOM node.
+        const liveDestination = DOMUtils.getElement(Selectors.MERGE.DESTINATION_DROPDOWN);
+        if (liveDestination) {
+            this.mergeDestination = liveDestination;
+        }
         const runtimeProps = this.diffViewer.getRuntimeProps();
 
         // Get diffData which contains file information

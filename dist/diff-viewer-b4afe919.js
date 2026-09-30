@@ -2777,7 +2777,13 @@ var MergeUIController = /*#__PURE__*/function () {
     key: "populateMergeDestinations",
     value: function populateMergeDestinations() {
       var _diffData$new, _runtimeProps$filepat, _diffData$old;
-      // Get runtime properties
+      // Re-resolve the live dropdown node: the merge controls may have been
+      // (re)built by BrowserUIManager after initialize() captured this reference,
+      // leaving a detached node here. Always work on the current DOM node.
+      var liveDestination = _utils_DOMUtils__WEBPACK_IMPORTED_MODULE_1__/* .DOMUtils */ .e.getElement(_constants_Selectors__WEBPACK_IMPORTED_MODULE_5__/* ["default"] */ .A.MERGE.DESTINATION_DROPDOWN);
+      if (liveDestination) {
+        this.mergeDestination = liveDestination;
+      }
       var runtimeProps = this.diffViewer.getRuntimeProps();
 
       // Get diffData which contains file information
