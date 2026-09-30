@@ -7,8 +7,9 @@
  * It processes merged content and saves it to the filesystem.
  */
 
-// Include Composer's autoloader
-require_once __DIR__ . '/../vendor/autoload.php';
+// Load the composer autoloader (package-internal when installed from source,
+// host-provided when installed via composer)
+require_once __DIR__ . '/../php/autoload-resilient.php';
 
 use VisualDiffMerge\CodeBeautifier;
 use VisualDiffMerge\Config;

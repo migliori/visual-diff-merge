@@ -6,8 +6,9 @@
  * It can return either relative or absolute URLs based on the request.
  */
 
-// Require composer autoloader if needed
-require_once __DIR__ . '/../vendor/autoload.php';
+// Load the composer autoloader (package-internal when installed from source,
+// host-provided when installed via composer)
+require_once __DIR__ . '/../php/autoload-resilient.php';
 
 // Set header for JSON response
 header('Content-Type: application/json');

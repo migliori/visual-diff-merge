@@ -6,7 +6,9 @@ use VisualDiffMerge\Config;
 use VisualDiffMerge\PathManager;
 use VisualDiffMerge\Security;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+// Load the composer autoloader (package-internal when installed from source,
+// host-provided when installed via composer)
+require_once __DIR__ . '/../php/autoload-resilient.php';
 
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {

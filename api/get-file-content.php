@@ -7,7 +7,9 @@
  * that shouldn't be directly executed when opened.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+// Load the composer autoloader (package-internal when installed from source,
+// host-provided when installed via composer)
+require_once __DIR__ . '/../php/autoload-resilient.php';
 
 use VisualDiffMerge\FileBrowser;
 use VisualDiffMerge\PathManager;
