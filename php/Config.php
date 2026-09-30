@@ -145,6 +145,12 @@ class Config
     private static $configPath = '/../api/config.php';
 
     /**
+     * Runtime configuration injected by the host application
+     * @var array
+     */
+    private static $runtimeConfig = [];
+
+    /**
      * Initialize configuration system
      * Loads and merges configuration from user file if it exists
      *
@@ -168,6 +174,58 @@ class Config
             }
         }
 
+        // Merge host-provided runtime configuration (composer integration)
+        if (!empty(static::$runtimeConfig)) {
+            $config = static::mergeConfig($config, static::$runtimeConfig);
+        }
+
+        static::finalize($config);
+    }
+
+    /**
+     * Override the user configuration file path before init()
+     *
+     * Useful when the library is installed via composer and the shipped
+     * api/config.php (inside vendor/) must be replaced by a host-managed file.
+     *
+     * @param string $fullPath Absolute path to the configuration file
+     * @return void
+     */
+    public static function setConfigPath($fullPath)
+    {
+        static::$configPath = $fullPath;
+    }
+
+    /**
+     * Inject runtime configuration from the host application
+     *
+     * Must be called BEFORE init() (or before the first Config::get() call).
+     * The provided array is merged over the defaults and the user config file,
+     * keeping the host values authoritative.
+     *
+     * @param array $config Host configuration array (same schema as api/config.php)
+     * @return void
+     */
+    public static function loadArray(array $config)
+    {
+        // Merge over defaults first so init() still works as expected
+        static::$runtimeConfig = static::mergeConfig(static::$runtimeConfig, $config);
+
+        // If config was already initialized, apply immediately
+        if (static::$config !== null) {
+            static::$config = static::mergeConfig(static::$config, $config);
+            static::finalize(static::$config);
+        }
+    }
+
+    /**
+     * Finalize configuration: security salt, base path, apiBaseUrl auto-detection
+     *
+     * @param array $config Reference to the merged configuration array
+     * @return void
+     */
+    private static function finalize(&$config)
+    {
         // Generate a security salt if not set
         if (empty($config['php']['security']['salt'])) {
             $config['php']['security']['salt'] = bin2hex(random_bytes(16));
