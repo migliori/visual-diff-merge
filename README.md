@@ -1,6 +1,8 @@
 # Visual Diff Merge Tool
 
 [![Version](https://img.shields.io/github/package-json/v/migliori/visual-diff-merge)](https://github.com/migliori/visual-diff-merge)
+[![Packagist Version](https://img.shields.io/packagist/v/migliori/visual-diff-merge)](https://packagist.org/packages/migliori/visual-diff-merge)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/migliori/visual-diff-merge)](https://packagist.org/packages/migliori/visual-diff-merge)
 [![License](https://img.shields.io/github/license/migliori/visual-diff-merge)](https://github.com/migliori/visual-diff-merge/blob/main/LICENSE)
 [![Commits](https://img.shields.io/github/commit-activity/m/migliori/visual-diff-merge)](https://github.com/migliori/visual-diff-merge/commits/main)
 [![Contributors](https://img.shields.io/github/contributors/migliori/visual-diff-merge)](https://github.com/migliori/visual-diff-merge/graphs/contributors)
@@ -36,7 +38,60 @@ Visit **[visual-diff-merge.miglisoft.com](https://visual-diff-merge.miglisoft.co
 - Compare content from URLs
 - (Note: File Browser mode has limited functionality in the online version)
 
-### Option 2: Self-hosted Installation
+### Option 2: Install with Composer (recommended)
+
+The fastest way to use Visual Diff Merge in your own PHP project:
+
+```bash
+composer require migliori/visual-diff-merge
+```
+
+This installs the PHP classes (`VisualDiffMerge\` namespace, PSR-4) and the ready-to-use
+frontend assets under `vendor/migliori/visual-diff-merge/dist/`.
+
+Minimal integration example:
+
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+
+use VisualDiffMerge\Config;
+
+// Inject host configuration BEFORE any Config::get() / init() call
+Config::loadArray([
+    'php' => [
+        'security' => [
+            'allowedDirectories' => ['/absolute/path/to/dir-a', '/absolute/path/to/dir-b'],
+        ],
+    ],
+    'javascript' => [
+        'apiBaseUrl' => '/vendor/migliori/visual-diff-merge/api/',
+        'lang'       => 'en',
+    ],
+]);
+```
+
+Then load the assets from the vendor directory and initialize the JS component, e.g. in File
+Browser mode (only `api/` and `dist/` need to be web-accessible):
+
+```html
+<script>
+window.diffConfig = {
+    apiBaseUrl: '/vendor/migliori/visual-diff-merge/api/',
+    lang: 'en'
+};
+</script>
+<script src="/vendor/migliori/visual-diff-merge/dist/diff-viewer.min.js"></script>
+<script src="/vendor/migliori/visual-diff-merge/dist/file-browser.min.js"></script>
+<script>
+window.fileBrowserManager = new FileBrowserManager();
+</script>
+```
+
+> **Note:** since `api/config.php` lives inside `vendor/` and is not editable, use
+> `Config::loadArray()` (or `Config::setConfigPath()` pointing to a host-managed file) to supply
+> your settings. Host values passed to `Config::loadArray()` always win over defaults.
+
+### Option 3: Self-hosted from Source
 
 Visual Diff Merge is a client-server application that requires both PHP backend and JavaScript frontend:
 
@@ -238,7 +293,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GNU General Public License v3.0 or later** - see the [LICENSE](LICENSE) file for details.
 
 ## 👏 Acknowledgements
 
